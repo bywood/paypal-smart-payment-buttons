@@ -11,7 +11,7 @@ import { getLogger } from '../lib';
 
 import { getCardProps } from './props';
 import type { Card, ExtraFields } from './types';
-import { type CardExports, type ExportsOptions, parseGQLErrors } from './lib';
+import { type CardExports, type ExportsOptions } from './lib';
 
 function getExportsByFrameName<T>(name : $Values<typeof FRAME_NAME>) : ?CardExports<T> {
     try {
@@ -151,7 +151,7 @@ type SubmitCardFieldsOptions = {|
 
 type CardValues = {|
     number : string,
-    expiry? : string,
+    expiry? : ?string,
     security_code? : string,
     postalCode? : string,
     name? : string,
@@ -159,13 +159,15 @@ type CardValues = {|
 |};
 
 // Reformat MM/YYYY to YYYY-MM
-function reformatExpiry(expiry) : string {
-    const [ month, year ] = expiry.split('/');
-    return `${ year }-${ month }`;
+function reformatExpiry(expiry : ?string) : ?string {
+    if (typeof expiry === "string") {
+        const [ month, year ] = expiry.split('/');
+        return `${ year }-${ month }`;
+    }
 }
 
 export function submitCardFields({ facilitatorAccessToken, extraFields } : SubmitCardFieldsOptions) : ZalgoPromise<void> {
-    const { intent, branded, vault, createOrder, onApprove, clientID, onError } = getCardProps({ facilitatorAccessToken });
+    const { intent, createOrder, onApprove, onError } = getCardProps({ facilitatorAccessToken });
 
     resetGQLErrors();
 
@@ -210,17 +212,17 @@ export function submitCardFields({ facilitatorAccessToken, extraFields } : Submi
                         card: cardObject
                     }
                 };
-                return confirmOrderAPI(orderID, data, {facilitatorAccessToken, partnerAttributionID: ''}).catch((error) => {
+                return confirmOrderAPI(orderID, data, { facilitatorAccessToken, partnerAttributionID: '' }).catch((error) => {
                     getLogger().info('card_fields_payment_failed');
-                    if(onError){
+                    if (onError) {
                         onError(error);
                     }
                     throw error;
                 })
-                }).then((orderData) => {
-                    console.log(orderData)
-                    return onApprove({ payerID: uniqueID(), buyerAccessToken: uniqueID(), ...orderData}, { restart });
-                });
+
+            }).then((orderData) => {
+                return onApprove({ payerID: uniqueID(), buyerAccessToken: uniqueID(), ...orderData }, { restart });
+            });
         }
     });
 }

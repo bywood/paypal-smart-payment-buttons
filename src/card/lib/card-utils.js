@@ -207,15 +207,15 @@ export function styleToString(style : Object = { }) : string {
     ), '');
 }
 
-export function mergeStyles(defaultStyle: Object, generalStyle: Object) : Object {
-    let composedStyle = JSON.parse(JSON.stringify(defaultStyle));
+export function mergeStyles(defaultStyle : Object, generalStyle : Object) : Object {
+    const composedStyle = JSON.parse(JSON.stringify(defaultStyle));
     Object.keys(generalStyle).forEach(selector => {
-        if(!composedStyle[selector]){
+        if (!composedStyle[selector]) {
             composedStyle[selector] = {};
         }
-        Object.assign(composedStyle[selector], generalStyle[selector])
-    })
-    return composedStyle
+        Object.assign(composedStyle[selector], generalStyle[selector]);
+    });
+    return composedStyle;
 }
 
 export function removeNonDigits(value : string) : string {

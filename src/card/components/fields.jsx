@@ -30,7 +30,6 @@ import {
     CARD_ERRORS,
     DEFAULT_STYLE,
     DEFAULT_CARD_TYPE,
-    DEFAULT_INPUT_STYLE,
     DEFAULT_PLACEHOLDERS,
     CARD_FIELD_TYPE
 } from '../constants';

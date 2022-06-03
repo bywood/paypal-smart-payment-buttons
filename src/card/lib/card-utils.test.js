@@ -1,6 +1,5 @@
 /* @flow */
 
-import { redirect } from '@krakenjs/belter/src';
 import { getActiveElement } from '../../lib/dom';
 
 import {
@@ -390,35 +389,35 @@ describe('card utils', () => {
 
     describe('mergeStyles', () => {
         it('Should merge the syle object passed by the merchant into the default style object', () => {
-           const defaultStyles = {
-               'input': {
+            const defaultStyles = {
+                'input': {
                     'border': 'none',
-                    'color': 'red',
+                    'color':  'red',
                     'height': '100%',
-                    'width': '100%'   
-               }
+                    'width':  '100%'
+                }
+            };
+            const styles = {
+                'input': {
+                    'font-size':   '16px',
+                    'font-family': 'sans-serif',
+                    'font-weight': 'lighter',
+                    'color':       'blue'
+                }
+            };
+            const mergedStyles = mergeStyles(defaultStyles, styles)
+            const expectedStyles = {
+                'input': {
+                    'font-size':   '16px',
+                    'font-family': 'sans-serif',
+                    'font-weight': 'lighter',
+                    'color':       'blue',
+                    'border':      'none',
+                    'height':      '100%',
+                    'width':       '100%'
+                }
            };
-           const styles = {
-            'input': {
-                'font-size': '16px',
-                'font-family': 'sans-serif',
-                'font-weight': 'lighter',
-                'color': 'blue',
-            },
-           }
-           const mergedStyles = mergeStyles(defaultStyles, styles)
-           const expectedStyles = {
-            'input': {
-                'font-size': '16px',
-                'font-family': 'sans-serif',
-                'font-weight': 'lighter',
-                'color': 'blue',
-                'border': 'none',
-                'height': '100%',
-                'width': '100%', 
-            } 
-           }
-           expect(Object.keys(mergedStyles[input]).length).toBe(7);
+           expect(Object.keys(mergedStyles.input).length).toBe(7);
            expect(mergedStyles.input.color).toBe('blue');
            expect(mergedStyles).toEqual(expectedStyles);
         });
