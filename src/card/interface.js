@@ -6,7 +6,7 @@ import { getAllFramesInWindow, isSameDomain } from '@krakenjs/cross-domain-utils
 import { uniqueID } from '@krakenjs/belter/src';
 
 import { FRAME_NAME } from '../constants';
-import { tokenizeCard, confirmOrderAPI, type ConfirmData } from '../api';
+import { tokenizeCard, confirmOrderAPI } from '../api';
 import { getLogger } from '../lib';
 
 import { getCardProps } from './props';
@@ -207,7 +207,8 @@ export function submitCardFields({ facilitatorAccessToken, extraFields } : Submi
                     cardObject.name = card.name;
                 }
 
-                const data : ConfirmData = {
+                // eslint-disable-next-line flowtype/no-weak-types
+                const data : any = {
                     payment_source: {
                         card: cardObject
                     }

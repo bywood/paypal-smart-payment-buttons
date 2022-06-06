@@ -1,6 +1,7 @@
 /* @flow */
 
 import { getActiveElement } from '../../lib/dom';
+import { getLogger } from '../../lib';
 
 import {
     autoFocusOnFirstInput,
@@ -374,15 +375,17 @@ describe('card utils', () => {
         it('should stringify a style object into a valid style string', () => {
 
             const objectStyle = {
-                height:     '60px',
-                padding:    '10px',
-                fontSize:   '18px',
-                fontFamily: '"Open Sans", sans-serif',
-                transition: 'all 0.5s ease-out'
+                input: {
+                    height:     '60px',
+                    padding:    '10px',
+                    fontSize:   '18px',
+                    fontFamily: '"Open Sans", sans-serif',
+                    transition: 'all 0.5s ease-out'
+                }
             };
             const stringStyle = styleToString(objectStyle);
 
-            expect(stringStyle).toBe('  height : 60px ;  padding : 10px ;  font-size : 18px ;  font-family : "Open Sans", sans-serif ;  transition : all 0.5s ease-out ;');
+            expect(stringStyle).toBe('  input {  height : 60px ;  padding : 10px ;  font-size : 18px ;  font-family : "Open Sans", sans-serif ;  transition : all 0.5s ease-out ; }');
         });
 
     });
@@ -402,7 +405,8 @@ describe('card utils', () => {
                     'font-size':   '16px',
                     'font-family': 'sans-serif',
                     'font-weight': 'lighter',
-                    'color':       'blue'
+                    'color':       'blue',
+                    'box-shadow':  'black'
                 }
             };
             const mergedStyles = mergeStyles(defaultStyles, styles)
@@ -413,13 +417,22 @@ describe('card utils', () => {
                     'font-weight': 'lighter',
                     'color':       'blue',
                     'border':      'none',
+                    'box-shadow':  'black',
                     'height':      '100%',
                     'width':       '100%'
                 }
            };
-           expect(Object.keys(mergedStyles.input).length).toBe(7);
+           expect(Object.keys(mergedStyles.input).length).toBe(8);
            expect(mergedStyles.input.color).toBe('blue');
            expect(mergedStyles).toEqual(expectedStyles);
+
+           const originalLoggerWarn = getLogger().warn;
+           getLogger().warn = jest.fn();
+           const styleString = styleToString(mergedStyles);
+           expect(styleString).toEqual(expect.not.stringContaining('box-shadow'));
+           expect(getLogger().warn).toHaveBeenCalledWith('style_warning', { warn: 'CSS property "box-shadow" was ignored. See allowed CSS property list.' });
+           getLogger().warn = originalLoggerWarn;
+
         });
     });
 

@@ -8,6 +8,7 @@ import cardValidator from 'card-validator';
 import type { CardType, CardNavigation, InputState, FieldValidity, FieldStyle, InputEvent, Card, ExtraFields } from '../types';
 import { CARD_ERRORS, FIELD_STYLE, VALIDATOR_TO_TYPE_MAP, DEFAULT_CARD_TYPE, GQL_ERRORS, CARD_FIELD_TYPE, VALID_EXTRA_FIELDS } from '../constants';
 import { getActiveElement } from '../../lib/dom';
+import { getLogger } from '../../lib';
 
 // Add additional supported card types
 creditCardType.addCard({
@@ -188,22 +189,35 @@ export function filterStyles(rawStyles : Object = {}) : FieldStyle {
     const dashKey = values(FIELD_STYLE);
 
     // $FlowFixMe
-    return Object.keys(rawStyles).reduce((acc : Object, key : string) => {
-        if (typeof rawStyles[key] === 'object') {
-            acc[key] = rawStyles[key];
-        } else if (camelKey.includes(key) || dashKey.includes(key)) {
-            acc[key] = rawStyles[key];
-        }
+    return Object.keys(rawStyles).reduce((acc : Object, selector : string) => {
+        Object.keys(rawStyles[selector]).forEach((property) => {
+            if (acc[selector] === undefined) {
+                acc[selector] = {};
+            }
+            if (camelKey.includes(property) || dashKey.includes(property.toLowerCase())) {
+                acc[selector][property] = rawStyles[selector][property];
+            } else {
+                getLogger().warn('style_warning', { warn: `CSS property "${property}" was ignored. See allowed CSS property list.`});
+            }
+        });
         return acc;
     }, { });
 
 }
 
+function getStyleValues(selectorObject) : string {
+    let s = '';
+    Object.keys(selectorObject).forEach((property) => {
+        s += ` ${camelToDasherize(property)} : ${selectorObject[property]} ; `;
+    });
+    return s;
+}
+
 // Converts style object to valid style string
 export function styleToString(style : Object = { }) : string {
     const filteredStyles = filterStyles(style);
-    return Object.keys(filteredStyles).reduce((acc : string, key : string) => (
-        `${ acc }  ${ camelToDasherize(key) } ${ typeof style[key] === 'object' ? `{ ${ styleToString(style[key]) } }` : `: ${ style[key] } ;` }`
+    return Object.keys(filteredStyles).reduce((acc : string, selector : string) => (
+        `${ acc }  ${ selector } { ${ getStyleValues(filteredStyles[selector]) }}`
     ), '');
 }
 

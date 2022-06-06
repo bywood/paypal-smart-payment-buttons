@@ -57,7 +57,6 @@ export const FIELD_STYLE : FieldStyle = {
     borderRight:             'border-right',
     display:                 'display',
     backgroundColor:         'background-color',
-    background:              'background',
     appearance:              'appearance',
     direction:               'direction',
     font:                    'font',
