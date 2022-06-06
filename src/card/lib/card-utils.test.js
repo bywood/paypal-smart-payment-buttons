@@ -385,7 +385,7 @@ describe('card utils', () => {
             };
             const stringStyle = styleToString(objectStyle);
 
-            expect(stringStyle).toBe('  input {  height : 60px ;  padding : 10px ;  font-size : 18px ;  font-family : "Open Sans", sans-serif ;  transition : all 0.5s ease-out ; }');
+            expect(stringStyle).toBe(' input { height: 60px; padding: 10px; font-size: 18px; font-family: "Open Sans", sans-serif; transition: all 0.5s ease-out; }');
         });
 
     });

@@ -206,18 +206,18 @@ export function filterStyles(rawStyles : Object = {}) : FieldStyle {
 }
 
 function getStyleValues(selectorObject) : string {
-    let s = '';
+    const list = [];
     Object.keys(selectorObject).forEach((property) => {
-        s += ` ${camelToDasherize(property)} : ${selectorObject[property]} ; `;
+        list.push(`${ camelToDasherize(property) }: ${ selectorObject[property] };`);
     });
-    return s;
+    return list.join(' ');
 }
 
 // Converts style object to valid style string
 export function styleToString(style : Object = { }) : string {
     const filteredStyles = filterStyles(style);
     return Object.keys(filteredStyles).reduce((acc : string, selector : string) => (
-        `${ acc }  ${ selector } { ${ getStyleValues(filteredStyles[selector]) }}`
+        `${ acc } ${ selector } { ${ getStyleValues(filteredStyles[selector]) } }`
     ), '');
 }
 
