@@ -1,14 +1,13 @@
 /* @flow */
 
 import { getActiveElement } from '../../lib/dom';
-import { getLogger } from '../../lib';
 
 import {
     autoFocusOnFirstInput,
     maskValidCard,
     formatDate,
     parseGQLErrors,
-    styleToString,
+    injectStyles,
     mergeStyles,
     filterExtraFields
 } from './card-utils';
@@ -370,22 +369,17 @@ describe('card utils', () => {
         });
     });
 
-    describe('styleToString', () => {
+    describe('injectStyles', () => {
 
-        it('should stringify a style object into a valid style string', () => {
+        it('should add a CSP nonce, if provided', () => {
 
-            const objectStyle = {
-                input: {
-                    height:     '60px',
-                    padding:    '10px',
-                    fontSize:   '18px',
-                    fontFamily: '"Open Sans", sans-serif',
-                    transition: 'all 0.5s ease-out'
-                }
-            };
-            const stringStyle = styleToString(objectStyle);
-
-            expect(stringStyle).toBe(' input { height: 60px; padding: 10px; font-size: 18px; font-family: "Open Sans", sans-serif; transition: all 0.5s ease-out; }');
+            injectStyles({}, 'abc123');
+            const style = document.querySelector("html > head > style:last-child");
+            let nonce;
+            if (style) {
+                nonce = style.getAttribute("nonce");
+            }
+            expect(nonce).toBe('abc123');
         });
 
     });
@@ -396,8 +390,7 @@ describe('card utils', () => {
                 'input': {
                     'border': 'none',
                     'color':  'red',
-                    'height': '100%',
-                    'width':  '100%'
+                    'padding-top': '10px'
                 }
             };
             const styles = {
@@ -406,7 +399,8 @@ describe('card utils', () => {
                     'font-family': 'sans-serif',
                     'font-weight': 'lighter',
                     'color':       'blue',
-                    'box-shadow':  'black'
+                    'box-shadow':  'black',
+                    paddingTop:    '20px'
                 }
             };
             const mergedStyles = mergeStyles(defaultStyles, styles)
@@ -418,21 +412,11 @@ describe('card utils', () => {
                     'color':       'blue',
                     'border':      'none',
                     'box-shadow':  'black',
-                    'height':      '100%',
-                    'width':       '100%'
+                    'padding-top': '20px'
                 }
            };
-           expect(Object.keys(mergedStyles.input).length).toBe(8);
-           expect(mergedStyles.input.color).toBe('blue');
+           expect(Object.keys(mergedStyles.input).length).toBe(7);
            expect(mergedStyles).toEqual(expectedStyles);
-
-           const originalLoggerWarn = getLogger().warn;
-           getLogger().warn = jest.fn();
-           const styleString = styleToString(mergedStyles);
-           expect(styleString).toEqual(expect.not.stringContaining('box-shadow'));
-           expect(getLogger().warn).toHaveBeenCalledWith('style_warning', { warn: 'CSS property "box-shadow" was ignored. See allowed CSS property list.' });
-           getLogger().warn = originalLoggerWarn;
-
         });
     });
 

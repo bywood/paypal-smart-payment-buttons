@@ -4,11 +4,11 @@ import { camelToDasherize, noop, values } from '@krakenjs/belter';
 import creditCardType from 'credit-card-type';
 import luhn10 from 'card-validator/src/luhn-10';
 import cardValidator from 'card-validator';
+import { injectWithAllowlist } from 'inject-stylesheet';
 
-import type { CardType, CardNavigation, InputState, FieldValidity, FieldStyle, InputEvent, Card, ExtraFields } from '../types';
+import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
 import { CARD_ERRORS, FIELD_STYLE, VALIDATOR_TO_TYPE_MAP, DEFAULT_CARD_TYPE, GQL_ERRORS, CARD_FIELD_TYPE, VALID_EXTRA_FIELDS } from '../constants';
 import { getActiveElement } from '../../lib/dom';
-import { getLogger } from '../../lib';
 
 // Add additional supported card types
 creditCardType.addCard({
@@ -183,51 +183,31 @@ export function formatDate(date : string, prevFormat? : string = '') : string {
 
 }
 
-// Removed invalid and/or unsupported style props
-export function filterStyles(rawStyles : Object = {}) : FieldStyle {
-    const camelKey = Object.keys(FIELD_STYLE);
-    const dashKey = values(FIELD_STYLE);
-
-    // $FlowFixMe
-    return Object.keys(rawStyles).reduce((acc : Object, selector : string) => {
-        Object.keys(rawStyles[selector]).forEach((property) => {
-            if (acc[selector] === undefined) {
-                acc[selector] = {};
-            }
-            if (camelKey.includes(property) || dashKey.includes(property.toLowerCase())) {
-                acc[selector][property] = rawStyles[selector][property];
-            } else {
-                getLogger().warn('style_warning', { warn: `CSS property "${property}" was ignored. See allowed CSS property list.`});
-            }
-        });
-        return acc;
-    }, { });
-
-}
-
-function getStyleValues(selectorObject) : string {
-    const list = [];
-    Object.keys(selectorObject).forEach((property) => {
-        list.push(`${ camelToDasherize(property) }: ${ selectorObject[property] };`);
-    });
-    return list.join(' ');
-}
-
-// Converts style object to valid style string
-export function styleToString(style : Object = { }) : string {
-    const filteredStyles = filterStyles(style);
-    return Object.keys(filteredStyles).reduce((acc : string, selector : string) => (
-        `${ acc } ${ selector } { ${ getStyleValues(filteredStyles[selector]) } }`
-    ), '');
+// injects an HTMLStyleElement with valid styles
+export function injectStyles(styles : Object, cspNonce? : string) : void {
+    const allowList = values(FIELD_STYLE);
+    const stylesheet = injectWithAllowlist(styles, allowList);
+    if (cspNonce) {
+        stylesheet.setAttribute("nonce", cspNonce);
+    }
 }
 
 export function mergeStyles(defaultStyle : Object, generalStyle : Object) : Object {
     const composedStyle = JSON.parse(JSON.stringify(defaultStyle));
-    Object.keys(generalStyle).forEach(selector => {
+    const camelKeys = Object.keys(FIELD_STYLE);
+    Object.keys(generalStyle).forEach((selector) => {
         if (!composedStyle[selector]) {
             composedStyle[selector] = {};
         }
-        Object.assign(composedStyle[selector], generalStyle[selector]);
+        Object.keys(generalStyle[selector]).forEach((name) => {
+            let property = name;
+            if (camelKeys.includes(property)) {
+                property = camelToDasherize(property);
+            } else {
+                property = property.toLowerCase();
+            }
+            composedStyle[selector][property] = generalStyle[selector][name];
+        });
     });
     return composedStyle;
 }

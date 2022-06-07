@@ -3,10 +3,11 @@
 
 import { h, render, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { injectWithBlocklist } from 'inject-stylesheet';
 
 import { getBody } from '../../lib';
 import { setupExports, formatFieldValue, autoFocusOnFirstInput, filterExtraFields } from '../lib';
-import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
+import { DEFAULT_STYLE, CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
 import { submitCardFields } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions } from '../types';
@@ -74,6 +75,13 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     };
 
     useEffect(() => {
+        const stylesheet = injectWithBlocklist(DEFAULT_STYLE);
+        if (cspNonce) {
+            stylesheet.addAttribute("nonce", cspNonce);
+        }
+    }, [ cspNonce ]);
+
+    useEffect(() => {
         onChange({
             isValid:  fieldValid,
             errors:   fieldErrors
@@ -112,31 +120,6 @@ function Page({ cspNonce, props } : PageProps) : mixed {
 
     return (
         <Fragment>
-            <style nonce={ cspNonce }>
-                {`
-                    * {
-                        box-sizing: border-box;
-                    }
-
-                    html, body {
-                        margin: 0;
-                        padding: 0;
-                        height: 100%;
-                    }
-
-                    body {
-                        display: inline-block;
-                        width: 100%;
-                        font-size: 100%;
-                        font-family: monospace;
-                    }
-
-                    *:focus {
-                        outline: none;
-                    }
-                `}
-            </style>
-
             {
                 (type === CARD_FIELD_TYPE.SINGLE)
                     ? <CardField

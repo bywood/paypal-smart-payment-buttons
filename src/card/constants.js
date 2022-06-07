@@ -47,17 +47,8 @@ export const CARD_FIELD_TYPE_TO_FRAME_NAME : {| [$Values<typeof CARD_FIELD_TYPE>
 };
 
 export const FIELD_STYLE : FieldStyle = {
-    height:                  'height',
-    width:                   'width',
-    color:                   'color',
-    border:                  'border',
-    borderTop:               'border-top',
-    borderLeft:              'border-left',
-    borderBottom:            'border-bottom',
-    borderRight:             'border-right',
-    display:                 'display',
-    backgroundColor:         'background-color',
     appearance:              'appearance',
+    color:                   'color',
     direction:               'direction',
     font:                    'font',
     fontFamily:              'font-family',
@@ -76,19 +67,21 @@ export const FIELD_STYLE : FieldStyle = {
     lineHeight:              'line-height',
     opacity:                 'opacity',
     outline:                 'outline',
-    margin:                  'margin',
-    marginTop:               'margin-top',
-    marginRight:             'margin-right',
-    marginBottom:            'margin-bottom',
-    marginLeft:              'margin-left',
     padding:                 'padding',
     paddingTop:              'padding-top',
     paddingRight:            'padding-right',
     paddingBottom:           'padding-bottom',
     paddingLeft:             'padding-left',
-    textAlign:               'text-align',
     textShadow:              'text-shadow',
-    transition:              'transition'
+    transition:              'transition',
+    MozApperance:            '-moz-appearance',
+    MozOsxFontSmoothing:     '-moz-osx-font-smoothing',
+    MozTapHighlightColor:    '-moz-tap-highlight-color',
+    MozTransition:           '-moz-transition',
+    WebkitAppearance:        '-webkit-appearance',
+    WebkitOsxFontSmoothing:  '-webkit-osx-font-smoothing',
+    WebkitTapHighlightColor: '-webkit-tap-highlight-color',
+    WebkitTransition:        '-webkit-transition'
 };
 
 // $FlowFixMe
@@ -122,7 +115,7 @@ export const DEFAULT_CARD_TYPE : CardType = {
     }
 };
 
-export const DEFAULT_INPUT_STYLE : FieldStyle = {
+export const DEFAULT_INPUT_STYLE : Object = {
     border:     'none',
     background: 'transparent',
     height:     '100%',
@@ -133,6 +126,23 @@ export const DEFAULT_INPUT_STYLE : FieldStyle = {
 };
 
 export const DEFAULT_STYLE = {
+    '*': {
+        'box-sizing': 'border-box'
+    },
+    'html, body': {
+        'margin':  '0',
+        'padding': '0',
+        'height':  '100%'
+    },
+    'body': {
+        'display':     'inline-block',
+        'width':       '100%',
+        'font-size':   '100%',
+        'font-family': 'monospace'
+    },
+    '*:focus': {
+        'outline': 'none'
+    },
     'input':        DEFAULT_INPUT_STYLE,
     'input.number': {
         width:       '60vw',
