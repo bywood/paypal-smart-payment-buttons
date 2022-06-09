@@ -7,8 +7,8 @@ import {
     maskValidCard,
     formatDate,
     parseGQLErrors,
-    injectStyles,
-    mergeStyles,
+    filterStyle,
+    styleToString,
     filterExtraFields
 } from './card-utils';
 
@@ -369,54 +369,58 @@ describe('card utils', () => {
         });
     });
 
-    describe('injectStyles', () => {
+    // describe('filterStyles', () => {
+    //     it('', () => {
+    //         const defaultStyles = {
+    //             'input': {
+    //                 'border': 'none',
+    //                 'color':  'red',
+    //                 'padding-top': '10px'
+    //             }
+    //         };
+    //         const styles = {
+    //             'input': {
+    //                 'font-size':   '16px',
+    //                 'font-family': 'sans-serif',
+    //                 'font-weight': 'lighter',
+    //                 'color':       'blue',
+    //                 'box-shadow':  'black',
+    //                 paddingTop:    '20px'
+    //             }
+    //         };
+    //         const mergedStyles = mergeStyles(defaultStyles, styles)
+    //         const expectedStyles = {
+    //             'input': {
+    //                 'font-size':   '16px',
+    //                 'font-family': 'sans-serif',
+    //                 'font-weight': 'lighter',
+    //                 'color':       'blue',
+    //                 'border':      'none',
+    //                 'box-shadow':  'black',
+    //                 'padding-top': '20px'
+    //             }
+    //        };
+    //        expect(Object.keys(mergedStyles.input).length).toBe(7);
+    //        expect(mergedStyles).toEqual(expectedStyles);
+    //     });
+    // });
 
-        it('should add a CSP nonce, if provided', () => {
-
-            injectStyles({}, 'abc123');
-            const style = document.querySelector("html > head > style:last-child");
-            let nonce;
-            if (style) {
-                nonce = style.getAttribute("nonce");
-            }
-            expect(nonce).toBe('abc123');
-        });
-
-    });
-
-    describe('mergeStyles', () => {
-        it('Should merge the syle object passed by the merchant into the default style object', () => {
-            const defaultStyles = {
+    describe.only('styleToString', () => {
+        it.only('converts a style object to a valid style string', () => {
+            const styleObject = {
                 'input': {
-                    'border': 'none',
-                    'color':  'red',
-                    'padding-top': '10px'
+                'font-size': '16 px'
                 }
             };
-            const styles = {
-                'input': {
-                    'font-size':   '16px',
-                    'font-family': 'sans-serif',
-                    'font-weight': 'lighter',
-                    'color':       'blue',
-                    'box-shadow':  'black',
-                    paddingTop:    '20px'
-                }
-            };
-            const mergedStyles = mergeStyles(defaultStyles, styles)
-            const expectedStyles = {
-                'input': {
-                    'font-size':   '16px',
-                    'font-family': 'sans-serif',
-                    'font-weight': 'lighter',
-                    'color':       'blue',
-                    'border':      'none',
-                    'box-shadow':  'black',
-                    'padding-top': '20px'
-                }
-           };
-           expect(Object.keys(mergedStyles.input).length).toBe(7);
-           expect(mergedStyles).toEqual(expectedStyles);
+
+            const targetString = `input {\n font-size: 16 px;\n}`
+
+            expect(typeof styleObject).toBe('object');
+
+            const styleString = styleToString(styleObject);
+            console.log(styleString)
+            expect(typeof styleString).toBe('string');
+            expect(styleString).toBe(targetString)
         });
     });
 
