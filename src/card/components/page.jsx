@@ -3,11 +3,10 @@
 
 import { h, render, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { injectWithBlocklist } from 'inject-stylesheet';
 
 import { getBody } from '../../lib';
 import { setupExports, formatFieldValue, autoFocusOnFirstInput, filterExtraFields } from '../lib';
-import { DEFAULT_STYLE, CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
+import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
 import { submitCardFields } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions } from '../types';
@@ -73,13 +72,6 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     const resetGQLErrors = () => {
         setFieldGQLErrors({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [] });
     };
-
-    useEffect(() => {
-        const stylesheet = injectWithBlocklist(DEFAULT_STYLE);
-        if (cspNonce) {
-            stylesheet.addAttribute("nonce", cspNonce);
-        }
-    }, [ cspNonce ]);
 
     useEffect(() => {
         onChange({

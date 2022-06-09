@@ -84,6 +84,29 @@ export const FIELD_STYLE : FieldStyle = {
     WebkitTransition:        '-webkit-transition'
 };
 
+// from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
+export const FILTER_CSS_VALUES = [
+    // prevent injecting additional rules
+    /;/,
+    // prevent injecting script tags
+    /[<>]/,
+    // prevent hexadecimal characters
+    // (could allow an exploiter to get around the url/expression/javascript rules)
+    /\\/,
+    /@import/i,
+    /expression/i,
+    /javascript/i,
+    /url/i,
+];
+
+export const FILTER_CSS_SELECTORS = [
+    /^\s*$/,
+    /supports/i,
+    /import/i,
+    /[{}]/,
+    /</,
+];
+
 // $FlowFixMe
 export const VALIDATOR_TO_TYPE_MAP = {
     [types.AMERICAN_EXPRESS]: 'AMEX',
@@ -116,13 +139,13 @@ export const DEFAULT_CARD_TYPE : CardType = {
 };
 
 export const DEFAULT_INPUT_STYLE : Object = {
-    border:     'none',
-    background: 'transparent',
-    height:     '100%',
-    width:      '100%',
-    fontFamily: 'monospace',
-    fontSize:   '50vh',
-    display:    'inline-block'
+    'border':      'none',
+    'background':  'transparent',
+    'height':      '100%',
+    'width':       '100%',
+    'font-family': 'monospace',
+    'font-size':   '50vh',
+    'display':     'inline-block'
 };
 
 export const DEFAULT_STYLE = {
@@ -143,19 +166,20 @@ export const DEFAULT_STYLE = {
     '*:focus': {
         'outline': 'none'
     },
-    'input':        DEFAULT_INPUT_STYLE,
+    'input': DEFAULT_INPUT_STYLE,
     'input.number': {
-        width:       '60vw',
-        marginRight: '2vw'
+        'width':        '60vw',
+        'margin-right': '2vw'
     },
     'input.cvv': {
-        width:       '16vw',
-        marginRight: '2vw'
+        'width':        '16vw',
+        'margin-right': '2vw'
     },
     'input.expiry': {
-        width: '20vw'
+        'width': '20vw'
     }
 };
+
 export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
     number: 'Card number',
     expiry: 'MM/YY',

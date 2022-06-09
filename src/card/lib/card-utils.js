@@ -1,14 +1,14 @@
 /* @flow */
 
-import { camelToDasherize, noop, values } from '@krakenjs/belter';
+import { noop, values } from '@krakenjs/belter';
 import creditCardType from 'credit-card-type';
 import luhn10 from 'card-validator/src/luhn-10';
 import cardValidator from 'card-validator';
-import { injectWithAllowlist } from 'inject-stylesheet';
 
 import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
-import { CARD_ERRORS, FIELD_STYLE, VALIDATOR_TO_TYPE_MAP, DEFAULT_CARD_TYPE, GQL_ERRORS, CARD_FIELD_TYPE, VALID_EXTRA_FIELDS } from '../constants';
+import { CARD_ERRORS, FIELD_STYLE, FILTER_CSS_SELECTORS, FILTER_CSS_VALUES, VALIDATOR_TO_TYPE_MAP, DEFAULT_CARD_TYPE, GQL_ERRORS, CARD_FIELD_TYPE, VALID_EXTRA_FIELDS } from '../constants';
 import { getActiveElement } from '../../lib/dom';
+import { getLogger } from '../../lib';
 
 // Add additional supported card types
 creditCardType.addCard({
@@ -183,33 +183,64 @@ export function formatDate(date : string, prevFormat? : string = '') : string {
 
 }
 
-// injects an HTMLStyleElement with valid styles
-export function injectStyles(styles : Object, cspNonce? : string) : void {
-    const allowList = values(FIELD_STYLE);
-    const stylesheet = injectWithAllowlist(styles, allowList);
-    if (cspNonce) {
-        stylesheet.setAttribute("nonce", cspNonce);
-    }
+// from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
+function isValidValue(value : string) : boolean {
+    return !FILTER_CSS_VALUES.some((regex) => regex.test(value));
 }
 
-export function mergeStyles(defaultStyle : Object, generalStyle : Object) : Object {
-    const composedStyle = JSON.parse(JSON.stringify(defaultStyle));
-    const camelKeys = Object.keys(FIELD_STYLE);
-    Object.keys(generalStyle).forEach((selector) => {
-        if (!composedStyle[selector]) {
-            composedStyle[selector] = {};
-        }
-        Object.keys(generalStyle[selector]).forEach((name) => {
-            let property = name;
-            if (camelKeys.includes(property)) {
-                property = camelToDasherize(property);
+// from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/validate-selector.ts
+function isValidSelector(selector : string) : boolean {
+    return !FILTER_CSS_SELECTORS.some((regex) => regex.test(selector));
+}
+
+export function filterStyle(style : Object) : Object {
+    const result = {};
+    Object.keys(style).forEach((key) => {
+        // if the key is pointing to a string, it must be a CSS property
+        if (typeof style[key] === "string") {
+            // so normalize the property name and filter based on FIELD_STYLE (allow list)
+            let property;
+            if (FIELD_STYLE[key]) {
+                // normalize from camelCase to kebab-case
+                property = FIELD_STYLE[key];
+                const value = style[key];
+                if (isValidValue(value)) {
+                    result[property] = value;
+                }
+            } else if (values(FIELD_STYLE).includes(key.toLowerCase())) {
+                // normalize to lower case
+                property = key.toLowerCase();
+                const value = style[key];
+                if (isValidValue(value)) {
+                    result[property] = value;
+                }
             } else {
-                property = property.toLowerCase();
+                getLogger().warn('style_warning', { warn: `CSS property "${key}" was ignored. See allowed CSS property list.`});
             }
-            composedStyle[selector][property] = generalStyle[selector][name];
-        });
+        // if the key is pointing to an object, it must be a CSS selector
+        } else if (typeof style[key] === "object") {
+            if (isValidSelector(key)) {
+                // so normalize the object it's pointing to
+                result[key] = filterStyle(style[key]);
+            }
+        }
     });
-    return composedStyle;
+    return result;
+}
+
+// converts style object to valid style string
+export function styleToString(style : Object = { }) : string {
+    const s = [];
+    Object.keys(style).forEach((key) => {
+        if (typeof style[key] === 'string') {
+            s.push(`  ${ key }: ${ style[key] };`);
+        } else if (typeof style[key] === 'object') {
+            s.push(`${ key } {`);
+            s.push(styleToString(style[key]));
+            s.push(`}`);
+        }
+    });
+    return s.join('\n');
 }
 
 export function removeNonDigits(value : string) : string {

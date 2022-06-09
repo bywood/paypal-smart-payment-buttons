@@ -6,14 +6,14 @@ import { noop } from '@krakenjs/belter';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
 import {
-    injectStyles,
     setErrors,
     getCvvLength,
     initFieldValidity,
     goToNextField,
     goToPreviousField,
     convertDateFormat,
-    mergeStyles
+    filterStyle,
+    styleToString
 } from '../lib';
 import type {
     CardStyle,
@@ -63,15 +63,11 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const expiryRef = useRef();
     const cvvRef = useRef();
 
-    const composedStyles = mergeStyles(DEFAULT_STYLE, styleObject);
+    const merchantStyle = filterStyle(styleObject);
 
     const cardNumberNavivation : CardNavigation = { next: goToNextField(expiryRef), previous: () => noop };
     const cardExpiryNavivation : CardNavigation = { next: goToNextField(cvvRef), previous: goToPreviousField(numberRef) };
     const cardCvvNavivation : CardNavigation = { next:     () =>  noop, previous: goToPreviousField(expiryRef) };
-
-    useEffect(() => {
-        injectStyles(composedStyles, cspNonce);
-    }, [ cspNonce ]);
 
     useEffect(() => {
         autoFocusRef(numberRef);
@@ -130,6 +126,12 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
     return (
         <Fragment>
+            <style nonce={ cspNonce }>
+                { '\n/* default style */\n' }
+                { styleToString(DEFAULT_STYLE) }
+                { '\n/* merchant style */\n' }
+                { styleToString(merchantStyle) }
+            </style>
             <CardNumber
                 ref={ numberRef }
                 autocomplete={ autocomplete }
@@ -189,12 +191,8 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const numberRef = useRef();
 
-    const composedStyles = mergeStyles(DEFAULT_STYLE, styleObject);
+    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = numberValidity;
-
-    useEffect(() => {
-        injectStyles(composedStyles, cspNonce);
-    }, [ cspNonce ]);
 
     useEffect(() => {
         autoFocusRef(numberRef);
@@ -213,17 +211,25 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     }, [ number, isValid, isPotentiallyValid ]);
 
     return (
-        <CardNumber
-            ref={ numberRef }
-            type='text'
-            autocomplete={ autocomplete }
-            // eslint-disable-next-line react/forbid-component-props
-            className={ `number ${ numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid' }` }
-            placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
-            maxLength='24'
-            onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
-            onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
-        />
+        <Fragment>
+            <script nonce={ cspNonce }>
+                { '\n/* default style */\n' }
+                { styleToString(DEFAULT_STYLE) }
+                { '\n/* merchant style */\n' }
+                { styleToString(merchantStyle) }
+            </script>
+            <CardNumber
+                ref={ numberRef }
+                type='text'
+                autocomplete={ autocomplete }
+                // eslint-disable-next-line react/forbid-component-props
+                className={ `number ${ numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid' }` }
+                placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
+                maxLength='24'
+                onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
+                onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
+            />
+        </Fragment>
     );
 }
 
@@ -242,12 +248,8 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const expiryRef = useRef();
 
-    const composedStyles = mergeStyles(DEFAULT_STYLE, styleObject);
+    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = expiryValidity;
-
-    useEffect(() => {
-        injectStyles(composedStyles, cspNonce);
-    }, [ cspNonce ]);
 
     useEffect(() => {
         autoFocusRef(expiryRef);
@@ -267,17 +269,25 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     }, [ expiry, isValid, isPotentiallyValid ]);
 
     return (
-        <CardExpiry
-            ref={ expiryRef }
-            type='text'
-            autocomplete={ autocomplete }
-            // eslint-disable-next-line react/forbid-component-props
-            className={ `expiry ${ expiryValidity.isPotentiallyValid || expiryValidity.isValid ? 'valid' : 'invalid' }` }
-            placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
-            maxLength='7'
-            onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
-            onValidityChange={ (validity : FieldValidity) => setExpiryValidity(validity) }
-        />
+        <Fragment>
+            <script nonce={ cspNonce }>
+                { '\n/* default style */\n' }
+                { styleToString(DEFAULT_STYLE) }
+                { '\n/* merchant style */\n' }
+                { styleToString(merchantStyle) }
+            </script>
+            <CardExpiry
+                ref={ expiryRef }
+                type='text'
+                autocomplete={ autocomplete }
+                // eslint-disable-next-line react/forbid-component-props
+                className={ `expiry ${ expiryValidity.isPotentiallyValid || expiryValidity.isValid ? 'valid' : 'invalid' }` }
+                placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
+                maxLength='7'
+                onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
+                onValidityChange={ (validity : FieldValidity) => setExpiryValidity(validity) }
+            />
+        </Fragment>
     );
 }
 type CardCvvFieldProps = {|
@@ -295,12 +305,8 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const cvvRef = useRef();
     
-    const composedStyles = mergeStyles(DEFAULT_STYLE, styleObject);
+    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = cvvValidity;
-
-    useEffect(() => {
-        injectStyles(composedStyles, cspNonce);
-    }, [ cspNonce ]);
 
     useEffect(() => {
         autoFocusRef(cvvRef);
@@ -320,17 +326,25 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     }, [ cvv, isValid, isPotentiallyValid  ]);
 
     return (
-        <CardCVV
-            ref={ cvvRef }
-            type='text'
-            autocomplete={ autocomplete }
-            // eslint-disable-next-line react/forbid-component-props
-            className={ `cvv ${ cvvValidity.isPotentiallyValid || cvvValidity.isValid ? 'valid' : 'invalid' }` }
-            placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
-            maxLength='4'
-            onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
-            onValidityChange={ (validity : FieldValidity) => setCvvValidity(validity) }
-        />
+        <Fragment>
+            <script nonce={ cspNonce }>
+                { '\n/* default style */\n' }
+                { styleToString(DEFAULT_STYLE) }
+                { '\n/* merchant style */\n' }
+                { styleToString(merchantStyle) }
+            </script>
+            <CardCVV
+                ref={ cvvRef }
+                type='text'
+                autocomplete={ autocomplete }
+                // eslint-disable-next-line react/forbid-component-props
+                className={ `cvv ${ cvvValidity.isPotentiallyValid || cvvValidity.isValid ? 'valid' : 'invalid' }` }
+                placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
+                maxLength='4'
+                onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
+                onValidityChange={ (validity : FieldValidity) => setCvvValidity(validity) }
+            />
+        </Fragment>
     );
 }
 
@@ -348,12 +362,8 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     const [ nameValidity, setNameValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const nameRef = useRef();
     
-    const composedStyles = mergeStyles(DEFAULT_STYLE, styleObject);
+    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = nameValidity;
-
-    useEffect(() => {
-        injectStyles(composedStyles, cspNonce);
-    }, [ cspNonce ]);
 
     useEffect(() => {
         autoFocusRef(nameRef);
@@ -373,15 +383,23 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     }, [ name, isValid, isPotentiallyValid  ]);
 
     return (
-        <CardName
-            ref={ nameRef }
-            type='text'
-            // eslint-disable-next-line react/forbid-component-props
-            className={ `name ${ nameValidity.isPotentiallyValid || nameValidity.isValid ? 'valid' : 'invalid' }` }
-            placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.name }
-            maxLength='255'
-            onChange={ ({ cardName } : CardNameChangeEvent) => setName(cardName) }
-            onValidityChange={ (validity : FieldValidity) => setNameValidity(validity) }
-        />
+        <Fragment>
+            <script nonce={ cspNonce }>
+                { '\n/* default style */' }
+                { styleToString(DEFAULT_STYLE) }
+                { '\n/* merchant style */' }
+                { styleToString(merchantStyle) }
+            </script>
+            <CardName
+                ref={ nameRef }
+                type='text'
+                // eslint-disable-next-line react/forbid-component-props
+                className={ `name ${ nameValidity.isPotentiallyValid || nameValidity.isValid ? 'valid' : 'invalid' }` }
+                placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.name }
+                maxLength='255'
+                onChange={ ({ cardName } : CardNameChangeEvent) => setName(cardName) }
+                onValidityChange={ (validity : FieldValidity) => setNameValidity(validity) }
+            />
+        </Fragment>
     );
 }
