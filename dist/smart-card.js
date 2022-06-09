@@ -57,226 +57,7 @@ window.smartCard = function(modules) {
     __webpack_require__.p = "";
     return __webpack_require__(__webpack_require__.s = 23);
 }([ function(module, exports, __webpack_require__) {
-    "use strict";
-    var __assign = this && this.__assign || function() {
-        return (__assign = Object.assign || function(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) ({}).hasOwnProperty.call(s, p) && (t[p] = s[p]);
-            }
-            return t;
-        }).apply(this, arguments);
-    };
-    var cardTypes = __webpack_require__(9);
-    var add_matching_cards_to_results_1 = __webpack_require__(10);
-    var is_valid_input_type_1 = __webpack_require__(12);
-    var find_best_match_1 = __webpack_require__(13);
-    var clone_1 = __webpack_require__(4);
-    var customCards = {};
-    var cardNames = {
-        VISA: "visa",
-        MASTERCARD: "mastercard",
-        AMERICAN_EXPRESS: "american-express",
-        DINERS_CLUB: "diners-club",
-        DISCOVER: "discover",
-        JCB: "jcb",
-        UNIONPAY: "unionpay",
-        MAESTRO: "maestro",
-        ELO: "elo",
-        MIR: "mir",
-        HIPER: "hiper",
-        HIPERCARD: "hipercard"
-    };
-    var ORIGINAL_TEST_ORDER = [ cardNames.VISA, cardNames.MASTERCARD, cardNames.AMERICAN_EXPRESS, cardNames.DINERS_CLUB, cardNames.DISCOVER, cardNames.JCB, cardNames.UNIONPAY, cardNames.MAESTRO, cardNames.ELO, cardNames.MIR, cardNames.HIPER, cardNames.HIPERCARD ];
-    var testOrder = clone_1.clone(ORIGINAL_TEST_ORDER);
-    function findType(cardType) {
-        return customCards[cardType] || cardTypes[cardType];
-    }
-    function getCardPosition(name, ignoreErrorForNotExisting) {
-        void 0 === ignoreErrorForNotExisting && (ignoreErrorForNotExisting = !1);
-        var position = testOrder.indexOf(name);
-        if (!ignoreErrorForNotExisting && -1 === position) throw new Error('"' + name + '" is not a supported card type.');
-        return position;
-    }
-    function creditCardType(cardNumber) {
-        var results = [];
-        if (!is_valid_input_type_1.isValidInputType(cardNumber)) return results;
-        if (0 === cardNumber.length) return testOrder.map((function(cardType) {
-            return clone_1.clone(findType(cardType));
-        }));
-        testOrder.forEach((function(cardType) {
-            var cardConfiguration = findType(cardType);
-            add_matching_cards_to_results_1.addMatchingCardsToResults(cardNumber, cardConfiguration, results);
-        }));
-        var bestMatch = find_best_match_1.findBestMatch(results);
-        return bestMatch ? [ bestMatch ] : results;
-    }
-    creditCardType.getTypeInfo = function(cardType) {
-        return clone_1.clone(findType(cardType));
-    };
-    creditCardType.removeCard = function(name) {
-        var position = getCardPosition(name);
-        testOrder.splice(position, 1);
-    };
-    creditCardType.addCard = function(config) {
-        var existingCardPosition = getCardPosition(config.type, !0);
-        customCards[config.type] = config;
-        -1 === existingCardPosition && testOrder.push(config.type);
-    };
-    creditCardType.updateCard = function(cardType, updates) {
-        var originalObject = customCards[cardType] || cardTypes[cardType];
-        if (!originalObject) throw new Error('"' + cardType + "\" is not a recognized type. Use `addCard` instead.'");
-        if (updates.type && originalObject.type !== updates.type) throw new Error("Cannot overwrite type parameter.");
-        var clonedCard = clone_1.clone(originalObject);
-        clonedCard = __assign(__assign({}, clonedCard), updates);
-        customCards[clonedCard.type] = clonedCard;
-    };
-    creditCardType.changeOrder = function(name, position) {
-        var currentPosition = getCardPosition(name);
-        testOrder.splice(currentPosition, 1);
-        testOrder.splice(position, 0, name);
-    };
-    creditCardType.resetModifications = function() {
-        testOrder = clone_1.clone(ORIGINAL_TEST_ORDER);
-        customCards = {};
-    };
-    creditCardType.types = cardNames;
-    module.exports = creditCardType;
-}, function(module, exports, __webpack_require__) {
-    module.exports = __webpack_require__(8);
-}, function(module, exports, __webpack_require__) {
-    module.exports = __webpack_require__(22);
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", {
-        value: !0
-    });
-    exports.expirationYear = void 0;
-    function verification(isValid, isPotentiallyValid, isCurrentYear) {
-        return {
-            isValid: isValid,
-            isPotentiallyValid: isPotentiallyValid,
-            isCurrentYear: isCurrentYear || !1
-        };
-    }
-    exports.expirationYear = function(value, maxElapsedYear) {
-        void 0 === maxElapsedYear && (maxElapsedYear = 19);
-        var isCurrentYear;
-        if ("string" != typeof value) return verification(!1, !1);
-        if ("" === value.replace(/\s/g, "")) return verification(!1, !0);
-        if (!/^\d*$/.test(value)) return verification(!1, !1);
-        var len = value.length;
-        if (len < 2) return verification(!1, !0);
-        var currentYear = (new Date).getFullYear();
-        if (3 === len) return verification(!1, value.slice(0, 2) === String(currentYear).slice(0, 2));
-        if (len > 4) return verification(!1, !1);
-        var numericValue = parseInt(value, 10);
-        var twoDigitYear = Number(String(currentYear).substr(2, 2));
-        var valid = !1;
-        if (2 === len) {
-            if (String(currentYear).substr(0, 2) === value) return verification(!1, !0);
-            isCurrentYear = twoDigitYear === numericValue;
-            valid = numericValue >= twoDigitYear && numericValue <= twoDigitYear + maxElapsedYear;
-        } else if (4 === len) {
-            isCurrentYear = currentYear === numericValue;
-            valid = numericValue >= currentYear && numericValue <= currentYear + maxElapsedYear;
-        }
-        return verification(valid, valid, isCurrentYear);
-    };
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", {
-        value: !0
-    });
-    exports.clone = void 0;
-    exports.clone = function(originalObject) {
-        return originalObject ? JSON.parse(JSON.stringify(originalObject)) : null;
-    };
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", {
-        value: !0
-    });
-    exports.expirationMonth = void 0;
-    function verification(isValid, isPotentiallyValid, isValidForThisYear) {
-        return {
-            isValid: isValid,
-            isPotentiallyValid: isPotentiallyValid,
-            isValidForThisYear: isValidForThisYear || !1
-        };
-    }
-    exports.expirationMonth = function(value) {
-        var currentMonth = (new Date).getMonth() + 1;
-        if ("string" != typeof value) return verification(!1, !1);
-        if ("" === value.replace(/\s/g, "") || "0" === value) return verification(!1, !0);
-        if (!/^\d*$/.test(value)) return verification(!1, !1);
-        var month = parseInt(value, 10);
-        if (isNaN(Number(value))) return verification(!1, !1);
-        var result = month > 0 && month < 13;
-        return verification(result, result, result && month >= currentMonth);
-    };
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    module.exports = function(identifier) {
-        var sum = 0;
-        var alt = !1;
-        var i = identifier.length - 1;
-        var num;
-        for (;i >= 0; ) {
-            num = parseInt(identifier.charAt(i), 10);
-            alt && (num *= 2) > 9 && (num = num % 10 + 1);
-            alt = !alt;
-            sum += num;
-            i--;
-        }
-        return sum % 10 == 0;
-    };
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    var __createBinding = this && this.__createBinding || (Object.create ? function(o, m, k, k2) {
-        void 0 === k2 && (k2 = k);
-        Object.defineProperty(o, k2, {
-            enumerable: !0,
-            get: function() {
-                return m[k];
-            }
-        });
-    } : function(o, m, k, k2) {
-        void 0 === k2 && (k2 = k);
-        o[k2] = m[k];
-    });
-    var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function(o, v) {
-        Object.defineProperty(o, "default", {
-            enumerable: !0,
-            value: v
-        });
-    } : function(o, v) {
-        o.default = v;
-    });
-    var creditCardType = (this && this.__importStar || function(mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (null != mod) for (var k in mod) "default" !== k && {}.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
-        __setModuleDefault(result, mod);
-        return result;
-    })(__webpack_require__(0));
-    var cardholder_name_1 = __webpack_require__(14);
-    var card_number_1 = __webpack_require__(15);
-    var expiration_date_1 = __webpack_require__(17);
-    var expiration_month_1 = __webpack_require__(5);
-    var expiration_year_1 = __webpack_require__(3);
-    var cvv_1 = __webpack_require__(20);
-    var postal_code_1 = __webpack_require__(21);
-    module.exports = {
-        creditCardType: creditCardType,
-        cardholderName: cardholder_name_1.cardholderName,
-        number: card_number_1.cardNumber,
-        expirationDate: expiration_date_1.expirationDate,
-        expirationMonth: expiration_month_1.expirationMonth,
-        expirationYear: expiration_year_1.expirationYear,
-        cvv: cvv_1.cvv,
-        postalCode: postal_code_1.postalCode
-    };
+    module.exports = __webpack_require__(1);
 }, function(module, exports, __webpack_require__) {
     "undefined" != typeof self && self, module.exports = function(modules) {
         var installedModules = {};
@@ -3609,6 +3390,92 @@ window.smartCard = function(modules) {
     } ]);
 }, function(module, exports, __webpack_require__) {
     "use strict";
+    var __assign = this && this.__assign || function() {
+        return (__assign = Object.assign || function(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) ({}).hasOwnProperty.call(s, p) && (t[p] = s[p]);
+            }
+            return t;
+        }).apply(this, arguments);
+    };
+    var cardTypes = __webpack_require__(3);
+    var add_matching_cards_to_results_1 = __webpack_require__(4);
+    var is_valid_input_type_1 = __webpack_require__(7);
+    var find_best_match_1 = __webpack_require__(8);
+    var clone_1 = __webpack_require__(5);
+    var customCards = {};
+    var cardNames = {
+        VISA: "visa",
+        MASTERCARD: "mastercard",
+        AMERICAN_EXPRESS: "american-express",
+        DINERS_CLUB: "diners-club",
+        DISCOVER: "discover",
+        JCB: "jcb",
+        UNIONPAY: "unionpay",
+        MAESTRO: "maestro",
+        ELO: "elo",
+        MIR: "mir",
+        HIPER: "hiper",
+        HIPERCARD: "hipercard"
+    };
+    var ORIGINAL_TEST_ORDER = [ cardNames.VISA, cardNames.MASTERCARD, cardNames.AMERICAN_EXPRESS, cardNames.DINERS_CLUB, cardNames.DISCOVER, cardNames.JCB, cardNames.UNIONPAY, cardNames.MAESTRO, cardNames.ELO, cardNames.MIR, cardNames.HIPER, cardNames.HIPERCARD ];
+    var testOrder = clone_1.clone(ORIGINAL_TEST_ORDER);
+    function findType(cardType) {
+        return customCards[cardType] || cardTypes[cardType];
+    }
+    function getCardPosition(name, ignoreErrorForNotExisting) {
+        void 0 === ignoreErrorForNotExisting && (ignoreErrorForNotExisting = !1);
+        var position = testOrder.indexOf(name);
+        if (!ignoreErrorForNotExisting && -1 === position) throw new Error('"' + name + '" is not a supported card type.');
+        return position;
+    }
+    function creditCardType(cardNumber) {
+        var results = [];
+        if (!is_valid_input_type_1.isValidInputType(cardNumber)) return results;
+        if (0 === cardNumber.length) return testOrder.map((function(cardType) {
+            return clone_1.clone(findType(cardType));
+        }));
+        testOrder.forEach((function(cardType) {
+            var cardConfiguration = findType(cardType);
+            add_matching_cards_to_results_1.addMatchingCardsToResults(cardNumber, cardConfiguration, results);
+        }));
+        var bestMatch = find_best_match_1.findBestMatch(results);
+        return bestMatch ? [ bestMatch ] : results;
+    }
+    creditCardType.getTypeInfo = function(cardType) {
+        return clone_1.clone(findType(cardType));
+    };
+    creditCardType.removeCard = function(name) {
+        var position = getCardPosition(name);
+        testOrder.splice(position, 1);
+    };
+    creditCardType.addCard = function(config) {
+        var existingCardPosition = getCardPosition(config.type, !0);
+        customCards[config.type] = config;
+        -1 === existingCardPosition && testOrder.push(config.type);
+    };
+    creditCardType.updateCard = function(cardType, updates) {
+        var originalObject = customCards[cardType] || cardTypes[cardType];
+        if (!originalObject) throw new Error('"' + cardType + "\" is not a recognized type. Use `addCard` instead.'");
+        if (updates.type && originalObject.type !== updates.type) throw new Error("Cannot overwrite type parameter.");
+        var clonedCard = clone_1.clone(originalObject);
+        clonedCard = __assign(__assign({}, clonedCard), updates);
+        customCards[clonedCard.type] = clonedCard;
+    };
+    creditCardType.changeOrder = function(name, position) {
+        var currentPosition = getCardPosition(name);
+        testOrder.splice(currentPosition, 1);
+        testOrder.splice(position, 0, name);
+    };
+    creditCardType.resetModifications = function() {
+        testOrder = clone_1.clone(ORIGINAL_TEST_ORDER);
+        customCards = {};
+    };
+    creditCardType.types = cardNames;
+    module.exports = creditCardType;
+}, function(module, exports, __webpack_require__) {
+    "use strict";
     module.exports = {
         visa: {
             niceType: "Visa",
@@ -3749,8 +3616,8 @@ window.smartCard = function(modules) {
         value: !0
     });
     exports.addMatchingCardsToResults = void 0;
-    var clone_1 = __webpack_require__(4);
-    var matches_1 = __webpack_require__(11);
+    var clone_1 = __webpack_require__(5);
+    var matches_1 = __webpack_require__(6);
     exports.addMatchingCardsToResults = function(cardNumber, cardConfiguration, results) {
         var i, patternLength;
         for (i = 0; i < cardConfiguration.patterns.length; i++) {
@@ -3763,6 +3630,15 @@ window.smartCard = function(modules) {
                 break;
             }
         }
+    };
+}, function(module, exports, __webpack_require__) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+        value: !0
+    });
+    exports.clone = void 0;
+    exports.clone = function(originalObject) {
+        return originalObject ? JSON.parse(JSON.stringify(originalObject)) : null;
     };
 }, function(module, exports, __webpack_require__) {
     "use strict";
@@ -3809,6 +3685,68 @@ window.smartCard = function(modules) {
     };
 }, function(module, exports, __webpack_require__) {
     "use strict";
+    module.exports = function(identifier) {
+        var sum = 0;
+        var alt = !1;
+        var i = identifier.length - 1;
+        var num;
+        for (;i >= 0; ) {
+            num = parseInt(identifier.charAt(i), 10);
+            alt && (num *= 2) > 9 && (num = num % 10 + 1);
+            alt = !alt;
+            sum += num;
+            i--;
+        }
+        return sum % 10 == 0;
+    };
+}, function(module, exports, __webpack_require__) {
+    "use strict";
+    var __createBinding = this && this.__createBinding || (Object.create ? function(o, m, k, k2) {
+        void 0 === k2 && (k2 = k);
+        Object.defineProperty(o, k2, {
+            enumerable: !0,
+            get: function() {
+                return m[k];
+            }
+        });
+    } : function(o, m, k, k2) {
+        void 0 === k2 && (k2 = k);
+        o[k2] = m[k];
+    });
+    var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function(o, v) {
+        Object.defineProperty(o, "default", {
+            enumerable: !0,
+            value: v
+        });
+    } : function(o, v) {
+        o.default = v;
+    });
+    var creditCardType = (this && this.__importStar || function(mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (null != mod) for (var k in mod) "default" !== k && {}.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
+        return result;
+    })(__webpack_require__(2));
+    var cardholder_name_1 = __webpack_require__(11);
+    var card_number_1 = __webpack_require__(12);
+    var expiration_date_1 = __webpack_require__(14);
+    var expiration_month_1 = __webpack_require__(18);
+    var expiration_year_1 = __webpack_require__(16);
+    var cvv_1 = __webpack_require__(19);
+    var postal_code_1 = __webpack_require__(20);
+    module.exports = {
+        creditCardType: creditCardType,
+        cardholderName: cardholder_name_1.cardholderName,
+        number: card_number_1.cardNumber,
+        expirationDate: expiration_date_1.expirationDate,
+        expirationMonth: expiration_month_1.expirationMonth,
+        expirationYear: expiration_year_1.expirationYear,
+        cvv: cvv_1.cvv,
+        postalCode: postal_code_1.postalCode
+    };
+}, function(module, exports, __webpack_require__) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", {
         value: !0
     });
@@ -3829,8 +3767,8 @@ window.smartCard = function(modules) {
         value: !0
     });
     exports.cardNumber = void 0;
-    var luhn10 = __webpack_require__(16);
-    var getCardTypes = __webpack_require__(0);
+    var luhn10 = __webpack_require__(13);
+    var getCardTypes = __webpack_require__(2);
     function verification(card, isPotentiallyValid, isValid) {
         return {
             card: card,
@@ -3886,9 +3824,9 @@ window.smartCard = function(modules) {
         value: !0
     });
     exports.expirationDate = void 0;
-    var parse_date_1 = __webpack_require__(18);
-    var expiration_month_1 = __webpack_require__(5);
-    var expiration_year_1 = __webpack_require__(3);
+    var parse_date_1 = __webpack_require__(15);
+    var expiration_month_1 = __webpack_require__(18);
+    var expiration_year_1 = __webpack_require__(16);
     function verification(isValid, isPotentiallyValid, month, year) {
         return {
             isValid: isValid,
@@ -3927,8 +3865,8 @@ window.smartCard = function(modules) {
         value: !0
     });
     exports.parseDate = void 0;
-    var expiration_year_1 = __webpack_require__(3);
-    var is_array_1 = __webpack_require__(19);
+    var expiration_year_1 = __webpack_require__(16);
+    var is_array_1 = __webpack_require__(17);
     exports.parseDate = function(datestring) {
         var date;
         /^\d{4}-\d{1,2}$/.test(datestring) ? date = datestring.split("-").reverse() : /\//.test(datestring) ? date = datestring.split(/\s*\/\s*/g) : /\s/.test(datestring) && (date = datestring.split(/ +/g));
@@ -3959,9 +3897,69 @@ window.smartCard = function(modules) {
     Object.defineProperty(exports, "__esModule", {
         value: !0
     });
+    exports.expirationYear = void 0;
+    function verification(isValid, isPotentiallyValid, isCurrentYear) {
+        return {
+            isValid: isValid,
+            isPotentiallyValid: isPotentiallyValid,
+            isCurrentYear: isCurrentYear || !1
+        };
+    }
+    exports.expirationYear = function(value, maxElapsedYear) {
+        void 0 === maxElapsedYear && (maxElapsedYear = 19);
+        var isCurrentYear;
+        if ("string" != typeof value) return verification(!1, !1);
+        if ("" === value.replace(/\s/g, "")) return verification(!1, !0);
+        if (!/^\d*$/.test(value)) return verification(!1, !1);
+        var len = value.length;
+        if (len < 2) return verification(!1, !0);
+        var currentYear = (new Date).getFullYear();
+        if (3 === len) return verification(!1, value.slice(0, 2) === String(currentYear).slice(0, 2));
+        if (len > 4) return verification(!1, !1);
+        var numericValue = parseInt(value, 10);
+        var twoDigitYear = Number(String(currentYear).substr(2, 2));
+        var valid = !1;
+        if (2 === len) {
+            if (String(currentYear).substr(0, 2) === value) return verification(!1, !0);
+            isCurrentYear = twoDigitYear === numericValue;
+            valid = numericValue >= twoDigitYear && numericValue <= twoDigitYear + maxElapsedYear;
+        } else if (4 === len) {
+            isCurrentYear = currentYear === numericValue;
+            valid = numericValue >= currentYear && numericValue <= currentYear + maxElapsedYear;
+        }
+        return verification(valid, valid, isCurrentYear);
+    };
+}, function(module, exports, __webpack_require__) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+        value: !0
+    });
     exports.isArray = void 0;
     exports.isArray = Array.isArray || function(arg) {
         return "[object Array]" === {}.toString.call(arg);
+    };
+}, function(module, exports, __webpack_require__) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+        value: !0
+    });
+    exports.expirationMonth = void 0;
+    function verification(isValid, isPotentiallyValid, isValidForThisYear) {
+        return {
+            isValid: isValid,
+            isPotentiallyValid: isPotentiallyValid,
+            isValidForThisYear: isValidForThisYear || !1
+        };
+    }
+    exports.expirationMonth = function(value) {
+        var currentMonth = (new Date).getMonth() + 1;
+        if ("string" != typeof value) return verification(!1, !1);
+        if ("" === value.replace(/\s/g, "") || "0" === value) return verification(!1, !0);
+        if (!/^\d*$/.test(value)) return verification(!1, !1);
+        var month = parseInt(value, 10);
+        if (isNaN(Number(value))) return verification(!1, !1);
+        var result = month > 0 && month < 13;
+        return verification(result, result, result && month >= currentMonth);
     };
 }, function(module, exports, __webpack_require__) {
     "use strict";
@@ -4005,6 +4003,8 @@ window.smartCard = function(modules) {
         var minLength = options.minLength || 3;
         return "string" != typeof value ? verification(!1, !1) : verification(!(value.length < minLength), !0);
     };
+}, function(module, exports, __webpack_require__) {
+    module.exports = __webpack_require__(22);
 }, function(module, exports, __webpack_require__) {
     "undefined" != typeof self && self, module.exports = function(E) {
         var N = {};
@@ -6565,6 +6565,7 @@ window.smartCard = function(modules) {
         return logger;
     }
     var _FUNDING_SKIP_LOGIN, _AMPLITUDE_API_KEY;
+    var ORDERS_API_URL = "/v2/checkout/orders";
     (_FUNDING_SKIP_LOGIN = {}).paypal = "paypal", _FUNDING_SKIP_LOGIN.paylater = "paypal", 
     _FUNDING_SKIP_LOGIN.credit = "paypal";
     (_AMPLITUDE_API_KEY = {}).test = "a23fb4dfae56daf7c3212303b53a8527", _AMPLITUDE_API_KEY.local = "a23fb4dfae56daf7c3212303b53a8527", 
@@ -6613,48 +6614,21 @@ window.smartCard = function(modules) {
             lifetime: 36e5
         });
     }
-    var belter = __webpack_require__(1);
-    var dist = __webpack_require__(0);
+    var belter = __webpack_require__(0);
+    var dist = __webpack_require__(2);
     var dist_default = __webpack_require__.n(dist);
-    var luhn_10 = __webpack_require__(6);
+    var luhn_10 = __webpack_require__(9);
     var luhn_10_default = __webpack_require__.n(luhn_10);
-    var card_validator_dist = __webpack_require__(7);
+    var card_validator_dist = __webpack_require__(10);
     var card_validator_dist_default = __webpack_require__.n(card_validator_dist);
     var _CARD_FIELD_TYPE_TO_F, _VALIDATOR_TO_TYPE_MA;
-    var GQL_ERRORS = {
-        "/payment_source/card/number": {
-            VALIDATION_ERROR: "INVALID_NUMBER",
-            MISSING_REQUIRED_PARAMETER: "MISSING_NUMBER"
-        },
-        "/payment_source/card/expiry": {
-            INVALID_PARAMETER_SYNTAX: "INVALID_EXPIRATION_DATE_FORMAT",
-            INVALID_STRING_LENGTH: "INVALID_EXPIRATION_DATE_LENGTH",
-            CARD_EXPIRED: "CARD_EXPIRED",
-            MISSING_REQUIRED_PARAMETER: "MISSING_EXPIRATION_DATE"
-        },
-        "/payment_source/card/security_code": {
-            VALIDATION_ERROR: "INVALID_SECURITY_CODE"
-        },
-        TRANSACTION_REFUSED: "TRANSACTION_REJECTED"
-    };
     var CARD_FIELD_TYPE_TO_FRAME_NAME = ((_CARD_FIELD_TYPE_TO_F = {}).single = "card-field", 
     _CARD_FIELD_TYPE_TO_F.number = "card-number-field", _CARD_FIELD_TYPE_TO_F.cvv = "card-cvv-field", 
     _CARD_FIELD_TYPE_TO_F.expiry = "card-expiry-field", _CARD_FIELD_TYPE_TO_F.name = "card-name-field", 
     _CARD_FIELD_TYPE_TO_F);
     var FIELD_STYLE = {
-        height: "height",
-        width: "width",
-        color: "color",
-        border: "border",
-        borderTop: "border-top",
-        borderLeft: "border-left",
-        borderBottom: "border-bottom",
-        borderRight: "border-right",
-        display: "display",
-        backgroundColor: "background-color",
-        background: "background",
         appearance: "appearance",
-        boxShadow: "box-shadow",
+        color: "color",
         direction: "direction",
         font: "font",
         fontFamily: "font-family",
@@ -6673,20 +6647,24 @@ window.smartCard = function(modules) {
         lineHeight: "line-height",
         opacity: "opacity",
         outline: "outline",
-        margin: "margin",
-        marginTop: "margin-top",
-        marginRight: "margin-right",
-        marginBottom: "margin-bottom",
-        marginLeft: "margin-left",
         padding: "padding",
         paddingTop: "padding-top",
         paddingRight: "padding-right",
         paddingBottom: "padding-bottom",
         paddingLeft: "padding-left",
-        textAlign: "text-align",
         textShadow: "text-shadow",
-        transition: "transition"
+        transition: "transition",
+        MozApperance: "-moz-appearance",
+        MozOsxFontSmoothing: "-moz-osx-font-smoothing",
+        MozTapHighlightColor: "-moz-tap-highlight-color",
+        MozTransition: "-moz-transition",
+        WebkitAppearance: "-webkit-appearance",
+        WebkitOsxFontSmoothing: "-webkit-osx-font-smoothing",
+        WebkitTapHighlightColor: "-webkit-tap-highlight-color",
+        WebkitTransition: "-webkit-transition"
     };
+    var FILTER_CSS_VALUES = [ /;/, /[<>]/, /\\/, /@import/i, /expression/i, /javascript/i, /url/i ];
+    var FILTER_CSS_SELECTORS = [ /^\s*$/, /supports/i, /import/i, /[{}]/, /</ ];
     var VALIDATOR_TO_TYPE_MAP = ((_VALIDATOR_TO_TYPE_MA = {})[dist.types.AMERICAN_EXPRESS] = "AMEX", 
     _VALIDATOR_TO_TYPE_MA[dist.types.DINERS_CLUB] = "DINERS", _VALIDATOR_TO_TYPE_MA[dist.types.DISCOVER] = "DISCOVER", 
     _VALIDATOR_TO_TYPE_MA[dist.types.ELO] = "ELO", _VALIDATOR_TO_TYPE_MA[dist.types.HIPER] = "HIPER", 
@@ -6707,24 +6685,40 @@ window.smartCard = function(modules) {
             size: 3
         }
     };
-    var DEFAULT_INPUT_STYLE = {
-        border: "none",
-        background: "transparent",
-        height: "100%",
-        width: "100%",
-        fontFamily: "monospace",
-        fontSize: "50vh",
-        display: "inline-block"
-    };
     var DEFAULT_STYLE = {
-        input: DEFAULT_INPUT_STYLE,
+        "*": {
+            "box-sizing": "border-box"
+        },
+        "html, body": {
+            margin: "0",
+            padding: "0",
+            height: "100%"
+        },
+        body: {
+            display: "inline-block",
+            width: "100%",
+            "font-size": "100%",
+            "font-family": "monospace"
+        },
+        "*:focus": {
+            outline: "none"
+        },
+        input: {
+            border: "none",
+            background: "transparent",
+            height: "100%",
+            width: "100%",
+            "font-family": "monospace",
+            "font-size": "50vh",
+            display: "inline-block"
+        },
         "input.number": {
             width: "60vw",
-            marginRight: "2vw"
+            "margin-right": "2vw"
         },
         "input.cvv": {
             width: "16vw",
-            marginRight: "2vw"
+            "margin-right": "2vw"
         },
         "input.expiry": {
             width: "20vw"
@@ -6833,26 +6827,52 @@ window.smartCard = function(modules) {
     function removeDateMask(date) {
         return date.trim().replace(/\s|\//g, "");
     }
+    function isValidValue(value) {
+        return !FILTER_CSS_VALUES.some((function(regex) {
+            return regex.test(String(value));
+        }));
+    }
     function styleToString(style) {
         void 0 === style && (style = {});
-        var filteredStyles = function(rawStyles) {
-            void 0 === rawStyles && (rawStyles = {});
-            var camelKey = Object.keys(FIELD_STYLE);
-            var dashKey = Object(belter.values)(FIELD_STYLE);
-            return Object.keys(rawStyles).reduce((function(acc, key) {
-                ("object" == typeof rawStyles[key] || camelKey.includes(key) || dashKey.includes(key)) && (acc[key] = rawStyles[key]);
-                return acc;
-            }), {});
-        }(style);
-        return Object.keys(filteredStyles).reduce((function(acc, key) {
-            return acc + "  " + Object(belter.camelToDasherize)(key) + " " + ("object" == typeof style[key] ? "{ " + styleToString(style[key]) + " }" : ": " + style[key] + " ;");
-        }), "");
+        var s = [];
+        Object.keys(style).forEach((function(key) {
+            var value = style[key];
+            if ("string" == typeof value || "number" == typeof value) s.push("  " + key + ": " + value + ";"); else if ("object" == typeof value) {
+                s.push(key + " {");
+                s.push(styleToString(value));
+                s.push("}");
+            }
+        }));
+        return s.join("\n");
     }
-    function getStyles(style) {
-        return Object.keys(style).reduce((function(acc, key) {
-            "object" == typeof style[key] ? acc[0][key] = style[key] : acc[1][key] = style[key];
-            return acc;
-        }), [ {}, {} ]);
+    function getCSSText(defaultStyle, customStyle) {
+        var s = [];
+        s.push("/* default style */");
+        s.push(styleToString(defaultStyle));
+        s.push("/* custom style */");
+        s.push(styleToString(function filterStyle(style) {
+            var result = {};
+            Object.keys(style).forEach((function(key) {
+                var value = style[key];
+                if ("string" == typeof value || "number" == typeof value) {
+                    var property;
+                    if (FIELD_STYLE[key]) {
+                        property = FIELD_STYLE[key];
+                        isValidValue(value) && (result[property] = value);
+                    } else if (Object(belter.values)(FIELD_STYLE).includes(key.toLowerCase())) {
+                        property = key.toLowerCase();
+                        isValidValue(value) && (result[property] = value);
+                    } else getLogger().warn("style_warning", {
+                        warn: 'CSS property "' + key + '" was ignored. See allowed CSS property list.'
+                    });
+                } else "object" == typeof value && ((selector = key, FILTER_CSS_SELECTORS.some((function(regex) {
+                    return regex.test(selector);
+                }))) || (result[key] = filterStyle(value)));
+                var selector;
+            }));
+            return result;
+        }(customStyle)));
+        return s.join("\n");
     }
     function removeNonDigits(value) {
         return removeSpaces(value).replace(/\D/g, "");
@@ -6915,7 +6935,7 @@ window.smartCard = function(modules) {
         }
         return formattedDate;
     }
-    var sdk_constants = __webpack_require__(2);
+    var sdk_constants = __webpack_require__(21);
     function callRestAPI(_ref) {
         var _extends2;
         var accessToken = _ref.accessToken, method = _ref.method, url = _ref.url, data = _ref.data, headers = _ref.headers, eventName = _ref.eventName;
@@ -7092,7 +7112,7 @@ window.smartCard = function(modules) {
                 accessToken: facilitatorAccessToken,
                 method: "PATCH",
                 eventName: "v2_checkout_orders_patch",
-                url: "/v2/checkout/orders/" + orderID,
+                url: ORDERS_API_URL + "/" + orderID,
                 data: data,
                 headers: (_headers11 = {}, _headers11["paypal-partner-attribution-id"] = partnerAttributionID || "", 
                 _headers11.prefer = "return=representation", _headers11)
@@ -7328,7 +7348,7 @@ window.smartCard = function(modules) {
                             return callRestAPI({
                                 accessToken: facilitatorAccessToken,
                                 method: "post",
-                                url: "/v2/checkout/orders",
+                                url: "" + ORDERS_API_URL,
                                 eventName: "v2_checkout_orders_create",
                                 data: order,
                                 headers: (_headers = {}, _headers["paypal-partner-attribution-id"] = partnerAttributionID || "", 
@@ -7822,7 +7842,7 @@ window.smartCard = function(modules) {
                                                 var _headers2;
                                                 return callRestAPI({
                                                     accessToken: facilitatorAccessToken,
-                                                    url: "/v2/checkout/orders/" + orderID,
+                                                    url: ORDERS_API_URL + "/" + orderID,
                                                     eventName: "v2_checkout_orders_get",
                                                     headers: (_headers2 = {}, _headers2["paypal-partner-attribution-id"] = partnerAttributionID || "", 
                                                     _headers2.prefer = "return=representation", _headers2)
@@ -7889,7 +7909,7 @@ window.smartCard = function(modules) {
                                                     accessToken: facilitatorAccessToken,
                                                     method: "post",
                                                     eventName: "v2_checkout_orders_capture",
-                                                    url: "/v2/checkout/orders/" + orderID + "/capture",
+                                                    url: ORDERS_API_URL + "/" + orderID + "/capture",
                                                     headers: (_headers5 = {}, _headers5["paypal-partner-attribution-id"] = partnerAttributionID || "", 
                                                     _headers5.prefer = "return=representation", _headers5["paypal-request-id"] = orderID, 
                                                     _headers5)
@@ -7961,7 +7981,7 @@ window.smartCard = function(modules) {
                                                     accessToken: facilitatorAccessToken,
                                                     method: "post",
                                                     eventName: "v2_checkout_orders_authorize",
-                                                    url: "/v2/checkout/orders/" + orderID + "/authorize",
+                                                    url: ORDERS_API_URL + "/" + orderID + "/authorize",
                                                     headers: (_headers8 = {}, _headers8["paypal-partner-attribution-id"] = partnerAttributionID || "", 
                                                     _headers8.prefer = "return=representation", _headers8)
                                                 }).catch((function(err) {
@@ -8545,11 +8565,17 @@ window.smartCard = function(modules) {
         cardExpiryFrame && cardExpiryFrame.resetGQLErrors();
         cardCVVFrame && cardCVVFrame.resetGQLErrors();
     }
+    function reformatExpiry(expiry) {
+        if ("string" == typeof expiry) {
+            var _expiry$split = expiry.split("/");
+            return _expiry$split[1] + "-" + _expiry$split[0];
+        }
+    }
     function submitCardFields(_ref) {
-        var extraFields = _ref.extraFields;
+        var facilitatorAccessToken = _ref.facilitatorAccessToken, extraFields = _ref.extraFields;
         var _getCardProps = getCardProps({
-            facilitatorAccessToken: _ref.facilitatorAccessToken
-        }), intent = _getCardProps.intent, branded = _getCardProps.branded, vault = _getCardProps.vault, createOrder = _getCardProps.createOrder, onApprove = _getCardProps.onApprove, clientID = _getCardProps.clientID;
+            facilitatorAccessToken: facilitatorAccessToken
+        }), intent = _getCardProps.intent, createOrder = _getCardProps.createOrder, onApprove = _getCardProps.onApprove, onError = _getCardProps.onError;
         interface_resetGQLErrors();
         return promise_ZalgoPromise.try((function() {
             if (!hasCardFields()) throw new Error("Card fields not available to submit");
@@ -8578,73 +8604,42 @@ window.smartCard = function(modules) {
                     });
                 })) : intent === sdk_constants.INTENT.CAPTURE || intent === sdk_constants.INTENT.AUTHORIZE ? createOrder().then((function(orderID) {
                     var cardObject = _extends({
-                        cardNumber: card.number,
-                        expirationDate: card.expiry,
-                        securityCode: card.cvv
+                        name: card.name,
+                        number: card.number,
+                        expiry: reformatExpiry(card.expiry),
+                        security_code: card.cvv
                     }, extraFields);
                     card.name && (cardObject.name = card.name);
-                    return (_ref24 = {
-                        card: cardObject,
-                        orderID: orderID,
-                        vault: vault,
-                        branded: branded,
-                        clientID: clientID
-                    }, callGraphQL({
-                        name: "ProcessPayment",
-                        query: '\n            mutation ProcessPayment(\n                $orderID: String!\n                $clientID: String!\n                $card: CardInput!\n                $branded: Boolean!\n            ) {\n                processPayment(\n                    clientID: $clientID\n                    paymentMethod: { type: CARD, card: $card }\n                    branded: $branded\n                    orderID: $orderID\n                    buttonSessionID: "f7r7367r4"\n                )\n            }\n        ',
-                        variables: {
-                            orderID: _ref24.orderID,
-                            clientID: _ref24.clientID,
-                            card: _ref24.card,
-                            branded: _ref24.branded
-                        },
-                        returnErrorObject: !0
-                    }).then((function(gqlResult) {
-                        if (!gqlResult) throw new Error("Error on GraphQL ProcessPayment mutation");
-                        return gqlResult;
-                    }))).catch((function(error) {
-                        var _parseGQLErrors = function(errorsObject) {
-                            var data = errorsObject.data;
-                            var parsedErrors = [];
-                            var errors = [];
-                            var errorsMap = {};
-                            Array.isArray(data) && data.length && data.forEach((function(e) {
-                                var details = e.details;
-                                Array.isArray(details) && details.length && details.forEach((function(d) {
-                                    errors.push(d);
-                                    var parsedError;
-                                    if (d.field && d.issue && d.description) {
-                                        var _GQL_ERRORS$d$field$d;
-                                        parsedError = null != (_GQL_ERRORS$d$field$d = GQL_ERRORS[d.field][d.issue]) ? _GQL_ERRORS$d$field$d : d.issue + ": " + d.description;
-                                        var field = d.field.split("/").pop();
-                                        errorsMap[field] || (errorsMap[field] = []);
-                                        errorsMap[field].push(parsedError);
-                                    } else if (d.issue && d.description) {
-                                        var _GQL_ERRORS$d$issue;
-                                        parsedError = null != (_GQL_ERRORS$d$issue = GQL_ERRORS[d.issue]) ? _GQL_ERRORS$d$issue : d.issue + ": " + d.description;
-                                    }
-                                    parsedError && parsedErrors.push(parsedError);
-                                }));
-                            }));
-                            return {
-                                errors: errors,
-                                parsedErrors: parsedErrors,
-                                errorsMap: errorsMap
-                            };
-                        }(error), errorsMap = _parseGQLErrors.errorsMap, parsedErrors = _parseGQLErrors.parsedErrors, errors = _parseGQLErrors.errors;
-                        errorsMap && emitGqlErrors(errorsMap);
+                    return function(orderID, data, _ref10) {
+                        var _headers14;
+                        return callRestAPI({
+                            accessToken: _ref10.facilitatorAccessToken,
+                            method: "post",
+                            eventName: "order_confirm_payment_source",
+                            url: ORDERS_API_URL + "/" + orderID + "/confirm-payment-source",
+                            data: data,
+                            headers: (_headers14 = {}, _headers14["paypal-partner-attribution-id"] = _ref10.partnerAttributionID || "", 
+                            _headers14.prefer = "return=representation", _headers14)
+                        }).then((function(_ref11) {
+                            return _ref11.data;
+                        }));
+                    }(orderID, {
+                        payment_source: {
+                            card: cardObject
+                        }
+                    }, {
+                        facilitatorAccessToken: facilitatorAccessToken,
+                        partnerAttributionID: ""
+                    }).catch((function(error) {
                         getLogger().info("card_fields_payment_failed");
-                        throw {
-                            parsedErrors: parsedErrors,
-                            errors: errors
-                        };
+                        onError && onError(error);
+                        throw error;
                     }));
-                    var _ref24;
-                })).then((function() {
-                    return onApprove({
+                })).then((function(orderData) {
+                    return onApprove(_extends({
                         payerID: uniqueID(),
                         buyerAccessToken: uniqueID()
-                    }, {
+                    }, orderData), {
                         restart: restart
                     });
                 })) : void 0;
@@ -9012,19 +9007,18 @@ window.smartCard = function(modules) {
     function CardField(_ref) {
         var _placeholder$number, _placeholder$expiry, _placeholder$cvv;
         var cspNonce = _ref.cspNonce, onChange = _ref.onChange, _ref$styleObject = _ref.styleObject, styleObject = void 0 === _ref$styleObject ? {} : _ref$styleObject, _ref$placeholder = _ref.placeholder, placeholder = void 0 === _ref$placeholder ? {} : _ref$placeholder, _ref$gqlErrorsObject = _ref.gqlErrorsObject, gqlErrorsObject = void 0 === _ref$gqlErrorsObject ? {} : _ref$gqlErrorsObject, autoFocusRef = _ref.autoFocusRef, autocomplete = _ref.autocomplete;
-        var _useState = hooks_module_m(""), number = _useState[0], setNumber = _useState[1];
-        var _useState2 = hooks_module_m(""), cvv = _useState2[0], setCvv = _useState2[1];
-        var _useState3 = hooks_module_m(""), expiry = _useState3[0], setExpiry = _useState3[1];
-        var _useState4 = hooks_module_m(!0), isValid = _useState4[0], setIsValid = _useState4[1];
-        var _useState5 = hooks_module_m(initFieldValidity), numberValidity = _useState5[0], setNumberValidity = _useState5[1];
-        var _useState6 = hooks_module_m(initFieldValidity), expiryValidity = _useState6[0], setExpiryValidity = _useState6[1];
-        var _useState7 = hooks_module_m(initFieldValidity), cvvValidity = _useState7[0], setCvvValidity = _useState7[1];
-        var _useState8 = hooks_module_m(DEFAULT_CARD_TYPE), cardType = _useState8[0], setCardType = _useState8[1];
-        var _getStyles = getStyles(styleObject), generalStyle = _getStyles[0], inputStyle = _getStyles[1];
+        var _useState = hooks_module_m(""), cssText = _useState[0], setCSSText = _useState[1];
+        var _useState2 = hooks_module_m(""), number = _useState2[0], setNumber = _useState2[1];
+        var _useState3 = hooks_module_m(""), cvv = _useState3[0], setCvv = _useState3[1];
+        var _useState4 = hooks_module_m(""), expiry = _useState4[0], setExpiry = _useState4[1];
+        var _useState5 = hooks_module_m(!0), isValid = _useState5[0], setIsValid = _useState5[1];
+        var _useState6 = hooks_module_m(initFieldValidity), numberValidity = _useState6[0], setNumberValidity = _useState6[1];
+        var _useState7 = hooks_module_m(initFieldValidity), expiryValidity = _useState7[0], setExpiryValidity = _useState7[1];
+        var _useState8 = hooks_module_m(initFieldValidity), cvvValidity = _useState8[0], setCvvValidity = _useState8[1];
+        var _useState9 = hooks_module_m(DEFAULT_CARD_TYPE), cardType = _useState9[0], setCardType = _useState9[1];
         var numberRef = hooks_module_h();
         var expiryRef = hooks_module_h();
         var cvvRef = hooks_module_h();
-        var composedStyles = _extends({}, DEFAULT_STYLE, generalStyle);
         var cardNumberNavivation = {
             next: goToNextField(expiryRef),
             previous: function() {
@@ -9044,6 +9038,9 @@ window.smartCard = function(modules) {
         hooks_module_y((function() {
             autoFocusRef(numberRef);
         }), []);
+        hooks_module_y((function() {
+            setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        }), [ styleObject ]);
         hooks_module_y((function() {
             var field = gqlErrorsObject.field, errors = gqlErrorsObject.errors;
             "number" === field && errors.length > 0 && setNumberValidity({
@@ -9080,13 +9077,12 @@ window.smartCard = function(modules) {
         }), [ number, cvv, expiry, isValid, numberValidity, cvvValidity, expiryValidity, cardType ]);
         return v(preact_module_d, null, v("style", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardNumber, {
+        }, cssText), v(CardNumber, {
             ref: numberRef,
             autocomplete: autocomplete,
             navigation: cardNumberNavivation,
             type: "text",
             className: "number " + (numberValidity.isPotentiallyValid || numberValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             allowNavigation: !0,
             placeholder: null != (_placeholder$number = placeholder.number) ? _placeholder$number : "Card number",
             maxLength: "24",
@@ -9104,7 +9100,6 @@ window.smartCard = function(modules) {
             navigation: cardExpiryNavivation,
             type: "text",
             className: "expiry " + (expiryValidity.isPotentiallyValid || expiryValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             allowNavigation: !0,
             placeholder: null != (_placeholder$expiry = placeholder.expiry) ? _placeholder$expiry : "MM/YY",
             maxLength: "7",
@@ -9121,7 +9116,6 @@ window.smartCard = function(modules) {
             type: "text",
             cardType: cardType,
             className: "cvv " + (cvvValidity.isPotentiallyValid || cvvValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             allowNavigation: !0,
             placeholder: null != (_placeholder$cvv = placeholder.cvv) ? _placeholder$cvv : "CVV",
             maxLength: getCvvLength(cardType),
@@ -9136,17 +9130,17 @@ window.smartCard = function(modules) {
     function CardNumberField(_ref5) {
         var _placeholder$number2;
         var cspNonce = _ref5.cspNonce, onChange = _ref5.onChange, _ref5$styleObject = _ref5.styleObject, styleObject = void 0 === _ref5$styleObject ? {} : _ref5$styleObject, _ref5$placeholder = _ref5.placeholder, placeholder = void 0 === _ref5$placeholder ? {} : _ref5$placeholder, autoFocusRef = _ref5.autoFocusRef, autocomplete = _ref5.autocomplete, _ref5$gqlErrors = _ref5.gqlErrors, gqlErrors = void 0 === _ref5$gqlErrors ? [] : _ref5$gqlErrors;
-        var _useState9 = hooks_module_m(""), number = _useState9[0], setNumber = _useState9[1];
-        var _useState10 = hooks_module_m(initFieldValidity), numberValidity = _useState10[0], setNumberValidity = _useState10[1];
-        var _getStyles2 = getStyles(styleObject), generalStyle = _getStyles2[0], inputStyle = _getStyles2[1];
+        var _useState10 = hooks_module_m(""), cssText = _useState10[0], setCSSText = _useState10[1];
+        var _useState11 = hooks_module_m(""), number = _useState11[0], setNumber = _useState11[1];
+        var _useState12 = hooks_module_m(initFieldValidity), numberValidity = _useState12[0], setNumberValidity = _useState12[1];
         var numberRef = hooks_module_h();
-        var composedStyles = _extends({}, {
-            input: DEFAULT_INPUT_STYLE
-        }, generalStyle);
         var isValid = numberValidity.isValid, isPotentiallyValid = numberValidity.isPotentiallyValid;
         hooks_module_y((function() {
             autoFocusRef(numberRef);
         }), []);
+        hooks_module_y((function() {
+            setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        }), [ styleObject ]);
         hooks_module_y((function() {
             gqlErrors.length > 0 && setNumberValidity({
                 isPotentiallyValid: !1,
@@ -9167,14 +9161,13 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ number, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return v(preact_module_d, null, v("script", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardNumber, {
+        }, cssText), v(CardNumber, {
             ref: numberRef,
             type: "text",
             autocomplete: autocomplete,
             className: "number " + (numberValidity.isPotentiallyValid || numberValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             placeholder: null != (_placeholder$number2 = placeholder.number) ? _placeholder$number2 : "Card number",
             maxLength: "24",
             onChange: function(_ref6) {
@@ -9188,17 +9181,17 @@ window.smartCard = function(modules) {
     function CardExpiryField(_ref7) {
         var _placeholder$expiry2;
         var cspNonce = _ref7.cspNonce, onChange = _ref7.onChange, _ref7$styleObject = _ref7.styleObject, styleObject = void 0 === _ref7$styleObject ? {} : _ref7$styleObject, _ref7$placeholder = _ref7.placeholder, placeholder = void 0 === _ref7$placeholder ? {} : _ref7$placeholder, autoFocusRef = _ref7.autoFocusRef, autocomplete = _ref7.autocomplete, _ref7$gqlErrors = _ref7.gqlErrors, gqlErrors = void 0 === _ref7$gqlErrors ? [] : _ref7$gqlErrors;
-        var _useState11 = hooks_module_m(""), expiry = _useState11[0], setExpiry = _useState11[1];
-        var _useState12 = hooks_module_m(initFieldValidity), expiryValidity = _useState12[0], setExpiryValidity = _useState12[1];
-        var _getStyles3 = getStyles(styleObject), generalStyle = _getStyles3[0], inputStyle = _getStyles3[1];
+        var _useState13 = hooks_module_m(""), cssText = _useState13[0], setCSSText = _useState13[1];
+        var _useState14 = hooks_module_m(""), expiry = _useState14[0], setExpiry = _useState14[1];
+        var _useState15 = hooks_module_m(initFieldValidity), expiryValidity = _useState15[0], setExpiryValidity = _useState15[1];
         var expiryRef = hooks_module_h();
-        var composedStyles = _extends({}, {
-            input: DEFAULT_INPUT_STYLE
-        }, generalStyle);
         var isValid = expiryValidity.isValid, isPotentiallyValid = expiryValidity.isPotentiallyValid;
         hooks_module_y((function() {
             autoFocusRef(expiryRef);
         }), []);
+        hooks_module_y((function() {
+            setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        }), [ styleObject ]);
         hooks_module_y((function() {
             gqlErrors.length > 0 && setExpiryValidity({
                 isPotentiallyValid: !1,
@@ -9215,14 +9208,13 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ expiry, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return v(preact_module_d, null, v("script", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardExpiry, {
+        }, cssText), v(CardExpiry, {
             ref: expiryRef,
             type: "text",
             autocomplete: autocomplete,
             className: "expiry " + (expiryValidity.isPotentiallyValid || expiryValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             placeholder: null != (_placeholder$expiry2 = placeholder.expiry) ? _placeholder$expiry2 : "MM/YY",
             maxLength: "7",
             onChange: function(_ref8) {
@@ -9236,17 +9228,17 @@ window.smartCard = function(modules) {
     function CardCVVField(_ref9) {
         var _placeholder$cvv2;
         var cspNonce = _ref9.cspNonce, onChange = _ref9.onChange, _ref9$styleObject = _ref9.styleObject, styleObject = void 0 === _ref9$styleObject ? {} : _ref9$styleObject, _ref9$placeholder = _ref9.placeholder, placeholder = void 0 === _ref9$placeholder ? {} : _ref9$placeholder, autoFocusRef = _ref9.autoFocusRef, autocomplete = _ref9.autocomplete, _ref9$gqlErrors = _ref9.gqlErrors, gqlErrors = void 0 === _ref9$gqlErrors ? [] : _ref9$gqlErrors;
-        var _useState13 = hooks_module_m(""), cvv = _useState13[0], setCvv = _useState13[1];
-        var _useState14 = hooks_module_m(initFieldValidity), cvvValidity = _useState14[0], setCvvValidity = _useState14[1];
-        var _getStyles4 = getStyles(styleObject), generalStyle = _getStyles4[0], inputStyle = _getStyles4[1];
+        var _useState16 = hooks_module_m(""), cssText = _useState16[0], setCSSText = _useState16[1];
+        var _useState17 = hooks_module_m(""), cvv = _useState17[0], setCvv = _useState17[1];
+        var _useState18 = hooks_module_m(initFieldValidity), cvvValidity = _useState18[0], setCvvValidity = _useState18[1];
         var cvvRef = hooks_module_h();
-        var composedStyles = _extends({}, {
-            input: DEFAULT_INPUT_STYLE
-        }, generalStyle);
         var isValid = cvvValidity.isValid, isPotentiallyValid = cvvValidity.isPotentiallyValid;
         hooks_module_y((function() {
             autoFocusRef(cvvRef);
         }), []);
+        hooks_module_y((function() {
+            setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        }), [ styleObject ]);
         hooks_module_y((function() {
             gqlErrors.length > 0 && setCvvValidity({
                 isPotentiallyValid: !1,
@@ -9263,14 +9255,13 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ cvv, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return v(preact_module_d, null, v("script", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardCVV, {
+        }, cssText), v(CardCVV, {
             ref: cvvRef,
             type: "text",
             autocomplete: autocomplete,
             className: "cvv " + (cvvValidity.isPotentiallyValid || cvvValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             placeholder: null != (_placeholder$cvv2 = placeholder.cvv) ? _placeholder$cvv2 : "CVV",
             maxLength: "4",
             onChange: function(_ref10) {
@@ -9284,17 +9275,17 @@ window.smartCard = function(modules) {
     function CardNameField(_ref11) {
         var _placeholder$name;
         var cspNonce = _ref11.cspNonce, onChange = _ref11.onChange, _ref11$styleObject = _ref11.styleObject, styleObject = void 0 === _ref11$styleObject ? {} : _ref11$styleObject, _ref11$placeholder = _ref11.placeholder, placeholder = void 0 === _ref11$placeholder ? {} : _ref11$placeholder, autoFocusRef = _ref11.autoFocusRef, _ref11$gqlErrors = _ref11.gqlErrors, gqlErrors = void 0 === _ref11$gqlErrors ? [] : _ref11$gqlErrors;
-        var _useState15 = hooks_module_m(""), name = _useState15[0], setName = _useState15[1];
-        var _useState16 = hooks_module_m(initFieldValidity), nameValidity = _useState16[0], setNameValidity = _useState16[1];
-        var _getStyles5 = getStyles(styleObject), generalStyle = _getStyles5[0], inputStyle = _getStyles5[1];
+        var _useState19 = hooks_module_m(""), cssText = _useState19[0], setCSSText = _useState19[1];
+        var _useState20 = hooks_module_m(""), name = _useState20[0], setName = _useState20[1];
+        var _useState21 = hooks_module_m(initFieldValidity), nameValidity = _useState21[0], setNameValidity = _useState21[1];
         var nameRef = hooks_module_h();
-        var composedStyles = _extends({}, {
-            input: DEFAULT_INPUT_STYLE
-        }, generalStyle);
         var isValid = nameValidity.isValid, isPotentiallyValid = nameValidity.isPotentiallyValid;
         hooks_module_y((function() {
             autoFocusRef(nameRef);
         }), []);
+        hooks_module_y((function() {
+            setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        }), [ styleObject ]);
         hooks_module_y((function() {
             gqlErrors.length > 0 && setNameValidity({
                 isPotentiallyValid: !1,
@@ -9311,13 +9302,12 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ name, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return v(preact_module_d, null, v("script", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardName, {
+        }, cssText), v(CardName, {
             ref: nameRef,
             type: "text",
             className: "name " + (nameValidity.isPotentiallyValid || nameValidity.isValid ? "valid" : "invalid"),
-            style: inputStyle,
             placeholder: null != (_placeholder$name = placeholder.name) ? _placeholder$name : "Cardholder name",
             maxLength: "255",
             onChange: function(_ref12) {
@@ -9445,9 +9435,7 @@ window.smartCard = function(modules) {
             setFieldValid(valid);
             resetGQLErrors();
         };
-        return v(preact_module_d, null, v("style", {
-            nonce: cspNonce
-        }, "\n                    * {\n                        box-sizing: border-box;\n                    }\n\n                    html, body {\n                        margin: 0;\n                        padding: 0;\n                        height: 100%;\n                    }\n\n                    body {\n                        display: inline-block;\n                        width: 100%;\n                        font-size: 100%;\n                        font-family: monospace;\n                    }\n\n                    *:focus {\n                        outline: none;\n                    }\n                "), "single" === type ? v(CardField, {
+        return v(preact_module_d, null, "single" === type ? v(CardField, {
             gqlErrorsObject: fieldGQLErrors.singleField,
             cspNonce: cspNonce,
             autocomplete: autocomplete,

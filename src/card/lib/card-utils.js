@@ -184,8 +184,8 @@ export function formatDate(date : string, prevFormat? : string = '') : string {
 }
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
-function isValidValue(value : string) : boolean {
-    return !FILTER_CSS_VALUES.some((regex) => regex.test(value));
+function isValidValue(value : string | number) : boolean {
+    return !FILTER_CSS_VALUES.some((regex) => regex.test(String(value)));
 }
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/validate-selector.ts
@@ -193,24 +193,23 @@ function isValidSelector(selector : string) : boolean {
     return !FILTER_CSS_SELECTORS.some((regex) => regex.test(selector));
 }
 
-export function filterStyle(style : Object) : Object {
+function filterStyle(style : Object) : Object {
     const result = {};
     Object.keys(style).forEach((key) => {
-        // if the key is pointing to a string, it must be a CSS property
-        if (typeof style[key] === "string") {
+        const value = style[key];
+        // if the key is pointing to a string or a number, it must be a CSS property
+        if (typeof value === 'string' || typeof value === 'number') {
             // so normalize the property name and filter based on FIELD_STYLE (allow list)
             let property;
             if (FIELD_STYLE[key]) {
                 // normalize from camelCase to kebab-case
                 property = FIELD_STYLE[key];
-                const value = style[key];
                 if (isValidValue(value)) {
                     result[property] = value;
                 }
             } else if (values(FIELD_STYLE).includes(key.toLowerCase())) {
                 // normalize to lower case
                 property = key.toLowerCase();
-                const value = style[key];
                 if (isValidValue(value)) {
                     result[property] = value;
                 }
@@ -218,10 +217,10 @@ export function filterStyle(style : Object) : Object {
                 getLogger().warn('style_warning', { warn: `CSS property "${key}" was ignored. See allowed CSS property list.`});
             }
         // if the key is pointing to an object, it must be a CSS selector
-        } else if (typeof style[key] === "object") {
+        } else if (typeof value === 'object') {
             if (isValidSelector(key)) {
                 // so normalize the object it's pointing to
-                result[key] = filterStyle(style[key]);
+                result[key] = filterStyle(value);
             }
         }
     });
@@ -229,17 +228,28 @@ export function filterStyle(style : Object) : Object {
 }
 
 // converts style object to valid style string
-export function styleToString(style : Object = { }) : string {
+function styleToString(style : Object = { }) : string {
     const s = [];
     Object.keys(style).forEach((key) => {
-        if (typeof style[key] === 'string') {
-            s.push(` ${ key }: ${ style[key] };`);
-        } else if (typeof style[key] === 'object') {
+        const value = style[key];
+        if (typeof value === 'string' || typeof value === 'number') {
+            s.push(` ${ key }: ${ value };`);
+        } else if (typeof value === 'object') {
             s.push(`${ key } {`);
-            s.push(styleToString(style[key]));
-            s.push(`}`);
+            s.push(styleToString(value));
+            s.push('}');
         }
     });
+    return s.join('\n');
+}
+
+// convert default and custom styles to CSS text
+export function getCSSText(defaultStyle : Object, customStyle : Object) : string {
+    const s = [];
+    s.push('/* default style */');
+    s.push(styleToString(defaultStyle));
+    s.push('/* custom style */');
+    s.push(styleToString(filterStyle(customStyle)));
     return s.join('\n');
 }
 

@@ -12,8 +12,7 @@ import {
     goToNextField,
     goToPreviousField,
     convertDateFormat,
-    filterStyle,
-    styleToString
+    getCSSText
 } from '../lib';
 import type {
     CardStyle,
@@ -51,6 +50,7 @@ type CardFieldProps = {|
 |};
 
 export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autoFocusRef, autocomplete } : CardFieldProps) : mixed {
+    const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
@@ -63,8 +63,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const expiryRef = useRef();
     const cvvRef = useRef();
 
-    const merchantStyle = filterStyle(styleObject);
-
     const cardNumberNavivation : CardNavigation = { next: goToNextField(expiryRef), previous: () => noop };
     const cardExpiryNavivation : CardNavigation = { next: goToNextField(cvvRef), previous: goToPreviousField(numberRef) };
     const cardCvvNavivation : CardNavigation = { next:     () =>  noop, previous: goToPreviousField(expiryRef) };
@@ -72,6 +70,10 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     useEffect(() => {
         autoFocusRef(numberRef);
     }, []);
+
+    useEffect(() => {
+        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+    }, [ styleObject ]);
 
     useEffect(() => {
         const { field, errors } = gqlErrorsObject;
@@ -127,10 +129,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     return (
         <Fragment>
             <style nonce={ cspNonce }>
-                { '\n/* default style */\n' }
-                { styleToString(DEFAULT_STYLE) }
-                { '\n/* merchant style */\n' }
-                { styleToString(merchantStyle) }
+                { cssText }
             </style>
             <CardNumber
                 ref={ numberRef }
@@ -187,16 +186,20 @@ type CardNumberFieldProps = {|
 |};
 
 export function CardNumberField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
+    const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const numberRef = useRef();
 
-    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = numberValidity;
 
     useEffect(() => {
         autoFocusRef(numberRef);
     }, []);
+
+    useEffect(() => {
+        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+    }, [ styleObject ]);
 
     useEffect(() => {
         const hasGQLErrors = gqlErrors.length > 0;
@@ -213,10 +216,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     return (
         <Fragment>
             <script nonce={ cspNonce }>
-                { '\n/* default style */\n' }
-                { styleToString(DEFAULT_STYLE) }
-                { '\n/* merchant style */\n' }
-                { styleToString(merchantStyle) }
+                { cssText }
             </script>
             <CardNumber
                 ref={ numberRef }
@@ -244,16 +244,20 @@ type CardExpiryFieldProps = {|
 |};
 
 export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardExpiryFieldProps) : mixed {
+    const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const expiryRef = useRef();
 
-    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = expiryValidity;
 
     useEffect(() => {
         autoFocusRef(expiryRef);
     }, []);
+
+    useEffect(() => {
+        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+    }, [ styleObject ]);
 
     useEffect(() => {
         const hasGQLErrors = gqlErrors.length > 0;
@@ -271,10 +275,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     return (
         <Fragment>
             <script nonce={ cspNonce }>
-                { '\n/* default style */\n' }
-                { styleToString(DEFAULT_STYLE) }
-                { '\n/* merchant style */\n' }
-                { styleToString(merchantStyle) }
+                { cssText }
             </script>
             <CardExpiry
                 ref={ expiryRef }
@@ -301,16 +302,20 @@ type CardCvvFieldProps = {|
 |};
 
 export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardCvvFieldProps) : mixed {
+    const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const cvvRef = useRef();
     
-    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = cvvValidity;
 
     useEffect(() => {
         autoFocusRef(cvvRef);
     }, []);
+
+    useEffect(() => {
+        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+    }, [ styleObject ]);
 
     useEffect(() => {
         const hasGQLErrors = gqlErrors.length > 0;
@@ -328,10 +333,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     return (
         <Fragment>
             <script nonce={ cspNonce }>
-                { '\n/* default style */\n' }
-                { styleToString(DEFAULT_STYLE) }
-                { '\n/* merchant style */\n' }
-                { styleToString(merchantStyle) }
+                { cssText }
             </script>
             <CardCVV
                 ref={ cvvRef }
@@ -358,16 +360,20 @@ type CardNameFieldProps = {|
 |};
 
 export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
+    const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ name, setName ] : [ string, (string) => string ] = useState('');
     const [ nameValidity, setNameValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const nameRef = useRef();
     
-    const merchantStyle = filterStyle(styleObject);
     const { isValid, isPotentiallyValid } = nameValidity;
 
     useEffect(() => {
         autoFocusRef(nameRef);
     }, []);
+
+    useEffect(() => {
+        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+    }, [ styleObject ]);
 
     useEffect(() => {
         const hasGQLErrors = gqlErrors.length > 0;
@@ -385,10 +391,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     return (
         <Fragment>
             <script nonce={ cspNonce }>
-                { '\n/* default style */' }
-                { styleToString(DEFAULT_STYLE) }
-                { '\n/* merchant style */' }
-                { styleToString(merchantStyle) }
+                { cssText }
             </script>
             <CardName
                 ref={ nameRef }

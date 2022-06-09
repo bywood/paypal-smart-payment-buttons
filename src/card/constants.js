@@ -85,7 +85,7 @@ export const FIELD_STYLE : FieldStyle = {
 };
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
-export const FILTER_CSS_VALUES = [
+export const FILTER_CSS_VALUES : $ReadOnlyArray<RegExp> = [
     // prevent injecting additional rules
     /;/,
     // prevent injecting script tags
@@ -96,15 +96,16 @@ export const FILTER_CSS_VALUES = [
     /@import/i,
     /expression/i,
     /javascript/i,
-    /url/i,
+    /url/i
 ];
 
-export const FILTER_CSS_SELECTORS = [
+// from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/validate-selector.ts
+export const FILTER_CSS_SELECTORS : $ReadOnlyArray<RegExp> = [
     /^\s*$/,
     /supports/i,
     /import/i,
     /[{}]/,
-    /</,
+    /</
 ];
 
 // $FlowFixMe
