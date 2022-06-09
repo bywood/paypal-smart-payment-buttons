@@ -13,6 +13,7 @@ import {
 } from './card-utils';
 
 jest.mock('../../lib/dom');
+// jest.mock('../../lib/logger')
 
 function triggerFocusListener() {
     const cb = window.addEventListener.mock.calls.find((args) => {
@@ -369,44 +370,63 @@ describe('card utils', () => {
         });
     });
 
-    // describe('filterStyles', () => {
-    //     it('', () => {
-    //         const defaultStyles = {
-    //             'input': {
-    //                 'border': 'none',
-    //                 'color':  'red',
-    //                 'padding-top': '10px'
-    //             }
-    //         };
-    //         const styles = {
-    //             'input': {
-    //                 'font-size':   '16px',
-    //                 'font-family': 'sans-serif',
-    //                 'font-weight': 'lighter',
-    //                 'color':       'blue',
-    //                 'box-shadow':  'black',
-    //                 paddingTop:    '20px'
-    //             }
-    //         };
-    //         const mergedStyles = mergeStyles(defaultStyles, styles)
-    //         const expectedStyles = {
-    //             'input': {
-    //                 'font-size':   '16px',
-    //                 'font-family': 'sans-serif',
-    //                 'font-weight': 'lighter',
-    //                 'color':       'blue',
-    //                 'border':      'none',
-    //                 'box-shadow':  'black',
-    //                 'padding-top': '20px'
-    //             }
-    //        };
-    //        expect(Object.keys(mergedStyles.input).length).toBe(7);
-    //        expect(mergedStyles).toEqual(expectedStyles);
-    //     });
-    // });
+    describe.only('filterStyle', () => {
+        it('normalizes css properties from camelCase to kebab-case', () => {
+            const styles = {
+                'input': {
+                    paddingTop:    '20px'
+                }
+            };
+            const filteredStyles = filterStyle(styles)
+            const expectedStyles = {
+                'input': {
+                    'padding-top': '20px'
+                }
+           };
+           expect(filteredStyles).toEqual(expectedStyles);
+        });
+        it('normalizes all css properties to lower case', () => {
+            const styles = {
+                'input': {
+                    'pAdDiNg-ToP':    '20px'
+                }
+            };
+            const filteredStyles = filterStyle(styles)
+            const expectedStyles = {
+                'input': {
+                    'padding-top': '20px'
+                }
+           };
+           expect(filteredStyles).toEqual(expectedStyles);
+        });
+        it('excludes css properties that are not on the allowlist', () => {
+            const styles = {
+                'input': {
+                    boxShadow:    '20px',
+                    paddingTop:    '20px'
+                }
+            };
+            const filteredStyles = filterStyle(styles)
+            const expectedStyles = {
+                'input': {
+                    'padding-top': '20px'
+                }
+           };
+           expect(filteredStyles).toEqual(expectedStyles);
+        });
+        it('throws a warning when a style is passed that is not on the allowlist', () => {
+            const styles = {
+                'input': {
+                    boxShadow:    '20px',
+                }
+            };
+            const filteredStyles = filterStyle(styles)
+            expect(getLogger()).toBeCalledWith('style_warning', { warn: `CSS property "boxShadow" was ignored. See allowed CSS property list.`})
+        });
+    });
 
-    describe.only('styleToString', () => {
-        it.only('converts a style object to a valid style string', () => {
+    describe('styleToString', () => {
+        it('converts a style object to a valid style string', () => {
             const styleObject = {
                 'input': {
                     'font-size': '16 px',
