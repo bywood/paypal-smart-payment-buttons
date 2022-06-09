@@ -233,7 +233,7 @@ export function styleToString(style : Object = { }) : string {
     const s = [];
     Object.keys(style).forEach((key) => {
         if (typeof style[key] === 'string') {
-            s.push(`  ${ key }: ${ style[key] };`);
+            s.push(` ${ key }: ${ style[key] };`);
         } else if (typeof style[key] === 'object') {
             s.push(`${ key } {`);
             s.push(styleToString(style[key]));
