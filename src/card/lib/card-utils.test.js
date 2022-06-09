@@ -1,6 +1,7 @@
 /* @flow */
 
 import { getActiveElement } from '../../lib/dom';
+import { getLogger } from '../../lib';
 
 import {
     autoFocusOnFirstInput,
@@ -399,29 +400,24 @@ describe('card utils', () => {
            };
            expect(filteredStyles).toEqual(expectedStyles);
         });
-        it('excludes css properties that are not on the allowlist', () => {
+        it('excludes css properties that are not on the allowlist and log a warning', () => {
             const styles = {
                 'input': {
                     boxShadow:    '20px',
                     paddingTop:    '20px'
                 }
             };
+            const originalLoggerWarn = getLogger().warn;
+            getLogger().warn = jest.fn();
             const filteredStyles = filterStyle(styles)
             const expectedStyles = {
                 'input': {
                     'padding-top': '20px'
                 }
-           };
-           expect(filteredStyles).toEqual(expectedStyles);
-        });
-        it('throws a warning when a style is passed that is not on the allowlist', () => {
-            const styles = {
-                'input': {
-                    boxShadow:    '20px',
-                }
             };
-            const filteredStyles = filterStyle(styles)
-            expect(getLogger()).toBeCalledWith('style_warning', { warn: `CSS property "boxShadow" was ignored. See allowed CSS property list.`})
+            expect(filteredStyles).toEqual(expectedStyles);
+            expect(getLogger().warn).toHaveBeenCalledWith('style_warning', { warn: 'CSS property "boxShadow" was ignored. See allowed CSS property list.' });
+            getLogger().warn = originalLoggerWarn;
         });
     });
 

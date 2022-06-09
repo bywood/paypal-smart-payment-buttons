@@ -193,7 +193,7 @@ function isValidSelector(selector : string) : boolean {
     return !FILTER_CSS_SELECTORS.some((regex) => regex.test(selector));
 }
 
-function filterStyle(style : Object) : Object {
+export function filterStyle(style : Object) : Object {
     const result = {};
     Object.keys(style).forEach((key) => {
         const value = style[key];
@@ -228,7 +228,7 @@ function filterStyle(style : Object) : Object {
 }
 
 // converts style object to valid style string
-function styleToString(style : Object = { }) : string {
+export function styleToString(style : Object = { }) : string {
     const s = [];
     Object.keys(style).forEach((key) => {
         const value = style[key];
