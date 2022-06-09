@@ -409,16 +409,16 @@ describe('card utils', () => {
         it.only('converts a style object to a valid style string', () => {
             const styleObject = {
                 'input': {
-                    'font-size': '16 px'
+                    'font-size': '16 px',
+                    'font-color': 'red'
                 }
             };
 
-            const targetString = `input {\n  font-size: 16 px;\n}`
+            const targetString = `input {\n font-size: 16 px;\n font-color: red;\n}`
 
             expect(typeof styleObject).toBe('object');
 
             const styleString = styleToString(styleObject);
-            console.log(styleString)
             expect(typeof styleString).toBe('string');
             expect(styleString).toBe(targetString)
         });
