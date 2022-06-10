@@ -139,51 +139,59 @@ export const DEFAULT_CARD_TYPE : CardType = {
     }
 };
 
-export const DEFAULT_INPUT_STYLE : Object = {
-    'border':      'none',
-    'background':  'transparent',
-    'height':      '100%',
-    'width':       '100%',
-    'font-family': 'monospace',
-    'font-size':   '50vh',
-    'display':     'inline-block'
-};
-
 export const DEFAULT_STYLE = {
-    '*': {
-        'box-sizing': 'border-box'
-    },
     'html, body': {
-        'margin':  '0',
-        'padding': '0',
-        'height':  '100%'
+        'background': 'transparent',
+        'margin':     '0',
+        'padding':    '0'
     },
     'body': {
-        'display':     'inline-block',
-        'width':       '100%',
-        'font-size':   '100%',
-        'font-family': 'monospace'
+        'display':        'flex',
+        'flex-direction': 'row',
+        'width':          '100%'
     },
-    '*:focus': {
+    'input': {
+        'border':        '1px solid #909697',
+        'border-radius': '2px',
+        'background':    '#FFFFFF',
+        'font-family':   '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        'font-size':     '18px',
+        'font-style':    'normal',
+        'font-weight':   '400',
+        'padding':       '20px 12px'
+    },
+    'input:focus': {
         'outline': 'none'
     },
-    'input': DEFAULT_INPUT_STYLE,
-    'input.number': {
-        'width':        '60vw',
-        'margin-right': '2vw'
+    'input::placeholder': {
+        'color':   '#687173',
+        'opacity': '1'
     },
-    'input.cvv': {
-        'width':        '16vw',
-        'margin-right': '2vw'
+    'input.number': {
+        'border-right':  'none',
+        'flex':          '1',
+        'min-width':     '4em',
+        'padding-right': '6px'
     },
     'input.expiry': {
-        'width': '20vw'
+        'border-left':   'none',
+        'border-right':  'none',
+        'padding-left':  '6px',
+        'padding-right': '6px',
+        'text-align':    'center',
+        'width':         '7em'
+    },
+    'input.cvv': {
+        'border-left': 'none',
+        'padding-left': '6px',
+        'text-align':   'center',
+        'width':       '3em'
     }
 };
 
 export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
     number: 'Card number',
-    expiry: 'MM/YY',
+    expiry: 'MM / YY',
     cvv:    'CVV',
     name:   'Cardholder name'
 };
