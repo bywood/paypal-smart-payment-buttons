@@ -141,23 +141,44 @@ export const DEFAULT_CARD_TYPE : CardType = {
 
 export const DEFAULT_STYLE = {
     'html, body': {
-        'background': 'transparent',
-        'margin':     '0',
-        'padding':    '0'
+        'background':  'transparent',
+        'font-family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        'font-style':  'normal',
+        'font-weight': '400'
     },
     'body': {
+        'margin':  '0',
+        'padding': '4px'
+    },
+    '.card-field': {
         'display':        'flex',
         'flex-direction': 'row',
-        'width':          '100%'
+        'width':          '100%',
+        'margin-bottom':  '7px'
+    },
+    '.card-field.invalid': {
+        'outline':        '3px solid #D9360B',
+        'outline-offset': '-1px;'
+    },
+    '.card-field-validation-error': {
+        'color':     '#515354',
+        'font-size': '14px'
+    },
+    '.card-field-validation-error > svg': {
+        'margin-right':   '6px',
+        'vertical-align': 'text-bottom'
+    },
+    '.card-field-validation-error > svg > path': {
+        'fill': '#D9360B'
+    },
+    '.card-field-validation-error.hidden': {
+        'visibility': 'hidden'
     },
     'input': {
         'border':        '1px solid #909697',
         'border-radius': '2px',
         'background':    '#FFFFFF',
-        'font-family':   '"Helvetica Neue", Helvetica, Arial, sans-serif',
         'font-size':     '18px',
-        'font-style':    'normal',
-        'font-weight':   '400',
         'padding':       '20px 12px'
     },
     'input:focus': {
@@ -182,10 +203,13 @@ export const DEFAULT_STYLE = {
         'width':         '7em'
     },
     'input.cvv': {
-        'border-left': 'none',
+        'border-left':  'none',
         'padding-left': '6px',
         'text-align':   'center',
-        'width':       '3em'
+        'width':        '3em'
+    },
+    'input.invalid': {
+        'color': '#D9360B'
     }
 };
 

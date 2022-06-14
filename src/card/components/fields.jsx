@@ -44,17 +44,17 @@ type CardFieldProps = {|
     onChange : ({| value : Card, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : {| number? : string, expiry? : string, cvv? : string  |},
-    autoFocusRef : (mixed) => void,
     autocomplete? : string,
     gqlErrorsObject : {| field : string, errors : [] |}
 |};
 
-export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autoFocusRef, autocomplete } : CardFieldProps) : mixed {
+export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autocomplete } : CardFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
     const [ isValid, setIsValid ] : [ boolean, (boolean) => boolean ] = useState(true);
+    const [ validationMessage, setValidationMessage ] : [ string, (string) => string ] = useState('');
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -67,9 +67,18 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const cardExpiryNavivation : CardNavigation = { next: goToNextField(cvvRef), previous: goToPreviousField(numberRef) };
     const cardCvvNavivation : CardNavigation = { next:     () =>  noop, previous: goToPreviousField(expiryRef) };
 
-    useEffect(() => {
-        autoFocusRef(numberRef);
-    }, []);
+    function getValidationMessage() : string {
+        if (!numberValidity.isPotentiallyValid && !numberValidity.isValid) {
+            return 'This card number is not valid.';
+        }
+        if (!expiryValidity.isPotentiallyValid && !expiryValidity.isValid) {
+            return 'This expiration date is not valid.';
+        }
+        if (!cvvValidity.isPotentiallyValid && !cvvValidity.isValid) {
+            return 'This security code is not valid.';
+        }
+        return '';
+    }
 
     useEffect(() => {
         setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
@@ -102,6 +111,8 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
    
     useEffect(() => {
 
+        setValidationMessage(getValidationMessage());
+
         const valid = Boolean(numberValidity.isValid && cvvValidity.isValid && expiryValidity.isValid);
 
         setIsValid(valid);
@@ -131,47 +142,61 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
             <style nonce={ cspNonce }>
                 { cssText }
             </style>
-            <CardNumber
-                ref={ numberRef }
-                autocomplete={ autocomplete }
-                navigation={ cardNumberNavivation }
-                type='text'
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `number ${ numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid' }` }
-                allowNavigation={ true }
-                placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
-                maxLength='24'
-                onChange={ onChangeNumber }
-                onValidityChange={ (validity : FieldValidity) => setNumberValidity({ ...validity }) }
-            />
-            <CardExpiry
-                ref={ expiryRef }
-                autocomplete={ autocomplete }
-                navigation={ cardExpiryNavivation }
-                type='text'
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `expiry ${ expiryValidity.isPotentiallyValid || expiryValidity.isValid ? 'valid' : 'invalid' }` }
-                allowNavigation={ true }
-                placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
-                maxLength='7'
-                onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
-                onValidityChange={ (validity : FieldValidity) => setExpiryValidity({ ...validity }) }
-            />
-            <CardCVV
-                ref={ cvvRef }
-                autocomplete={ autocomplete }
-                navigation={ cardCvvNavivation }
-                type='text'
-                cardType={ cardType }
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `cvv ${ cvvValidity.isPotentiallyValid || cvvValidity.isValid ? 'valid' : 'invalid' }` }
-                allowNavigation={ true }
-                placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
-                maxLength={ getCvvLength(cardType) }
-                onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
-                onValidityChange={ (validity : FieldValidity) => setCvvValidity({ ...validity }) }
-            />
+            <div className={ `card-field ${ !validationMessage.length ? '' : 'invalid' }` }>
+                <CardNumber
+                    ref={ numberRef }
+                    autocomplete={ autocomplete }
+                    navigation={ cardNumberNavivation }
+                    type='text'
+                    // eslint-disable-next-line react/forbid-component-props
+                    className={ `number ${ numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid' }` }
+                    allowNavigation={ true }
+                    placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
+                    maxLength='24'
+                    onChange={ onChangeNumber }
+                    onValidityChange={ (validity : FieldValidity) => setNumberValidity({ ...validity }) }
+                />
+                <CardExpiry
+                    ref={ expiryRef }
+                    autocomplete={ autocomplete }
+                    navigation={ cardExpiryNavivation }
+                    type='text'
+                    // eslint-disable-next-line react/forbid-component-props
+                    className={ `expiry ${ expiryValidity.isPotentiallyValid || expiryValidity.isValid ? 'valid' : 'invalid' }` }
+                    allowNavigation={ true }
+                    placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
+                    maxLength='7'
+                    onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
+                    onValidityChange={ (validity : FieldValidity) => setExpiryValidity({ ...validity }) }
+                />
+                <CardCVV
+                    ref={ cvvRef }
+                    autocomplete={ autocomplete }
+                    navigation={ cardCvvNavivation }
+                    type='text'
+                    cardType={ cardType }
+                    // eslint-disable-next-line react/forbid-component-props
+                    className={ `cvv ${ cvvValidity.isPotentiallyValid || cvvValidity.isValid ? 'valid' : 'invalid' }` }
+                    allowNavigation={ true }
+                    placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
+                    maxLength={ getCvvLength(cardType) }
+                    onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
+                    onValidityChange={ (validity : FieldValidity) => setCvvValidity({ ...validity }) }
+                />
+            </div>
+            <ValidationMessage message={ validationMessage } />
         </Fragment>
+    );
+}
+
+export function ValidationMessage({ message } : Object) : mixed {
+    return (
+        <div className={ `card-field-validation-error ${ message.length ? '' : 'hidden' }` }>
+            <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.1399 14.3401L12.5499 1.20007C11.6299 -0.389932 9.32989 -0.389932 8.40989 1.20007L0.81989 14.3401C-0.10011 15.9301 1.04989 17.9301 2.88989 17.9301H18.0699C19.9099 17.9301 21.0599 15.9301 20.1399 14.3401ZM9.75989 4.91007H11.2099C11.4699 4.91007 11.6799 5.16007 11.6599 5.44007L11.1599 10.9701C11.1499 11.1201 11.0299 11.2401 10.8899 11.2401H10.1099C9.96989 11.2401 9.84989 11.1201 9.83989 10.9701L9.30989 5.45007C9.28989 5.16007 9.48989 4.91007 9.75989 4.91007ZM10.4899 15.1001C9.84989 15.1001 9.31989 14.5801 9.31989 13.9301C9.31989 13.2901 9.84989 12.7601 10.4899 12.7601C11.1399 12.7601 11.6599 13.2901 11.6599 13.9301C11.6599 14.5801 11.1399 15.1001 10.4899 15.1001Z" fill="#515354"/>
+            </svg>
+            { message }
+        </div>
     );
 }
 
