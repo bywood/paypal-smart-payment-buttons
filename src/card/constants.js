@@ -151,14 +151,17 @@ export const DEFAULT_STYLE = {
         'padding': '4px'
     },
     '.card-field': {
+        'border':        '1px solid #909697',
+        'border-radius': '2px',
+        'box-sizing': 'border-box',
         'display':        'flex',
         'flex-direction': 'row',
         'width':          '100%',
         'margin-bottom':  '7px'
     },
     '.card-field.invalid': {
-        'outline':        '3px solid #D9360B',
-        'outline-offset': '-1px;'
+        'border':        '3px solid #D9360B',
+        'border-radius': '2px',
     },
     '.card-field-validation-error': {
         'color':     '#515354',
@@ -175,8 +178,7 @@ export const DEFAULT_STYLE = {
         'visibility': 'hidden'
     },
     'input': {
-        'border':        '1px solid #909697',
-        'border-radius': '2px',
+        'border': 'none',
         'background':    '#FFFFFF',
         'font-size':     '18px',
         'padding':       '20px 12px'
@@ -189,24 +191,20 @@ export const DEFAULT_STYLE = {
         'opacity': '1'
     },
     'input.number': {
-        'border-right':  'none',
         'flex':          '1',
         'min-width':     '4em',
         'padding-right': '6px'
     },
     'input.expiry': {
-        'border-left':   'none',
-        'border-right':  'none',
         'padding-left':  '6px',
         'padding-right': '6px',
         'text-align':    'center',
-        'width':         '7em'
+        'width':         '7ch'
     },
     'input.cvv': {
-        'border-left':  'none',
         'padding-left': '6px',
         'text-align':   'center',
-        'width':        '3em'
+        'width':        '4ch'
     },
     'input.invalid': {
         'color': '#D9360B'
