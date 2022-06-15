@@ -148,20 +148,29 @@ export const DEFAULT_STYLE = {
     },
     'body': {
         'margin':  '0',
-        'padding': '4px'
+        'padding': '6px'
     },
     '.card-field': {
-        'border':        '1px solid #909697',
-        'border-radius': '2px',
-        'box-sizing': 'border-box',
+        'border':         '1px solid #909697',
+        'border-radius':  '2px',
+        'box-sizing':     'border-box',
         'display':        'flex',
         'flex-direction': 'row',
         'width':          '100%',
         'margin-bottom':  '7px'
     },
+    '.card-field.focus': {
+        'border':     '3px solid #000000',
+        'box-shadow': '0 0 0 6px rgba(0, 0, 0, 0.12)'
+    },
+    '.card-field.focus.invalid': {
+        'box-shadow': '0 0 0 6px rgba(217, 54, 11, 0.16)'
+    },
     '.card-field.invalid': {
-        'border':        '3px solid #D9360B',
-        'border-radius': '2px',
+        'border': '3px solid #D9360B',
+    },
+    '.focus input, .invalid input': {
+        'padding': '18px 10px'
     },
     '.card-field-validation-error': {
         'color':     '#515354',
@@ -178,10 +187,10 @@ export const DEFAULT_STYLE = {
         'visibility': 'hidden'
     },
     'input': {
-        'border': 'none',
-        'background':    '#FFFFFF',
-        'font-size':     '18px',
-        'padding':       '20px 12px'
+        'border':     'none',
+        'background': '#FFFFFF',
+        'font-size':  '18px',
+        'padding':    '20px 12px'
     },
     'input:focus': {
         'outline': 'none'

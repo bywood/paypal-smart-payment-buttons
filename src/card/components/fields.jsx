@@ -44,11 +44,12 @@ type CardFieldProps = {|
     onChange : ({| value : Card, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : {| number? : string, expiry? : string, cvv? : string  |},
+    autoFocusRef : (mixed) => void,
     autocomplete? : string,
     gqlErrorsObject : {| field : string, errors : [] |}
 |};
 
-export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autocomplete } : CardFieldProps) : mixed {
+export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autoFocusRef, autocomplete } : CardFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
@@ -59,6 +60,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     const numberRef = useRef();
     const expiryRef = useRef();
     const cvvRef = useRef();
@@ -79,6 +81,10 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
         }
         return '';
     }
+
+    useEffect(() => {
+        autoFocusRef(numberRef);
+    }, []);
 
     useEffect(() => {
         setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
@@ -142,7 +148,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
             <style nonce={ cspNonce }>
                 { cssText }
             </style>
-            <div className={ `card-field ${ !validationMessage.length ? '' : 'invalid' }` }>
+            <div className={ `card-field ${ hasFocus ? 'focus' : '' } ${ !validationMessage.length ? '' : 'invalid' }` }>
                 <CardNumber
                     ref={ numberRef }
                     autocomplete={ autocomplete }
@@ -155,6 +161,8 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     maxLength='24'
                     onChange={ onChangeNumber }
                     onValidityChange={ (validity : FieldValidity) => setNumberValidity({ ...validity }) }
+                    onFocus={ () => setHasFocus(true) }
+                    onBlur={ () => setHasFocus(false) }
                 />
                 <CardExpiry
                     ref={ expiryRef }
@@ -168,6 +176,8 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     maxLength='7'
                     onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
                     onValidityChange={ (validity : FieldValidity) => setExpiryValidity({ ...validity }) }
+                    onFocus={ () => setHasFocus(true) }
+                    onBlur={ () => setHasFocus(false) }
                 />
                 <CardCVV
                     ref={ cvvRef }
@@ -182,6 +192,8 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     maxLength={ getCvvLength(cardType) }
                     onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
                     onValidityChange={ (validity : FieldValidity) => setCvvValidity({ ...validity }) }
+                    onFocus={ () => setHasFocus(true) }
+                    onBlur={ () => setHasFocus(false) }
                 />
             </div>
             <ValidationMessage message={ validationMessage } />

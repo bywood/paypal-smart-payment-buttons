@@ -121,6 +121,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
                             onChange={ onFieldChange }
                             styleObject={ style }
                             placeholder={ placeholder }
+                            autoFocusRef={ (ref) => setRef(ref.current.base) }
                     /> : null
             }
 
