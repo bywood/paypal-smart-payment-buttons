@@ -204,8 +204,8 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 export function ValidationMessage({ message } : Object) : mixed {
     return (
         <div className={ `card-field-validation-error ${ message.length ? '' : 'hidden' }` }>
-            <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20.1399 14.3401L12.5499 1.20007C11.6299 -0.389932 9.32989 -0.389932 8.40989 1.20007L0.81989 14.3401C-0.10011 15.9301 1.04989 17.9301 2.88989 17.9301H18.0699C19.9099 17.9301 21.0599 15.9301 20.1399 14.3401ZM9.75989 4.91007H11.2099C11.4699 4.91007 11.6799 5.16007 11.6599 5.44007L11.1599 10.9701C11.1499 11.1201 11.0299 11.2401 10.8899 11.2401H10.1099C9.96989 11.2401 9.84989 11.1201 9.83989 10.9701L9.30989 5.45007C9.28989 5.16007 9.48989 4.91007 9.75989 4.91007ZM10.4899 15.1001C9.84989 15.1001 9.31989 14.5801 9.31989 13.9301C9.31989 13.2901 9.84989 12.7601 10.4899 12.7601C11.1399 12.7601 11.6599 13.2901 11.6599 13.9301C11.6599 14.5801 11.1399 15.1001 10.4899 15.1001Z" fill="#515354"/>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M21.64 17.34L14.05 4.2c-.92-1.59-3.22-1.59-4.14 0L2.32 17.34c-.92 1.59.23 3.59 2.07 3.59h15.18c1.84 0 2.99-2 2.07-3.59zM11.26 7.91h1.45c.26 0 .47.25.45.53l-.5 5.53c-.01.15-.13.27-.27.27h-.78c-.14 0-.26-.12-.27-.27l-.53-5.52c-.02-.29.18-.54.45-.54zm.73 10.19c-.64 0-1.17-.52-1.17-1.17 0-.64.53-1.17 1.17-1.17.65 0 1.17.53 1.17 1.17 0 .65-.52 1.17-1.17 1.17z"/>
             </svg>
             { message }
         </div>
@@ -252,9 +252,9 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
     return (
         <Fragment>
-            <script nonce={ cspNonce }>
+            <style nonce={ cspNonce }>
                 { cssText }
-            </script>
+            </style>
             <CardNumber
                 ref={ numberRef }
                 type='text'
@@ -311,9 +311,9 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
 
     return (
         <Fragment>
-            <script nonce={ cspNonce }>
+            <style nonce={ cspNonce }>
                 { cssText }
-            </script>
+            </style>
             <CardExpiry
                 ref={ expiryRef }
                 type='text'
@@ -369,9 +369,9 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
     return (
         <Fragment>
-            <script nonce={ cspNonce }>
+            <style nonce={ cspNonce }>
                 { cssText }
-            </script>
+            </style>
             <CardCVV
                 ref={ cvvRef }
                 type='text'
@@ -427,9 +427,9 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
     return (
         <Fragment>
-            <script nonce={ cspNonce }>
+            <style nonce={ cspNonce }>
                 { cssText }
-            </script>
+            </style>
             <CardName
                 ref={ nameRef }
                 type='text'

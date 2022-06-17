@@ -139,58 +139,43 @@ export const DEFAULT_CARD_TYPE : CardType = {
     }
 };
 
+/*
+
+For most browsers, the default font-size for the root element is 16px.
+Given that 1rem is equal to 16px:
+
+  24px = 1.5rem
+  20px = 1.25rem
+  18px = 1.125rem
+  14px = 0.875rem
+  12px = 0.75rem
+   6px = 0.375rem
+   4px = 0.25rem
+   2px = 0.125rem
+   1px = 0.0625rem
+
+*/
 export const DEFAULT_STYLE = {
+
     'html, body': {
         'background':  'transparent',
-        'font-family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
-        'font-style':  'normal',
-        'font-weight': '400'
+        'font-family': '"Helvetica Neue", Helvetica, Arial, sans-serif'
     },
     'body': {
         'margin':  '0',
-        'padding': '6px'
+        'padding': '0.375rem'
     },
-    '.card-field': {
-        'border':         '1px solid #909697',
-        'border-radius':  '2px',
-        'box-sizing':     'border-box',
-        'display':        'flex',
-        'flex-direction': 'row',
-        'width':          '100%',
-        'margin-bottom':  '7px'
-    },
-    '.card-field.focus': {
-        'border':     '3px solid #000000',
-        'box-shadow': '0 0 0 6px rgba(0, 0, 0, 0.12)'
-    },
-    '.card-field.focus.invalid': {
-        'box-shadow': '0 0 0 6px rgba(217, 54, 11, 0.16)'
-    },
-    '.card-field.invalid': {
-        'border': '3px solid #D9360B',
-    },
-    '.focus input, .invalid input': {
-        'padding': '18px 10px'
-    },
-    '.card-field-validation-error': {
-        'color':     '#515354',
-        'font-size': '14px'
-    },
-    '.card-field-validation-error > svg': {
-        'margin-right':   '6px',
-        'vertical-align': 'text-bottom'
-    },
-    '.card-field-validation-error > svg > path': {
-        'fill': '#D9360B'
-    },
-    '.card-field-validation-error.hidden': {
-        'visibility': 'hidden'
-    },
+
     'input': {
-        'border':     'none',
-        'background': '#FFFFFF',
-        'font-size':  '18px',
-        'padding':    '20px 12px'
+        'border':        '0.0625rem solid #909697',
+        'border-radius': '0.25rem',
+        'box-sizing':    'border-box',
+        'background':    '#ffffff',
+        'font-family':   'inherit',
+        'font-size':     '1.125rem',
+        'line-height':   '1.5rem',
+        'padding':       '1.25rem 0.75rem',
+        'width':         '100%'
     },
     'input:focus': {
         'outline': 'none'
@@ -199,25 +184,72 @@ export const DEFAULT_STYLE = {
         'color':   '#687173',
         'opacity': '1'
     },
-    'input.number': {
-        'flex':          '1',
-        'min-width':     '4em',
-        'padding-right': '6px'
+    'input.invalid': {
+        'color': '#d9360b'
     },
-    'input.expiry': {
-        'padding-left':  '6px',
-        'padding-right': '6px',
+
+    '.card-field': {
+        'background':     '#ffffff',
+        'border':         '0.0625rem solid #909697',
+        'border-radius':  '0.25rem',
+        'box-sizing':     'border-box',
+        'display':        'flex',
+        'flex-direction': 'row'
+    },
+    '.card-field.focus': {
+        'border-color': '#000000',
+        'box-shadow':   '0 0 0 0.125rem #000000 inset, 0 0 0 0.375rem rgb(0 0 0 / 16%)'
+    },
+    '.card-field.focus.invalid': {
+        'border-color': '#d9360b',
+        'box-shadow':   '0 0 0 0.125rem #d9360b inset, 0 0 0 0.375rem rgb(217 54 11 / 16%)'
+    },
+    '.card-field.invalid': {
+        'border-color': '#d9360b',
+        'box-shadow': '0 0 0 0.0625rem #d9360b inset'
+    },
+
+    '.card-field > input': {
+        'background':    'transparent',
+        'border':        'none',
+        'border-radius': 'unset',
+        'box-sizing':    'content-box',
+        'margin':        '0'
+    },
+    '.card-field > input.number': {
+        'flex':          '1',
+        'min-width':     '4ch',
+        'padding-right': '0.375rem'
+    },
+    '.card-field > input.expiry': {
+        'padding-left':  '0.375rem',
+        'padding-right': '0.375rem',
         'text-align':    'center',
         'width':         '7ch'
     },
-    'input.cvv': {
-        'padding-left': '6px',
+    '.card-field > input.cvv': {
+        'padding-left': '0.375rem',
         'text-align':   'center',
         'width':        '4ch'
     },
-    'input.invalid': {
-        'color': '#D9360B'
+
+    '.card-field-validation-error': {
+        'align-items': 'center',
+        'color':       '#515354',
+        'display':     'flex',
+        'font-size':   '0.875rem',
+        'margin-top':  '0.375rem'
+    },
+    '.card-field-validation-error > svg': {
+        'color':        '#d9360b',
+        'width':        '24px',
+        'height':       '24px',
+        'margin-right': '0.25rem'
+    },
+    '.card-field-validation-error.hidden': {
+        'visibility': 'hidden'
     }
+
 };
 
 export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
