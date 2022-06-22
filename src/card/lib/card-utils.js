@@ -227,7 +227,7 @@ export function filterStyle(style : Object) : Object {
     return result;
 }
 
-// converts style object to valid style string
+// Converts style object to valid style string
 export function styleToString(style : Object = { }) : string {
     const s = [];
     Object.keys(style).forEach((key) => {

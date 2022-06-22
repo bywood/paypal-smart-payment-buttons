@@ -301,17 +301,26 @@ export function patchOrder(orderID : string, data : PatchData, { facilitatorAcce
         return patchData;
     });
 }
+type ConfirmPaymentSource = {|
+    [$Values<typeof FUNDING>] : {|
+        country_code? : string | null,
+        name? : string | null,
+        email? : string | null,
+        bic? : string | null,
+        bank_id? : string | null,
+        type?: string | 'NONCE',
+        id?: string
+    |}
+|}
+type LimitedNonceSource = {|
+    token : {|
+        id : string,
+        type : 'NONCE'
+    |},
+|}
 
 export type ConfirmData = {|
-    payment_source : {
-        [$Values<typeof FUNDING>] : {|
-            country_code? : string | null,
-            name? : string | null,
-            email? : string | null,
-            bic? : string | null,
-            bank_id? : string | null
-        |}
-      }
+    payment_source : ConfirmPaymentSource | LimitedNonceSource
 |};
 
 export function confirmOrderAPI(orderID : string, data : ConfirmData, { facilitatorAccessToken, partnerAttributionID } : OrderAPIOptions) : ZalgoPromise<OrderConfirmResponse> {
@@ -356,6 +365,17 @@ export type ValidatePaymentMethodResponse = {|
         description? : string
     |}>
 |};
+
+
+export function buildPaymentSource(tokenID: string): LimitedNonceSource {
+    const paymentSource = {
+        token: {
+            id:   tokenID,
+            type: 'NONCE'
+        }
+    };
+    return paymentSource;
+}
 
 type PaymentSource = {|
     token : {|
@@ -436,20 +456,29 @@ export function subscriptionIdToCartId(subscriptionID : string) : ZalgoPromise<s
     });
 }
 
-export function enableVault({ orderID, clientAccessToken } : {| orderID : string, clientAccessToken : string |}) : ZalgoPromise<mixed> {
+export function enableVault({ orderID, clientAccessToken, fundingSource, integrationArtifact, userExperienceFlow, productFlow, buttonSessionID } : {| orderID : string, clientAccessToken : string, fundingSource : string, integrationArtifact : string, userExperienceFlow : string, productFlow : string, buttonSessionID : string |}) : ZalgoPromise<mixed> {
+    const clientConfig = {
+        fundingSource,
+        integrationArtifact,
+        userExperienceFlow,
+        productFlow,
+        buttonSessionID,
+    }
     return callGraphQL({
         name:  'EnableVault',
         query: `
             mutation EnableVault(
-                $orderID : String!
+                $orderID : String!,
+                $clientConfig: ClientConfigInput!
             ) {
                 enableVault(
-                    token: $orderID
+                    token: $orderID,
+                    clientConfig: $clientConfig
                 )
             }
         `,
         variables: {
-            orderID
+            orderID, clientConfig
         },
         headers: {
             [ HEADERS.ACCESS_TOKEN ]:   clientAccessToken,

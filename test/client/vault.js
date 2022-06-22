@@ -5,8 +5,10 @@ import { wrapPromise } from '@krakenjs/belter/src';
 import { FUNDING, INTENT } from '@paypal/sdk-constants/src';
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 
-import { mockSetupButton, mockAsyncProp, createButtonHTML, getValidatePaymentMethodApiMock,
-    clickButton, getGraphQLApiMock, generateOrderID, mockMenu, clickMenu, getMockWindowOpen } from './mocks';
+import {
+    mockSetupButton, mockAsyncProp, createButtonHTML, getValidatePaymentMethodApiMock, getConfirmOrderApiMock,
+    clickButton, getGraphQLApiMock, generateOrderID, mockMenu, clickMenu, getMockWindowOpen
+} from './mocks';
 
 describe('vault cases', () => {
 
@@ -30,6 +32,16 @@ describe('vault cases', () => {
                         return;
                     }
 
+                    // CCO Data on enable vault
+                    if (!data.variables.clientConfig.productFlow ||
+                        !data.variables.clientConfig.fundingSource ||
+                        !data.variables.clientConfig.integrationArtifact ||
+                        !data.variables.clientConfig.userExperienceFlow ||
+                        !data.variables.clientConfig.productFlow ||
+                        !data.variables.clientConfig.buttonSessionID) {
+                        return {};
+                    }
+
                     enableVaultCalled = true;
                     return {};
                 })
@@ -41,6 +53,7 @@ describe('vault cases', () => {
                 if (!enableVaultCalled) {
                     throw new Error(`Expected graphql call with enableVault mutation`);
                 }
+
             }));
 
             const fundingEligibility = {
@@ -56,6 +69,7 @@ describe('vault cases', () => {
             await clickButton(FUNDING.PAYPAL);
         });
     });
+    
 
     it('should set up a new forced-vaulted funding source, and work even if paypal is not vaultable', async () => {
         return await wrapPromise(async ({ expect, avoid }) => {
@@ -287,7 +301,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -309,6 +323,7 @@ describe('vault cases', () => {
             }));
 
             const vpmCall = getValidatePaymentMethodApiMock().expectCalls();
+            const confirmCall = getConfirmOrderApiMock().expectCalls();
 
             window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
                 if (data.orderID !== orderID) {
@@ -316,10 +331,11 @@ describe('vault cases', () => {
                 }
 
                 vpmCall.done();
+                confirmCall.done();
             }));
 
             const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
+                [FUNDING.PAYPAL]: {
                     eligible:           true,
                     vaultedInstruments: [
                         {
@@ -368,7 +384,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -390,6 +406,7 @@ describe('vault cases', () => {
             }));
 
             const vpmCall = getValidatePaymentMethodApiMock().expectCalls();
+            const confirmCall = getConfirmOrderApiMock().expectCalls();
 
             window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
                 if (data.orderID !== orderID) {
@@ -397,13 +414,14 @@ describe('vault cases', () => {
                 }
 
                 vpmCall.done();
+                confirmCall.done();
             }));
 
             const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
+                [FUNDING.PAYPAL]: {
                     eligible: true
                 },
-                [ FUNDING.CARD ]: {
+                [FUNDING.CARD]: {
                     eligible: true,
                     vendors:  {
                         visa: {
@@ -428,6 +446,7 @@ describe('vault cases', () => {
 
             await clickButton(FUNDING.CARD);
             gqlMock.done();
+            confirmCall.done();
         });
     });
 
@@ -459,7 +478,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -481,6 +500,7 @@ describe('vault cases', () => {
             }));
 
             const vpmCall = getValidatePaymentMethodApiMock().expectCalls();
+            const confirmCall = getConfirmOrderApiMock().expectCalls();
 
             window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
                 if (data.orderID !== orderID) {
@@ -488,13 +508,14 @@ describe('vault cases', () => {
                 }
 
                 vpmCall.done();
+                confirmCall.done();
             }));
 
             const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
+                [FUNDING.PAYPAL]: {
                     eligible: true
                 },
-                [ FUNDING.CARD ]: {
+                [FUNDING.CARD]: {
                     eligible:     true,
                     installments: true,
                     vendors:      {
@@ -521,6 +542,7 @@ describe('vault cases', () => {
             await clickButton(FUNDING.CARD);
             gqlMock.done();
             vpmCall.done();
+            confirmCall.done();
         });
     });
 
@@ -552,7 +574,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -574,12 +596,14 @@ describe('vault cases', () => {
             }));
 
             const vpmCall = getValidatePaymentMethodApiMock().expectCalls();
+            const confirmCall = getConfirmOrderApiMock().expectCalls();
 
             window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
                 if (data.orderID !== orderID) {
                     throw new Error(`Expected orderID to be ${ orderID }, got ${ data.orderID }`);
                 }
 
+                confirmCall.done();
                 vpmCall.done();
             }));
 
@@ -633,7 +657,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -655,6 +679,7 @@ describe('vault cases', () => {
             }));
 
             const vpmCall = getValidatePaymentMethodApiMock().expectCalls();
+            const confirmCall = getConfirmOrderApiMock().expectCalls();
 
             window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
                 if (data.orderID !== orderID) {
@@ -662,6 +687,7 @@ describe('vault cases', () => {
                 }
 
                 vpmCall.done();
+                confirmCall.done();
             }));
 
             const fundingEligibility = {
@@ -700,7 +726,7 @@ describe('vault cases', () => {
         return await wrapPromise(async ({ expect }) => {
 
             window.xprops.clientAccessToken = 'abc-123';
-            
+
             const gqlMock = getGraphQLApiMock({
                 extraHandler: ({ data }) => {
                     if (data.query.includes('query GetCheckoutDetails')) {
@@ -724,7 +750,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -807,7 +833,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -904,7 +930,7 @@ describe('vault cases', () => {
 
             getMockWindowOpen({ expectImmediateUrl: false });
             const win = window.open();
-            
+
             const Checkout = window.paypal.Checkout;
             window.paypal.Checkout = expect('Checkout', (props) => {
                 if (!props.window) {
@@ -1227,7 +1253,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -1248,7 +1274,7 @@ describe('vault cases', () => {
             }));
 
             const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
+                [FUNDING.PAYPAL]: {
                     eligible:           true,
                     vaultedInstruments: [
                         {
@@ -1308,7 +1334,7 @@ describe('vault cases', () => {
                     if (data.variables.orderID && data.variables.orderID !== orderID) {
                         throw new Error(`Expected orderID passed to GQL to be ${ orderID }, got ${ data.variables.orderID }`);
                     }
-                    
+
                     if (data.query.includes('mutation UpdateClientConfig')) {
                         if (vpmCallInProgress) {
                             throw new Error(`Expected vpm call to not be in progress during client config call`);
@@ -1342,7 +1368,7 @@ describe('vault cases', () => {
                                     payees: [
                                         {
                                             merchantId: 'XYZ12345',
-                                            email:       {
+                                            email:      {
                                                 stringValue: 'xyz-us-b1@paypal.com'
                                             }
                                         }
@@ -1356,7 +1382,7 @@ describe('vault cases', () => {
 
             getMockWindowOpen({ expectImmediateUrl: false });
             const win = window.open();
-            
+
             const Checkout = window.paypal.Checkout;
             window.paypal.Checkout = expect('Checkout', (props) => {
                 if (!props.window) {
@@ -1421,7 +1447,7 @@ describe('vault cases', () => {
             }));
 
             const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
+                [FUNDING.PAYPAL]: {
                     eligible:           true,
                     vaultedInstruments: [
                         {
@@ -1438,6 +1464,44 @@ describe('vault cases', () => {
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility, content });
 
             await clickMenu(FUNDING.PAYPAL);
+        });
+    });
+
+    it('Enable Vault graphql call should fail', async () => {
+        return await wrapPromise(async ({ expect }) => {
+
+            window.xprops.vault = true;
+            window.xprops.clientAccessToken = 'abc-123';
+
+            const orderID = generateOrderID();
+
+            window.xprops.createOrder = mockAsyncProp(expect('createOrder', async () => {
+                return orderID;
+            }));
+
+            const gqlMock = getGraphQLApiMock({
+                extraHandler: ({ data }) => {
+                    if (data.query.includes('mutation EnableVault')) {
+                        throw new Error(`Not today`);
+                    }
+                }
+            }).expectCalls();
+ 
+            window.xprops.onApprove = mockAsyncProp(expect('onApprove', async () => {
+                gqlMock.done();
+            }));
+
+            const fundingEligibility = {
+                [FUNDING.PAYPAL]: {
+                    eligible:  true,
+                    vaultable: true
+                }
+            };
+
+            createButtonHTML({ fundingEligibility });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
+
+            await clickButton(FUNDING.PAYPAL).catch(expect('clickCatch'));
         });
     });
 });
