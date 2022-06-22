@@ -14,7 +14,6 @@ import {
 } from './card-utils';
 
 jest.mock('../../lib/dom');
-// jest.mock('../../lib/logger')
 
 function triggerFocusListener() {
     const cb = window.addEventListener.mock.calls.find((args) => {
