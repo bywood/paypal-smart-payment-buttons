@@ -370,7 +370,7 @@ describe('card utils', () => {
         });
     });
 
-    describe.only('filterStyle', () => {
+    describe('filterStyle', () => {
         it('normalizes css properties from camelCase to kebab-case', () => {
             const styles = {
                 'input': {

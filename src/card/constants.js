@@ -139,22 +139,6 @@ export const DEFAULT_CARD_TYPE : CardType = {
     }
 };
 
-/*
-
-For most browsers, the default font-size for the root element is 16px.
-Given that 1rem is equal to 16px:
-
-  24px = 1.5rem
-  20px = 1.25rem
-  18px = 1.125rem
-  14px = 0.875rem
-  12px = 0.75rem
-   6px = 0.375rem
-   4px = 0.25rem
-   2px = 0.125rem
-   1px = 0.0625rem
-
-*/
 export const DEFAULT_STYLE = {
 
     'html, body': {
