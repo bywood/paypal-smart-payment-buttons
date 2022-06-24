@@ -21,6 +21,7 @@ import type {
     CardExpiryChangeEvent,
     CardCvvChangeEvent,
     CardNameChangeEvent,
+    CardPostalCodeChangeEvent,
     FieldValidity,
     CardNavigation,
     CardType
@@ -397,14 +398,6 @@ type CardNameFieldProps = {|
     gqlErrors : []
 |};
 
-export function CardPostalCodeField() : mixed {
-    return (
-        <Fragment>
-            <CardPostalCode/>
-        </Fragment>
-    )
-}
-
 export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ name, setName ] : [ string, (string) => string ] = useState('');
@@ -451,4 +444,63 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
             />
         </Fragment>
     );
+}
+
+type CardPostalFieldProps = {|
+    cspNonce : string,
+    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    styleObject : CardStyle,
+    placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string |},
+    autoFocusRef : (mixed) => void,
+    autocomplete? : string,
+    gqlErrors : []
+|};
+
+export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardPostalFieldProps) : mixed {
+    const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
+    const [ postalCode, setPostalCode ] : [ string, (string) => string ] = useState('');
+    const [ postalCodeValidity, setPostalCodeValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
+    const postalRef = useRef();
+
+    const { isValid, isPotentiallyValid } = postalCodeValidity;
+
+    useEffect(() => {
+        autoFocusRef(postalRef);
+    }, []);
+
+    useEffect(() => {
+        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+    }, [ styleObject ]);
+
+    useEffect(() => {
+        const hasGQLErrors = gqlErrors.length > 0;
+        if (hasGQLErrors) {
+            setPostalCodeValidity({ isPotentiallyValid: false, isValid: false });
+        }
+    }, [ gqlErrors ]);
+
+    useEffect(() => {
+        const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
+
+        onChange({ value: postalCode, valid: postalCodeValidity.isValid, errors });
+    }, [ postalCode, isValid, isPotentiallyValid  ]);
+
+    return (
+        <Fragment>
+            <style nonce={ cspNonce }>
+                { cssText }
+            </style>
+            <CardPostalCode
+                ref={ postalRef }
+                type='text'
+                autocomplete={ autocomplete }
+                placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.postal }
+                // eslint-disable-next-line react/forbid-component-props
+                className={ `expiry ${ postalCodeValidity.isPotentiallyValid || postalCodeValidity.isValid ? 'valid' : 'invalid' }` }
+                maxLength='7'
+                onChange={ ({ cardPostalCode } : CardPostalCodeChangeEvent) => setPostalCode(cardPostalCode) }
+                onValidityChange={ (validity : FieldValidity) => setPostalCodeValidity(validity) }
+            />
+        </Fragment>
+    )
 }

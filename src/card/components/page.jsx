@@ -11,7 +11,7 @@ import { submitCardFields } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions } from '../types';
 
-import { CardField, CardNumberField, CardCVVField, CardExpiryField, CardNameField } from './fields';
+import { CardField, CardNumberField, CardCVVField, CardExpiryField, CardNameField, CardPostalCodeField } from './fields';
 
 type PageProps = {|
     cspNonce : string,
@@ -172,6 +172,19 @@ function Page({ cspNonce, props } : PageProps) : mixed {
             {
                 (type === CARD_FIELD_TYPE.NAME)
                     ? <CardNameField
+                            ref={ mainRef }
+                            gqlErrors={ fieldGQLErrors.nameField }
+                            cspNonce={ cspNonce }
+                            onChange={ onFieldChange }
+                            styleObject={ style }
+                            placeholder={ placeholder }
+                            autoFocusRef={ (ref) => setRef(ref.current.base) }
+                    /> : null
+            }
+
+            {
+                (type === CARD_FIELD_TYPE.POSTAL)
+                    ? <CardPostalCodeField
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.nameField }
                             cspNonce={ cspNonce }

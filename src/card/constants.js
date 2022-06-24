@@ -11,7 +11,8 @@ export const CARD_FIELD_TYPE = {
     NUMBER: 'number',
     CVV:    'cvv',
     EXPIRY: 'expiry',
-    NAME:   'name'
+    NAME:   'name',
+    POSTAL: 'postal'
 };
 
 export const GQL_ERRORS = {
@@ -35,7 +36,8 @@ export const CARD_ERRORS = {
     INVALID_NUMBER:       ('INVALID_NUMBER' : 'INVALID_NUMBER'),
     INVALID_EXPIRY:       ('INVALID_EXPIRY' : 'INVALID_EXPIRY'),
     INVALID_CVV:          ('INVALID_CVV' : 'INVALID_CVV'),
-    INVALID_NAME:         ('INVALID_NAME' : 'INVALID_NAME')
+    INVALID_NAME:         ('INVALID_NAME' : 'INVALID_NAME'),
+    INVALID_POSTAL:       ('INVALID_POSTAL' : 'INVALID_POSTAL')
 };
 
 export const CARD_FIELD_TYPE_TO_FRAME_NAME : {| [$Values<typeof CARD_FIELD_TYPE>] : $Values<typeof FRAME_NAME> |} = {
@@ -43,7 +45,8 @@ export const CARD_FIELD_TYPE_TO_FRAME_NAME : {| [$Values<typeof CARD_FIELD_TYPE>
     [ CARD_FIELD_TYPE.NUMBER ]: FRAME_NAME.CARD_NUMBER_FIELD,
     [ CARD_FIELD_TYPE.CVV ]:    FRAME_NAME.CARD_CVV_FIELD,
     [ CARD_FIELD_TYPE.EXPIRY ]: FRAME_NAME.CARD_EXPIRY_FIELD,
-    [ CARD_FIELD_TYPE.NAME ]:   FRAME_NAME.CARD_NAME_FIELD
+    [ CARD_FIELD_TYPE.NAME ]:   FRAME_NAME.CARD_NAME_FIELD,
+    [ CARD_FIELD_TYPE.POSTAL ]: FRAME_NAME.CARD_POSTAL_FIELD
 };
 
 export const FIELD_STYLE : FieldStyle = {
@@ -240,7 +243,8 @@ export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
     number: 'Card number',
     expiry: 'MM / YY',
     cvv:    'CVV',
-    name:   'Cardholder name'
+    name:   'Cardholder name',
+    postal: 'Postal Code'
 };
 
 export const VALID_EXTRA_FIELDS = [

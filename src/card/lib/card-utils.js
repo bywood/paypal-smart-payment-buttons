@@ -325,7 +325,17 @@ export function checkExpiry(value : string) : {| isValid : boolean, isPotentiall
     };
 }
 
-export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameValid, gqlErrorsObject = {} } : {| isNumberValid? : boolean, isCvvValid? : boolean, isExpiryValid? : boolean, isNameValid? : boolean, gqlErrorsObject? : {| field : string, errors : [] |} |}) : [$Values<typeof CARD_ERRORS>] | [] {
+// eslint-disable-next-line no-unused-vars
+export function checkPostalCode(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+    // eslint-disable-next-line no-warning-comments
+    // TODO: actually check the postal code value
+    return {
+        isValid: true,
+        isPotentiallyValid: true
+    };
+}
+
+export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameValid, isPostalCodeValid, gqlErrorsObject = {} } : {| isNumberValid? : boolean, isCvvValid? : boolean, isExpiryValid? : boolean, isNameValid? : boolean, isPostalCodeValid? : boolean, gqlErrorsObject? : {| field : string, errors : [] |} |}) : [$Values<typeof CARD_ERRORS>] | [] {
     const errors = [];
 
     const { field, errors: gqlErrors } = gqlErrorsObject;
@@ -364,6 +374,15 @@ export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameVali
             errors.push(...gqlErrors);
         } else {
             errors.push(CARD_ERRORS.INVALID_NAME);
+        }
+    }
+
+    if (isPostalCodeValid === false) {
+
+        if (field === CARD_FIELD_TYPE.POSTAL && gqlErrors.length) {
+            errors.push(...gqlErrors);
+        } else {
+            errors.push(CARD_ERRORS.INVALID_POSTAL);
         }
     }
 
