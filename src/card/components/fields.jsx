@@ -37,6 +37,7 @@ import { CardNumber } from './CardNumber';
 import { CardExpiry } from './CardExpiry';
 import { CardCVV } from './CardCVV';
 import { CardName } from './CardName';
+import { CardPostalCode } from './CardPostalCode';
 
 
 type CardFieldProps = {|
@@ -395,6 +396,14 @@ type CardNameFieldProps = {|
     autoFocusRef : (mixed) => void,
     gqlErrors : []
 |};
+
+export function CardPostalCodeField() : mixed {
+    return (
+        <Fragment>
+            <CardPostalCode/>
+        </Fragment>
+    )
+}
 
 export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
