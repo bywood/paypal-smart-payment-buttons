@@ -325,12 +325,11 @@ export function checkExpiry(value : string) : {| isValid : boolean, isPotentiall
     };
 }
 
-// eslint-disable-next-line no-unused-vars
-export function checkPostalCode(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    // eslint-disable-next-line no-warning-comments
-    // TODO: actually check the postal code value
+export function checkPostalCode(value : string, minLength: number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+    const { postalCode } = cardValidator;
+    const { isValid } = postalCode(value, {minLength})
     return {
-        isValid: true,
+        isValid,
         isPotentiallyValid: true
     };
 }

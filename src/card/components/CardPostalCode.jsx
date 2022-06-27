@@ -21,7 +21,8 @@ type CardPostalCodeProps = {|
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
     allowNavigation : boolean,
-    onValidityChange? : (numberValidity : FieldValidity) => void
+    onValidityChange? : (numberValidity : FieldValidity) => void,
+    minLength?: number
 |};
 
 export function CardPostalCode(
@@ -39,14 +40,17 @@ export function CardPostalCode(
         onChange,
         onFocus,
         onBlur,
-        onValidityChange
+        onValidityChange,
+        minLength
     } : CardPostalCodeProps
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     useEffect(() => {
-        const validity = checkPostalCode(inputValue);
+        console.log('Minimum Length entered by merchant')
+        console.log(minLength)
+        const validity = checkPostalCode(inputValue, minLength);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 
@@ -111,6 +115,7 @@ export function CardPostalCode(
             onInput={ setPostalCodeValue }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
+            minLength={ minLength }
         />
     )
 }

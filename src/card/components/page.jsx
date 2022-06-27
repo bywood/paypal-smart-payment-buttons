@@ -19,7 +19,7 @@ type PageProps = {|
 |};
 
 function Page({ cspNonce, props } : PageProps) : mixed {
-    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport } = props;
+    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, minLength, export: xport } = props;
 
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
@@ -191,6 +191,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
                             onChange={ onFieldChange }
                             styleObject={ style }
                             placeholder={ placeholder }
+                            minLength={ minLength }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
                     /> : null
             }

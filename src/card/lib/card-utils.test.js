@@ -10,7 +10,8 @@ import {
     parseGQLErrors,
     filterStyle,
     styleToString,
-    filterExtraFields
+    filterExtraFields,
+    checkPostalCode
 } from './card-utils';
 
 jest.mock('../../lib/dom');
@@ -438,6 +439,26 @@ describe('card utils', () => {
             expect(styleString).toBe(targetString)
         });
     });
+
+    describe.only('checkPostalCode', () => {
+        it('returns true for isValid for a 5-digit postal code', () => {
+            const postalCode = '12345';
+
+            expect(checkPostalCode(postalCode).isValid).toBe(true)
+        });
+
+        it('returns false for isValid for a postal code < 5 digits', () => {
+            const postalCode = '1234';
+
+            expect(checkPostalCode(postalCode).isValid).toBe(false)
+        });
+
+        it('retusn false for isValid for a postal code that is not a string', () => {
+            const postalCode = 12345
+
+            expect(checkPostalCode(postalCode).isValid).toBe(false)
+        })
+    })
 
     describe('filterExtraFields', () => {
 
