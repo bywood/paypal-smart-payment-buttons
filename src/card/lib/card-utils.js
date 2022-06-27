@@ -325,7 +325,7 @@ export function checkExpiry(value : string) : {| isValid : boolean, isPotentiall
     };
 }
 
-export function checkPostalCode(value : string, minLength: number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+export function checkPostalCode(value : string, minLength? : number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     const { postalCode } = cardValidator;
     const { isValid } = postalCode(value, {minLength})
     return {
