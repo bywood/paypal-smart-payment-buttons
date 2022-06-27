@@ -451,12 +451,13 @@ type CardPostalFieldProps = {|
     onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string |},
+    minLength : number,
     autoFocusRef : (mixed) => void,
     autocomplete? : string,
     gqlErrors : []
 |};
 
-export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardPostalFieldProps) : mixed {
+export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, placeholder = {}, minLength, autoFocusRef, autocomplete, gqlErrors = [] } : CardPostalFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ postalCode, setPostalCode ] : [ string, (string) => string ] = useState('');
     const [ postalCodeValidity, setPostalCodeValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -497,6 +498,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
                 placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.postal }
                 // eslint-disable-next-line react/forbid-component-props
                 className={ `expiry ${ postalCodeValidity.isPotentiallyValid || postalCodeValidity.isValid ? 'valid' : 'invalid' }` }
+                minLength={ minLength }
                 maxLength='7'
                 onChange={ ({ cardPostalCode } : CardPostalCodeChangeEvent) => setPostalCode(cardPostalCode) }
                 onValidityChange={ (validity : FieldValidity) => setPostalCodeValidity(validity) }
