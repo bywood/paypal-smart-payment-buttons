@@ -9,6 +9,7 @@ import { getProps, type XProps, type Props } from '../props/props';
 
 import type { CardStyle, CardPlaceholder } from './types';
 import { CARD_FIELD_TYPE, CARD_ERRORS } from './constants';
+import { number } from 'card-validator';
 
 // export something to force webpack to see this as an ES module
 export const TYPES = true;
@@ -35,6 +36,7 @@ export type CardXProps = {|
     style : CardStyle,
     placeholder : CardPlaceholder,
     minLength? : number,
+    maxLength? : number,
     cardSessionID : string,
     fundingEligibility : FundingEligibilityType,
     onChange : OnChange,
@@ -53,6 +55,7 @@ export type CardProps = {|
     style : CardStyle,
     placeholder : CardPlaceholder,
     minLength? : number,
+    maxLength? : number,
     cardSessionID : string,
     inlinexo : boolean,
     fundingEligibility : FundingEligibilityType,
@@ -75,6 +78,7 @@ export function getCardProps({ facilitatorAccessToken } : GetCardPropsOptions) :
         style,
         placeholder,
         minLength,
+        maxLength,
         fundingEligibility,
         onChange,
         branded = fundingEligibility?.card?.branded ?? true,
@@ -92,6 +96,7 @@ export function getCardProps({ facilitatorAccessToken } : GetCardPropsOptions) :
         style,
         placeholder,
         minLength,
+        maxLength,
         cardSessionID,
         fundingEligibility,
         onChange,

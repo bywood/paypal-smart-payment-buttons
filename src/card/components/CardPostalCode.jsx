@@ -15,7 +15,7 @@ type CardPostalCodeProps = {|
     className : string,
     placeholder : string,
     style : Object,
-    maxLength : string,
+    maxLength : number,
     navigation : CardNavigation,
     onChange : (expiryEvent : CardPostalCodeChangeEvent) => void,
     onFocus? : (event : InputEvent) => void,
