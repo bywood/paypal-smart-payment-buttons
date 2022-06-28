@@ -39,8 +39,6 @@ import { CardExpiry } from './CardExpiry';
 import { CardCVV } from './CardCVV';
 import { CardName } from './CardName';
 import { CardPostalCode } from './CardPostalCode';
-import { number } from 'card-validator';
-
 
 type CardFieldProps = {|
     cspNonce : string,

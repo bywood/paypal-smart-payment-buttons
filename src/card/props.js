@@ -9,7 +9,6 @@ import { getProps, type XProps, type Props } from '../props/props';
 
 import type { CardStyle, CardPlaceholder } from './types';
 import { CARD_FIELD_TYPE, CARD_ERRORS } from './constants';
-import { number } from 'card-validator';
 
 // export something to force webpack to see this as an ES module
 export const TYPES = true;

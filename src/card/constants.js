@@ -164,15 +164,24 @@ export const DEFAULT_STYLE = {
         'padding':       '1.25rem 0.75rem',
         'width':         '100%'
     },
-    'input:focus': {
-        'outline': 'none'
-    },
     'input::placeholder': {
         'color':   '#687173',
         'opacity': '1'
     },
+
+    'input:focus': {
+        'border-color': '#000000',
+        'box-shadow':   '0 0 0 0.125rem #000000 inset, 0 0 0 0.375rem rgb(0 0 0 / 16%)',
+        'outline':      'none'
+    },
+    'input:focus.invalid': {
+        'border-color': '#d9360b',
+        'box-shadow':   '0 0 0 0.125rem #d9360b inset, 0 0 0 0.375rem rgb(217 54 11 / 16%)'
+    },
     'input.invalid': {
-        'color': '#d9360b'
+        'border-color': '#d9360b',
+        'box-shadow':   '0 0 0 0.0625rem #d9360b inset',
+        'color':        '#d9360b'
     },
 
     '.card-field': {
@@ -202,6 +211,11 @@ export const DEFAULT_STYLE = {
         'border-radius': 'unset',
         'box-sizing':    'content-box',
         'margin':        '0'
+    },
+    '.card-field > input, .card-field > input:focus': {
+        'border':     'none',
+        'box-shadow': 'none',
+        'outline':    'none'
     },
     '.card-field > input.number': {
         'flex':          '1',
