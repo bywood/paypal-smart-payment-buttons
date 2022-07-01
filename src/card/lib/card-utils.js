@@ -475,16 +475,14 @@ export function autoFocusOnFirstInput(input? : HTMLInputElement) {
         return;
     }
 
+    let timeoutID = null;
+
     window.addEventListener('focus', () => {
         // the set timeout is required here, because in some browsers (Firefox, for instance)
         // when tabbing backward into the iframe, it will have the html element focussed
         // initially, but then passes focus to the input
-        setTimeout(() => {
-            const activeEl = getActiveElement();
-
-            if (activeEl !== document.body && activeEl !== document.documentElement) {
-                return;
-            }
+        timeoutID = setTimeout(() => {
+            timeoutID = null;
 
             applyFocusWorkaroundForSafari(input);
 
@@ -494,6 +492,14 @@ export function autoFocusOnFirstInput(input? : HTMLInputElement) {
             input.focus();
         }, 1);
     });
+
+    window.addEventListener('focusin', (event) => {
+        if (timeoutID && event.target instanceof HTMLInputElement) {
+            clearTimeout(timeoutID);
+            timeoutID = null;
+        }
+    });
+
 }
 
 // Function that returns the field value in the correct format
