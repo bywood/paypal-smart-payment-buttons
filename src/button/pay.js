@@ -83,13 +83,6 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
 
         const { name, init, inline, spinner, updateFlowClientConfig } = getPaymentFlow({ props, payment, config, components, serviceData });
         const { click, start, close } = init({ props, config, serviceData, components, payment, restart });
-        
-        let derivedExperience = '';
-        if (isCrossSiteTrackingEnabled('enforce_policy') && experience === EXPERIENCE.INLINE) {
-            derivedExperience = 'inline_tracking_enabled';
-        } else if (!isCrossSiteTrackingEnabled('enforce_policy') && experience === EXPERIENCE.INLINE) {
-            derivedExperience = 'inline_tracking_disabled';
-        }
 
         getLogger()
             .addPayloadBuilder(() => {
@@ -114,9 +107,14 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                 [FPTI_KEY.CHOSEN_FI_TYPE]:    instrumentType,
                 [FPTI_KEY.PAYMENT_FLOW]:      name,
                 [FPTI_KEY.IS_VAULT]:          instrumentType ? '1' : '0',
-                [FPTI_CUSTOM_KEY.INFO_MSG]:   enableNativeCheckout ? 'tester' : '',
-                [FPTI_CUSTOM_KEY.EXPERIENCE]: derivedExperience
-            }).flush();
+                [FPTI_CUSTOM_KEY.INFO_MSG]:   enableNativeCheckout ? 'tester' : ''
+            });
+
+            getLogger()
+                .info(`cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`)
+                .track({
+                    [FPTI_KEY.TRANSITION]: `cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`
+                }).flush();
 
         const loggingPromise =  ZalgoPromise.try(() => {
             return window.xprops.sessionState.get(`__confirm_${ fundingSource }_payload__`).then(confirmPayload => {
@@ -147,12 +145,13 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
             }
 
             const updateClientConfigPromise = createOrder().then(orderID => {
+                const experienceFlow = experience === EXPERIENCE.INLINE ? 'ACCELERATED' : userExperienceFlow;
                 if (updateFlowClientConfig) {
-                    return updateFlowClientConfig({ orderID, payment, userExperienceFlow, buttonSessionID });
+                    return updateFlowClientConfig({ orderID, payment, userExperienceFlow: experienceFlow, buttonSessionID });
                 }
 
                 // Do not block by default
-                updateButtonClientConfig({ orderID, fundingSource, inline, userExperienceFlow }).catch(err => {
+                updateButtonClientConfig({ orderID, fundingSource, inline, userExperienceFlow: experienceFlow }).catch(err => {
                     getLogger().error('update_client_config_error', { err: stringifyError(err) });
                 });
             }).catch(noop);

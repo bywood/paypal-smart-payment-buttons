@@ -241,7 +241,11 @@ function initCheckout({ props, components, serviceData, payment, config, restart
             },
 
             onComplete: () => {
-                return onComplete()
+                getLogger().info(`spb_oncomplete_access_token_${ buyerAccessToken ? 'present' : 'not_present' }`).flush();
+
+                setBuyerAccessToken(buyerAccessToken);
+
+                return onComplete({ buyerAccessToken })
                     // eslint-disable-next-line no-use-before-define
                     .finally(() => close().then(noop))
                     .catch(noop);
