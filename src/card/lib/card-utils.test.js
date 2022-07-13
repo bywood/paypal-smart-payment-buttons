@@ -1,6 +1,5 @@
 /* @flow */
 
-import { getActiveElement } from '../../lib/dom';
 import { getLogger } from '../../lib';
 
 import {
@@ -16,14 +15,25 @@ import {
 
 jest.mock('../../lib/dom');
 
-function triggerFocusListener() {
-    const cb = window.addEventListener.mock.calls.find((args) => {
+function triggerFocusListener(input) {
+
+    const focusListener = window.addEventListener.mock.calls.find((args) => {
         return args[0] === 'focus';
     })[1];
 
-    cb();
+    focusListener();
+
+    if (input) {
+
+        const focusinListener = window.addEventListener.mock.calls.find((args) => {
+            return args[0] === 'focusin';
+        })[1];
+
+        focusinListener({ target: input });
+    }
 
     jest.runAllTimers();
+
 }
 
 describe('card utils', () => {
@@ -34,8 +44,6 @@ describe('card utils', () => {
             jest.useFakeTimers();
             jest.spyOn(window, 'addEventListener').mockImplementation(jest.fn());
             input = document.createElement('input');
-
-            (getActiveElement : JestMockFn<[], null | HTMLElement>).mockReturnValue(null);
         });
 
         it('noops when no input is passed', () => {
@@ -44,38 +52,26 @@ describe('card utils', () => {
             expect(window.addEventListener).not.toBeCalled();
         });
 
-        it('adds a focus listener when input is available', () => {
+        it('adds a focus and focusin listener when input is available', () => {
             autoFocusOnFirstInput(input);
 
-            expect(window.addEventListener).toBeCalledTimes(1);
+            expect(window.addEventListener).toBeCalledTimes(2);
+            expect(window.addEventListener).toBeCalledWith('focus', expect.any(Function));
+            expect(window.addEventListener).toBeCalledWith('focusin', expect.any(Function));
         });
 
-        it('noops when the active element is not the body or the document element', () => {
+        it('noops when the an HTMLInputElement gets focus', () => {
             const spy = jest.spyOn(input, 'focus');
 
             autoFocusOnFirstInput(input);
 
-            triggerFocusListener();
+            triggerFocusListener(input);
 
             expect(spy).not.toBeCalled();
         });
 
-        it('focuses on input when the document body is the active element', () => {
+        it('focuses on input when the window gets focus', () => {
             const spy = jest.spyOn(input, 'focus');
-
-            (getActiveElement : JestMockFn<[], null | HTMLElement>).mockReturnValue(document.body);
-
-            autoFocusOnFirstInput(input);
-
-            triggerFocusListener();
-
-            expect(spy).toBeCalledTimes(1);
-        });
-
-        it('focuses on input when the document element is the active element', () => {
-            const spy = jest.spyOn(input, 'focus');
-
-            (getActiveElement : JestMockFn<[], null | HTMLElement>).mockReturnValue(document.documentElement);
 
             autoFocusOnFirstInput(input);
 
@@ -85,8 +81,6 @@ describe('card utils', () => {
         });
 
         it('applies a focus patch for Safari using setSelectionRange', () => {
-            (getActiveElement : JestMockFn<[], null | HTMLElement>).mockReturnValue(document.body);
-
             input.value = 'foo';
 
             input.setSelectionRange(1, 2);
@@ -102,8 +96,6 @@ describe('card utils', () => {
         });
 
         it('adjusts and resets the inputs value when it is empty to accomodate Safari quirk', () => {
-            (getActiveElement : JestMockFn<[], null | HTMLElement>).mockReturnValue(document.body);
-
             input.value = '';
 
             const spy = jest.spyOn(input, 'value', 'set');
@@ -440,7 +432,7 @@ describe('card utils', () => {
         });
     });
 
-    describe.only('checkPostalCode', () => {
+    describe('checkPostalCode', () => {
         it('returns true for isValid for a 5-digit postal code', () => {
             const postalCode = '12345';
 

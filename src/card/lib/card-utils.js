@@ -7,7 +7,6 @@ import cardValidator from 'card-validator';
 
 import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
 import { CARD_ERRORS, FIELD_STYLE, FILTER_CSS_SELECTORS, FILTER_CSS_VALUES, VALIDATOR_TO_TYPE_MAP, DEFAULT_CARD_TYPE, GQL_ERRORS, CARD_FIELD_TYPE, VALID_EXTRA_FIELDS } from '../constants';
-import { getActiveElement } from '../../lib/dom';
 import { getLogger } from '../../lib';
 
 // Add additional supported card types
