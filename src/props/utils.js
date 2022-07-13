@@ -1,6 +1,9 @@
 /* @flow */
 
-import { type Breakdown, type Query, type ShippingOption, ON_SHIPPING_CHANGE_PATHS } from './onShippingChange';
+import type { Breakdown } from '../types';
+
+import { type Query, type ShippingOption, ON_SHIPPING_CHANGE_PATHS } from './onShippingChange';
+
 
 export const calculateTotalFromShippingBreakdownAmounts = ({ breakdown, updatedAmounts } : {| breakdown : Breakdown, updatedAmounts : {| [string] : ?string |} |}) : string => {
     let newAmount = 0;
@@ -85,3 +88,11 @@ export const updateShippingOptions = ({ option, options } : {| option: ShippingO
 
     return updatedOptions;
 };
+
+export const updateOperationForShippingOptions = ({ queries } : {| queries : {| [$Values<typeof ON_SHIPPING_CHANGE_PATHS>] : Query |} |}) : $ReadOnlyArray<Query> => {
+    if (queries[ON_SHIPPING_CHANGE_PATHS.OPTIONS]) {
+        queries[ON_SHIPPING_CHANGE_PATHS.OPTIONS].op = 'replace';
+    }
+
+    return convertQueriesToArray({ queries });
+}

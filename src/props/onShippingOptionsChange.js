@@ -3,19 +3,19 @@
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FPTI_KEY } from '@paypal/sdk-constants/src';
 
-import { patchOrder, type OrderResponse } from '../api';
+import { patchOrder, type OrderResponse, getShippingOrderInfo } from '../api';
 import { FPTI_TRANSITION, FPTI_CONTEXT_TYPE, LSAT_UPGRADE_EXCLUDED_MERCHANTS, FPTI_CUSTOM_KEY } from '../constants';
 import { getLogger } from '../lib';
+import type { OrderAmount } from '../types';
 
 import type { CreateOrder } from './createOrder';
 import {
-    type ShippingAmount,
     type ShippingOption,
     type ON_SHIPPING_CHANGE_EVENT,
     ON_SHIPPING_CHANGE_PATHS,
     SHIPPING_OPTIONS_ERROR_MESSAGES
 } from './onShippingChange';
-import { buildBreakdown, calculateTotalFromShippingBreakdownAmounts, convertQueriesToArray, updateShippingOptions } from './utils';
+import { buildBreakdown, calculateTotalFromShippingBreakdownAmounts, convertQueriesToArray, updateOperationForShippingOptions, updateShippingOptions } from './utils';
        
 export type XOnShippingOptionsChangeDataType = {|
     orderID? : string,
@@ -27,7 +27,7 @@ export type XOnShippingOptionsChangeDataType = {|
 
 export type XOnShippingOptionsChangeActionsType = {|
     patch : () => ZalgoPromise<OrderResponse>,
-    query : () => string,
+    query : () => ZalgoPromise<string>,
     reject : (string) => ZalgoPromise<void>,
     updateShippingDiscount : ({| discount : string |}) => XOnShippingOptionsChangeActionsType,
     updateShippingOption : ({| option : ShippingOption |}) => XOnShippingOptionsChangeActionsType
@@ -41,7 +41,7 @@ export type OnShippingOptionsChangeData = {|
     paymentToken? : string,
     selected_shipping_option? : ShippingOption,
     options? : $ReadOnlyArray<ShippingOption>,
-    amount? : ShippingAmount,
+    amount? : OrderAmount,
     event? : ON_SHIPPING_CHANGE_EVENT,
     buyerAccessToken? : ?string,
     forceRestAPI? : boolean
@@ -126,12 +126,38 @@ export function buildXOnShippingOptionsChangeActions({ data, actions: passedActi
         },
 
         patch: () => {
-            return patchOrder(orderID, convertQueriesToArray({ queries: patchQueries }), { facilitatorAccessToken, buyerAccessToken, partnerAttributionID, forceRestAPI }).catch(() => {
-                throw new Error('Order could not be patched');
+            return getShippingOrderInfo(orderID).then(sessionData => {
+                let queries = [];
+                const shippingMethods = sessionData?.checkoutSession?.cart?.shippingMethods || [];
+                const hasShippingMethods = Boolean(shippingMethods.length > 0);
+                
+                if (hasShippingMethods) {
+                    queries = updateOperationForShippingOptions({ queries: patchQueries });
+                } else {
+                    queries = convertQueriesToArray({ queries: patchQueries });
+                }
+
+                return patchOrder(orderID, queries, { facilitatorAccessToken, buyerAccessToken, partnerAttributionID, forceRestAPI }).catch(() => {
+                    throw new Error('Order could not be patched');
+                });
             });
         },
 
-        query: () => JSON.stringify(convertQueriesToArray({ queries: patchQueries }))
+        query: () => {
+            return getShippingOrderInfo(orderID).then(sessionData => {
+                let queries = [];
+                const shippingMethods = sessionData?.checkoutSession?.cart?.shippingMethods || [];
+                const hasShippingMethods = Boolean(shippingMethods.length > 0);
+                
+                if (hasShippingMethods) {
+                    queries = updateOperationForShippingOptions({ queries: patchQueries });
+                } else {
+                    queries = convertQueriesToArray({ queries: patchQueries });
+                }
+                
+                return JSON.stringify(queries);
+            });
+        }
 
     };
 

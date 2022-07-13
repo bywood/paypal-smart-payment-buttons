@@ -1,7 +1,6 @@
 /* @flow */
 
 import { noop, stringifyError, isCrossSiteTrackingEnabled } from '@krakenjs/belter/src';
-import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FPTI_KEY } from '@paypal/sdk-constants/src';
 
@@ -74,7 +73,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
     return ZalgoPromise.try(() => {
         const { merchantID, personalization, fundingEligibility, buyerCountry } = serviceData;
         const { clientID, onClick, createOrder, env, vault, partnerAttributionID, userExperienceFlow, buttonSessionID, intent, currency,
-            clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout, experience } = props;
+            clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout } = props;
         
         sendPersonalizationBeacons(personalization);
 
@@ -83,13 +82,6 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
 
         const { name, init, inline, spinner, updateFlowClientConfig } = getPaymentFlow({ props, payment, config, components, serviceData });
         const { click, start, close } = init({ props, config, serviceData, components, payment, restart });
-        
-        let derivedExperience = '';
-        if (isCrossSiteTrackingEnabled('enforce_policy') && experience === EXPERIENCE.INLINE) {
-            derivedExperience = 'inline_tracking_enabled';
-        } else if (!isCrossSiteTrackingEnabled('enforce_policy') && experience === EXPERIENCE.INLINE) {
-            derivedExperience = 'inline_tracking_disabled';
-        }
 
         getLogger()
             .addPayloadBuilder(() => {
@@ -114,9 +106,14 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                 [FPTI_KEY.CHOSEN_FI_TYPE]:    instrumentType,
                 [FPTI_KEY.PAYMENT_FLOW]:      name,
                 [FPTI_KEY.IS_VAULT]:          instrumentType ? '1' : '0',
-                [FPTI_CUSTOM_KEY.INFO_MSG]:   enableNativeCheckout ? 'tester' : '',
-                [FPTI_CUSTOM_KEY.EXPERIENCE]: derivedExperience
-            }).flush();
+                [FPTI_CUSTOM_KEY.INFO_MSG]:   enableNativeCheckout ? 'tester' : ''
+            });
+
+            getLogger()
+                .info(`cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`)
+                .track({
+                    [FPTI_KEY.TRANSITION]: `cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`
+                }).flush();
 
         const loggingPromise =  ZalgoPromise.try(() => {
             return window.xprops.sessionState.get(`__confirm_${ fundingSource }_payload__`).then(confirmPayload => {

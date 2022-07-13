@@ -223,7 +223,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
                 });
             },
 
-            onApprove: ({ approveOnClose = false, payerID, paymentID, billingToken, subscriptionID, authCode }) => {
+            onApprove: ({ approveOnClose = false, payerID, paymentID, billingToken, subscriptionID, authCode } = {}) => {
                 if (approveOnClose) {
                     doApproveOnClose = true;
                     return;
@@ -241,16 +241,20 @@ function initCheckout({ props, components, serviceData, payment, config, restart
             },
 
             onComplete: () => {
-                return onComplete()
+                getLogger().info(`spb_oncomplete_access_token_${ buyerAccessToken ? 'present' : 'not_present' }`).flush();
+
+                setBuyerAccessToken(buyerAccessToken);
+
+                return onComplete({ buyerAccessToken })
                     // eslint-disable-next-line no-use-before-define
                     .finally(() => close().then(noop))
                     .catch(noop);
             },
 
-            onAuth: ({ accessToken, doLSATCapture }) => {
+            onAuth: ({ accessToken }) => {
                 const access_token = accessToken ? accessToken : buyerAccessToken;
 
-                return onAuth({ accessToken: access_token, doLSATCapture }).then(token => {
+                return onAuth({ accessToken: access_token }).then(token => {
                     buyerAccessToken = token;
                 });
             },

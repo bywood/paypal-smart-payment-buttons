@@ -4,7 +4,8 @@ import {
     isJSON,
     validateShippingContact,
     getSupportedNetworksFromIssuers,
-    getApplePayShippingMethods
+    getApplePayShippingMethods,
+    buildRequiredShippingContactFieldsFromFlags
 } from '../utils';
 
 
@@ -12,6 +13,9 @@ describe('createApplePayRequest', () => {
     test('it should map checkout session with isShippingAddressRequired flag false to applePaySession payload and not collect requiredShippingContactFields', () => {
         const order = {
             checkoutSession: {
+                merchant: {
+                    name: 'PP Demo'
+                },
                 flags: {
                     isShippingAddressRequired:      false,
                     isDigitalGoodsIntegration:      false,
@@ -124,15 +128,18 @@ describe('createApplePayRequest', () => {
             supportedNetworks: [ 'masterCard', 'discover', 'visa', 'amex' ],
             total:             {
                 amount: '7.05',
-                label:  'Total',
+                label:  'PP Demo',
                 type:   'final'
             }
         });
     });
 
-    test('it should map checkout session to applePaySession payload', () => {
+    test('it should map checkout session to applePaySession payload when isChangeShippingAddressAllowed is false', () => {
         const order = {
             checkoutSession: {
+                merchant: {
+                    name: 'PP Demo'
+                },
                 flags: {
                     isShippingAddressRequired:      true,
                     isDigitalGoodsIntegration:      false,
@@ -223,7 +230,6 @@ describe('createApplePayRequest', () => {
             merchantCapabilities:          [ 'supports3DS', 'supportsCredit', 'supportsDebit' ],
             requiredBillingContactFields:  [ 'postalAddress', 'name', 'phone' ],
             requiredShippingContactFields: [
-                'postalAddress',
                 'name',
                 'phone',
                 'email'
@@ -246,7 +252,7 @@ describe('createApplePayRequest', () => {
             supportedNetworks: [ 'masterCard', 'discover', 'visa', 'amex' ],
             total:             {
                 amount: '7.05',
-                label:  'Total',
+                label:  'PP Demo',
                 type:   'final'
             }
         });
@@ -442,5 +448,42 @@ describe('getApplePayShippingMethods', () => {
     test('should handle undefined', () => {
         expect(getApplePayShippingMethods(undefined)).toEqual([]);
     });
+
+    describe('buildRequiredShippingContactFields from shipping preferences', () => {
+        test('default GET_FROM_FILE', () => {
+            expect(buildRequiredShippingContactFieldsFromFlags({
+                isShippingAddressRequired:      true,
+                isChangeShippingAddressAllowed: true
+            })).toEqual([
+                'name',
+                'phone',
+                'email',
+                'postalAddress'
+            ]);
+        });
+
+        test('SET_PROVIDED_ADDRESS', () => {
+            expect(buildRequiredShippingContactFieldsFromFlags({
+                isShippingAddressRequired:      true,
+                isChangeShippingAddressAllowed: false
+            })).toEqual([
+                'name',
+                'phone',
+                'email'
+            ]);
+        });
+
+        test('NO_SHIPPING', () => {
+            expect(buildRequiredShippingContactFieldsFromFlags({
+                isShippingAddressRequired:      false,
+                isChangeShippingAddressAllowed: false
+            })).toEqual([
+                'name',
+                'phone',
+                'email'
+            ]);
+        });
+    });
+
 });
 
