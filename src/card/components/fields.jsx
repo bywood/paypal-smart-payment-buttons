@@ -28,7 +28,8 @@ import type {
 } from '../types';
 import {
     CARD_ERRORS,
-    DEFAULT_STYLE,
+    DEFAULT_STYLE_MULTI_CARD,
+    DEFAULT_STYLE_SINGLE_CARD,
     DEFAULT_CARD_TYPE,
     DEFAULT_PLACEHOLDERS,
     CARD_FIELD_TYPE
@@ -88,7 +89,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     }, []);
 
     useEffect(() => {
-        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        setCSSText(getCSSText(DEFAULT_STYLE_SINGLE_CARD, styleObject));
     }, [ styleObject ]);
 
     useEffect(() => {
@@ -236,7 +237,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     }, []);
 
     useEffect(() => {
-        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        setCSSText(getCSSText(DEFAULT_STYLE_MULTI_CARD, styleObject));
     }, [ styleObject ]);
 
     useEffect(() => {
@@ -294,7 +295,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     }, []);
 
     useEffect(() => {
-        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        setCSSText(getCSSText(DEFAULT_STYLE_MULTI_CARD, styleObject));
     }, [ styleObject ]);
 
     useEffect(() => {
@@ -352,7 +353,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     }, []);
 
     useEffect(() => {
-        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        setCSSText(getCSSText(DEFAULT_STYLE_MULTI_CARD, styleObject));
     }, [ styleObject ]);
 
     useEffect(() => {
@@ -410,7 +411,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     }, []);
 
     useEffect(() => {
-        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        setCSSText(getCSSText(DEFAULT_STYLE_MULTI_CARD, styleObject));
     }, [ styleObject ]);
 
     useEffect(() => {
@@ -470,7 +471,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
     }, []);
 
     useEffect(() => {
-        setCSSText(getCSSText(DEFAULT_STYLE, styleObject));
+        setCSSText(getCSSText(DEFAULT_STYLE_MULTI_CARD, styleObject));
     }, [ styleObject ]);
 
     useEffect(() => {

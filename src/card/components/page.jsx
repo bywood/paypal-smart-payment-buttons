@@ -25,7 +25,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
-    const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [] });
+    const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
 
     let autocomplete;
     if (disableAutocomplete) {
@@ -61,6 +61,9 @@ function Page({ cspNonce, props } : PageProps) : mixed {
             case CARD_FIELD_TYPE.NAME:
                 errorObject.nameField = [ ...errors ];
                 break;
+            case CARD_FIELD_TYPE.POSTAL:
+                errorObject.postalCodeField = [ ...errors ];
+                break;
             default:
                 break;
             }
@@ -70,7 +73,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     };
 
     const resetGQLErrors = () => {
-        setFieldGQLErrors({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [] });
+        setFieldGQLErrors({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     };
 
     useEffect(() => {
@@ -186,7 +189,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
                 (type === CARD_FIELD_TYPE.POSTAL)
                     ? <CardPostalCodeField
                             ref={ mainRef }
-                            gqlErrors={ fieldGQLErrors.nameField }
+                            gqlErrors={ fieldGQLErrors.postalCodeField }
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
                             styleObject={ style }

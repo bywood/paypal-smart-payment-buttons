@@ -6,7 +6,18 @@ import luhn10 from 'card-validator/src/luhn-10';
 import cardValidator from 'card-validator';
 
 import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
-import { CARD_ERRORS, FIELD_STYLE, FILTER_CSS_SELECTORS, FILTER_CSS_VALUES, VALIDATOR_TO_TYPE_MAP, DEFAULT_CARD_TYPE, GQL_ERRORS, CARD_FIELD_TYPE, VALID_EXTRA_FIELDS } from '../constants';
+import {
+    CARD_ERRORS,
+    CARD_FIELD_TYPE,
+    DEFAULT_CARD_TYPE,
+    DEFAULT_STYLE,
+    FIELD_STYLE,
+    FILTER_CSS_SELECTORS,
+    FILTER_CSS_VALUES,
+    GQL_ERRORS,
+    VALID_EXTRA_FIELDS,
+    VALIDATOR_TO_TYPE_MAP
+} from '../constants';
 import { getLogger } from '../../lib';
 
 // Add additional supported card types
@@ -243,10 +254,11 @@ export function styleToString(style : Object = { }) : string {
 }
 
 // convert default and custom styles to CSS text
-export function getCSSText(defaultStyle : Object, customStyle : Object) : string {
+export function getCSSText(cardFieldStyle : Object, customStyle : Object) : string {
     const s = [];
     s.push('/* default style */');
-    s.push(styleToString(defaultStyle));
+    s.push(styleToString(DEFAULT_STYLE));
+    s.push(styleToString(cardFieldStyle));
     s.push('/* custom style */');
     s.push(styleToString(filterStyle(customStyle)));
     return s.join('\n');
