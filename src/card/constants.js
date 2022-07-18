@@ -134,8 +134,8 @@ export const DEFAULT_CARD_TYPE : CardType = {
     gaps:     [ 4, 8, 12 ],
     lengths:  [ 16 ],
     patterns: [],
-    type:     'Unknow',
-    niceType: 'Unknow',
+    type:     'UNKNOWN',
+    niceType: 'Unknown',
     code:     {
         name: 'CVV',
         size: 3
@@ -168,6 +168,17 @@ export const DEFAULT_STYLE = {
         'color':   '#687173',
         'opacity': '1'
     },
+    '.card-icons': {
+        'display': 'none'
+    },
+    '.card-icon': {
+        'width': '40px',
+        'height': '24px',
+        'pointer-events': 'none',
+        'position': 'absolute',
+        'top': '1.6875rem', // calc(0.375rem + 0.0625rem + 1.25rem)
+        'left': '1.1875rem' // calc(0.375rem + 0.0625rem + 0.75rem)
+    }
 
 };
 
@@ -186,7 +197,10 @@ export const DEFAULT_STYLE_MULTI_CARD = {
         'border-color': '#d9360b',
         'box-shadow':   '0 0 0 0.0625rem #d9360b inset',
         'color':        '#d9360b'
-    }
+    },
+    'input.number': {
+        'padding-left':  'calc(1.2rem + 40px)' // calc(0.75rem + 40px + 0.375rem)'
+    },
 
 };
 
@@ -233,6 +247,7 @@ export const DEFAULT_STYLE_SINGLE_CARD = {
     'input.number': {
         'flex':          '1',
         'min-width':     '4ch',
+        'padding-left':  'calc(1.2rem + 40px)', // calc(0.75rem + 40px + 0.375rem)'
         'padding-right': '0.375rem'
     },
     'input.expiry': {
