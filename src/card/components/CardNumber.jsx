@@ -161,11 +161,8 @@ export function CardNumber(
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
-        const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false };
+        const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false, displayCardIcon: inputState.inputValue.length > 0 };
         
-        if (inputState.inputValue.length === 0) {
-            updatedState.displayCardIcon = false
-        }
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
         } else {
