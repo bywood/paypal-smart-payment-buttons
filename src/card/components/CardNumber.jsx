@@ -1,8 +1,9 @@
 /* @flow */
 /** @jsx h */
 
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+
 
 import {
     maskCard,
@@ -26,21 +27,10 @@ import type {
 } from '../types';
 import {  DEFAULT_CARD_TYPE } from '../constants';
 
-import { Icon } from './Icons';
-
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
     const { inputValue, isValid, maskedInputValue, cursorStart, contentPasted } = inputState;
     return Boolean(allowNavigation && inputValue && isValid && (maskedInputValue.length === cursorStart || contentPasted));
-}
-
-function getIconId(type) : string {
-    const iconId = `icon-${type}`;
-    const element = document.getElementById(iconId);
-    if (element) {
-        return iconId;
-    }
-    return 'icon-UNKNOWN';
 }
 
 type CardNumberProps = {|
@@ -184,25 +174,22 @@ export function CardNumber(
     };
 
     return (
-        <Fragment>
-            <input
-                name={ name }
-                autocomplete={ autocomplete }
-                inputmode='numeric'
-                ref={ ref }
-                type={ type }
-                className={ className }
-                placeholder={ placeholder }
-                value={ maskedInputValue }
-                style={ style }
-                maxLength={ maxLength }
-                onInput={ setValueAndCursor }
-                onFocus={ onFocusEvent }
-                onBlur={ onBlurEvent }
-                onKeyDown={ onKeyDownEvent }
-                onPaste={ onPasteEvent }
-            />
-            <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" />
-        </Fragment>
+        <input
+            name={ name }
+            autocomplete={ autocomplete }
+            inputmode='numeric'
+            ref={ ref }
+            type={ type }
+            className={ className }
+            placeholder={ placeholder }
+            value={ maskedInputValue }
+            style={ style }
+            maxLength={ maxLength }
+            onInput={ setValueAndCursor }
+            onFocus={ onFocusEvent }
+            onBlur={ onBlurEvent }
+            onKeyDown={ onKeyDownEvent }
+            onPaste={ onPasteEvent }
+        />
     );
 }

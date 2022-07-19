@@ -108,15 +108,15 @@ export function removeSpaces(value : string) : string {
 
 // Detect the card type metadata for a card number
 export function detectCardType(number : string) : CardType {
-    if (number.length > 0) {
-        const cardType = creditCardType(number)?.[0];
-        if (cardType) {
-            return {
-                ...cardType,
-                type: VALIDATOR_TO_TYPE_MAP[cardType.type]
-            };
-        }
+    const cardType = creditCardType(number)?.[0];
+
+    if (cardType) {
+        return {
+            ...cardType,
+            type: VALIDATOR_TO_TYPE_MAP[cardType.type]
+        };
     }
+
     return DEFAULT_CARD_TYPE;
 }
 
