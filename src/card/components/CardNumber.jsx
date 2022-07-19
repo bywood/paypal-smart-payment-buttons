@@ -209,7 +209,6 @@ export function CardNumber(
                 onKeyDown={ onKeyDownEvent }
                 onPaste={ onPasteEvent }
             />
-            {console.log(inputState)}
             {(inputState.displayCardIcon) ? <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" /> : null}
             
         </Fragment>
