@@ -198,7 +198,7 @@ export function CardNumber(
                 inputmode='numeric'
                 ref={ ref }
                 type={ type }
-                className={ className }
+                className={ `${className} ${inputState.displayCardIcon ? 'display-icon' : ''}` }
                 placeholder={ placeholder }
                 value={ maskedInputValue }
                 style={ style }
