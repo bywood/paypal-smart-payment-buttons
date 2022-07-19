@@ -28,6 +28,11 @@ import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
 
+const defaultCardNumberInputState : InputState = {
+    ...defaultInputState,
+    displayCardIcon: false
+}
+
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
     const { inputValue, isValid, maskedInputValue, cursorStart, contentPasted } = inputState;
@@ -82,7 +87,6 @@ export function CardNumber(
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
-
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
 
     useEffect(() => {
@@ -147,17 +151,20 @@ export function CardNumber(
         }
 
         const maskedValue = maskCard(inputValue);
-        const updatedState = { ...inputState, maskedInputValue: maskedValue };
+        const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
         if (!isValid) {
             updatedState.isPotentiallyValid = true;
         }
-
+        
         setInputState((newState) => ({ ...newState, ...updatedState }));
     };
-
+    
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false };
-
+        
+        if (inputState.inputValue.length === 0) {
+            updatedState.displayCardIcon = false
+        }
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
         } else {
@@ -202,7 +209,9 @@ export function CardNumber(
                 onKeyDown={ onKeyDownEvent }
                 onPaste={ onPasteEvent }
             />
-            <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" />
+            {console.log(inputState)}
+            {(inputState.displayCardIcon) ? <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" /> : null}
+            
         </Fragment>
     );
 }

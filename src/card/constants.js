@@ -198,9 +198,9 @@ export const DEFAULT_STYLE_MULTI_CARD = {
         'box-shadow':   '0 0 0 0.0625rem #d9360b inset',
         'color':        '#d9360b'
     },
-    'input.number': {
-        'padding-left':  'calc(1.2rem + 40px)' // calc(0.75rem + 40px + 0.375rem)'
-    },
+    'input.number.display-icon': {
+        'padding-left':  'calc(1.2rem + 40px)' // calc(0.75rem + 40px + 0.375rem)' 
+    }
 
 };
 
@@ -247,7 +247,6 @@ export const DEFAULT_STYLE_SINGLE_CARD = {
     'input.number': {
         'flex':          '1',
         'min-width':     '4ch',
-        'padding-left':  'calc(1.2rem + 40px)', // calc(0.75rem + 40px + 0.375rem)'
         'padding-right': '0.375rem'
     },
     'input.expiry': {
@@ -260,6 +259,9 @@ export const DEFAULT_STYLE_SINGLE_CARD = {
         'padding-left': '0.375rem',
         'text-align':   'center',
         'width':        '4ch'
+    },
+    'input.number.display-icon': {
+        'padding-left':  'calc(1.2rem + 40px)', // calc(0.75rem + 40px + 0.375rem)'
     },
 
     '.card-field-validation-error': {
