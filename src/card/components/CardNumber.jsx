@@ -86,7 +86,8 @@ export function CardNumber(
     } : CardNumberProps
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
-    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
+    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultCardNumberInputState, ...state });
+
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
 
     useEffect(() => {
@@ -155,10 +156,10 @@ export function CardNumber(
         if (!isValid) {
             updatedState.isPotentiallyValid = true;
         }
-        
+
         setInputState((newState) => ({ ...newState, ...updatedState }));
     };
-    
+
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false };
         
@@ -209,8 +210,7 @@ export function CardNumber(
                 onKeyDown={ onKeyDownEvent }
                 onPaste={ onPasteEvent }
             />
-            {(inputState.displayCardIcon) ? <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" /> : null}
-            
+            <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" />
         </Fragment>
     );
 }
