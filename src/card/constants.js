@@ -271,7 +271,7 @@ export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
     expiry: 'MM / YY',
     cvv:    'CVV',
     name:   'Cardholder name',
-    postal: 'Postal Code'
+    postal: 'Postal code'
 };
 
 export const VALID_EXTRA_FIELDS = [
