@@ -208,7 +208,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 export function ValidationMessage({ message } : Object) : mixed {
     return (
         <div className={ `card-field-validation-error ${ message.length ? '' : 'hidden' }` }>
-            <Icon iconId="iconError"/>
+            <Icon iconId="icon-error"/>
             { message }
         </div>
     );
