@@ -206,6 +206,7 @@ export const DEFAULT_STYLE_MULTI_CARD = {
         'box-shadow':   '0 0 0 0.0625rem #d9360b inset',
         'color':        '#d9360b'
     }
+
 };
 
 export const DEFAULT_STYLE_SINGLE_CARD = {
@@ -288,7 +289,7 @@ export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
     expiry: 'MM / YY',
     cvv:    'CVV',
     name:   'Cardholder name',
-    postal: 'Postal Code'
+    postal: 'Postal code'
 };
 
 export const VALID_EXTRA_FIELDS = [
