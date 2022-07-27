@@ -9,7 +9,6 @@ import {
     checkForNonDigits,
     removeNonDigits,
     detectCardType,
-    checkCardEligibility,
     checkCardNumber,
     moveCursor,
     defaultNavigation,
@@ -46,7 +45,7 @@ function getIconId(type) : string {
     if (element) {
         return iconId;
     }
-    return 'icon-unknown';
+    return 'icon-UNKNOWN';
 }
 
 type CardNumberProps = {|
@@ -64,8 +63,7 @@ type CardNumberProps = {|
     onChange : (numberEvent : CardNumberChangeEvent) => void,
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
-    onValidityChange? : (numberValidity : FieldValidity) => void,
-    onEligibilityChange? : (cardEligibility : boolean) => void
+    onValidityChange? : (numberValidity : FieldValidity) => void
 |};
 
 export function CardNumber(
@@ -84,8 +82,7 @@ export function CardNumber(
         onChange,
         onFocus,
         onBlur,
-        onValidityChange,
-        onEligibilityChange
+        onValidityChange
     } : CardNumberProps
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
@@ -98,11 +95,6 @@ export function CardNumber(
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 
-    useEffect(() => {
-        if (typeof onEligibilityChange === 'function') {
-            onEligibilityChange(checkCardEligibility(inputValue, cardType));
-        }
-    }, [ cardType ]);
 
     useEffect(() => {
         if (typeof onValidityChange === 'function') {
