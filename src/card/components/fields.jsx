@@ -59,6 +59,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
     const [ isValid, setIsValid ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ validationMessage, setValidationMessage ] : [ string, (string) => string ] = useState('');
+    const [ cardEligibility, setCardEligibility ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -73,6 +74,9 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const cardCvvNavivation : CardNavigation = { next:     () =>  noop, previous: goToPreviousField(expiryRef) };
 
     function getValidationMessage() : string {
+        if (!cardEligibility) {
+            return 'This card type is not eligible.';
+        }
         if (!numberValidity.isPotentiallyValid && !numberValidity.isValid) {
             return 'This card number is not valid.';
         }
@@ -126,7 +130,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
         setIsValid(valid);
 
-        const errors = setErrors({ isNumberValid: numberValidity.isValid, isCvvValid: cvvValidity.isValid, isExpiryValid: expiryValidity.isValid, gqlErrorsObject });
+        const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, isCvvValid: cvvValidity.isValid, isExpiryValid: expiryValidity.isValid, gqlErrorsObject });
 
         onChange({ value: { number, cvv, expiry }, valid, errors });
 
@@ -136,6 +140,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
         expiry,
         isValid,
         numberValidity,
+        cardEligibility,
         cvvValidity,
         expiryValidity,
         cardType
@@ -158,12 +163,13 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     autocomplete={ autocomplete }
                     navigation={ cardNumberNavivation }
                     type='text'
-                    // eslint-disable-next-line react/forbid-component-props
-                    className={ `number ${ numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid' }` }
+                    // eslint-disable-next-line react/forbid-component-props, no-nested-ternary
+                    className={ `number ${ !cardEligibility ? 'invalid' : (numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid')}`}
                     allowNavigation={ true }
                     placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
                     maxLength='24'
                     onChange={ onChangeNumber }
+                    onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
                     onValidityChange={ (validity : FieldValidity) => setNumberValidity({ ...validity }) }
                     onFocus={ () => setHasFocus(true) }
                     onBlur={ () => setHasFocus(false) }
@@ -227,8 +233,8 @@ type CardNumberFieldProps = {|
 export function CardNumberField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
-    const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cardEligibility, setCardEligibility ] : [ boolean, (boolean) => boolean ] = useState(true);
+    const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const numberRef = useRef();
 
     const { isValid, isPotentiallyValid } = numberValidity;
@@ -263,13 +269,13 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 ref={ numberRef }
                 type='text'
                 autocomplete={ autocomplete }
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `number ${ numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid' }` }
+                // eslint-disable-next-line react/forbid-component-props, no-nested-ternary
+                className={ `number ${ !cardEligibility ? 'invalid' : (numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid')}`}
                 placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
                 maxLength='24'
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
-                onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
                 onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
+                onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
             />
         </Fragment>
     );
