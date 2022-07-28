@@ -11,7 +11,8 @@ import {
     styleToString,
     filterExtraFields,
     checkPostalCode,
-    checkName
+    checkName,
+    checkCardNumber
 } from './card-utils';
 
 jest.mock('../../lib/dom');
@@ -454,7 +455,7 @@ describe('card utils', () => {
         })
     });
 
-    describe.only('checkName', () => {
+    describe('checkName', () => {
         it('returns true for isValid for a name less than 255 characters and is not comprised of only numbers, hyphens and spaces', () => {
             const name = "Test Name";
 
@@ -487,7 +488,27 @@ describe('card utils', () => {
 
             expect(checkName(name).isValid).toBe(false);
         });
-    })
+    });
+
+    describe('checkCardNumber', ( ) => {
+        it('returns true for isValid if card number passes luhn validation', () => {
+            const cardNumber = '4111 1111 1111 1111';
+
+            expect(checkCardNumber(cardNumber).isValid).toBe(true);
+        });
+
+        it('returns false for isValid if card number does not pass luhn validation', () => {
+            const cardNumber = '4111 1111';
+
+            expect(checkCardNumber(cardNumber).isValid).toBe(false);
+        });
+
+        it('returns false for isPotentiallyValid is a non-numeric character is entered', () => {
+            const cardNumber = '411x';
+
+            expect(checkCardNumber(cardNumber).isPotentiallyValid).toBe(false)
+        })
+    });
 
     describe('filterExtraFields', () => {
 

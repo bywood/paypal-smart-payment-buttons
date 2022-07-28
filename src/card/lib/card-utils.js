@@ -2,7 +2,6 @@
 
 import { noop, values } from '@krakenjs/belter';
 import creditCardType from 'credit-card-type';
-import luhn10 from 'card-validator/src/luhn-10';
 import cardValidator from 'card-validator';
 
 import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
@@ -300,19 +299,15 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
     return true;
 }
 
-export function checkCardNumber(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const trimmedValue = removeSpaces(value);
-    const { lengths } = cardType;
+export function checkCardNumber(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+    const { number } = cardValidator;
 
-    const validLength = lengths.some((length) => length === trimmedValue.length);
-    const validLuhn = luhn10(trimmedValue);
-
-    const maxLength = Math.max.apply(null, lengths);
+    const {isValid, isPotentiallyValid} = number(value);
 
     return {
-        isValid:            validLength && validLuhn,
-        isPotentiallyValid: validLength || trimmedValue.length < maxLength
-    };
+        isValid,
+        isPotentiallyValid
+    }
 }
 
 export function checkCVV(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
