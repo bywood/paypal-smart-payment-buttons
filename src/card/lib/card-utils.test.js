@@ -10,7 +10,8 @@ import {
     filterStyle,
     styleToString,
     filterExtraFields,
-    checkPostalCode
+    checkPostalCode,
+    checkName
 } from './card-utils';
 
 jest.mock('../../lib/dom');
@@ -451,6 +452,41 @@ describe('card utils', () => {
             // $FlowFixMe
             expect(checkPostalCode(postalCode).isValid).toBe(false)
         })
+    });
+
+    describe.only('checkName', () => {
+        it('returns true for isValid for a name less than 255 characters and is not comprised of only numbers, hyphens and spaces', () => {
+            const name = "Test Name";
+
+            expect(checkName(name).isValid).toBe(true);
+        });
+
+        it('returns false for isValid, and isPotentiallyValid for a name longer than 255 characters', () => {
+            const name = "Ekjgfsekldjghdsfkghdksgdfkgksafghefsgkvshdbbfkshdfkbdsfgkbdskfbndfskljbndfakljvbnadflkvbadlkfvnsljkdfvhnkldsfzvnlkdsfvnladkfjvnldkfsjvnsdlkjfvnakljdfvaasdkfjgvbefskldjvblsjkdfvnbaljkdfnvkdadfjvnklsdjfnvdksdjfvnksdfvnfdjdavnkddsafvnkadljfvwertydhfjdksjdddas";
+        
+            const validity = checkName(name);
+
+            expect(validity.isValid).toBe(false);
+            expect(validity.isPotentiallyValid).toBe(false);
+        });
+
+        it('returns false for isValid for a name comprised of only numbers', () => {
+            const name = "4111111111111111";
+
+            expect(checkName(name).isValid).toBe(false);
+        });
+
+        it('returns false for isValid for a name comprised of only hyphens', () => {
+            const name = "-----";
+
+            expect(checkName(name).isValid).toBe(false);
+        });
+
+        it('returns false for isValid for a name comprised of only spaces', () => {
+            const name = "   ";
+
+            expect(checkName(name).isValid).toBe(false);
+        });
     })
 
     describe('filterExtraFields', () => {
