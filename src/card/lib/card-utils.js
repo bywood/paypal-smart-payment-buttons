@@ -1,7 +1,6 @@
 /* @flow */
 
 import { noop, values } from '@krakenjs/belter';
-import creditCardType from 'credit-card-type';
 import cardValidator from 'card-validator';
 
 import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
@@ -20,7 +19,7 @@ import {
 import { getLogger } from '../../lib';
 
 // Add additional supported card types
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: 'CVV',
         size: 3
@@ -32,7 +31,7 @@ creditCardType.addCard({
     type:     'cb-nationale'
 });
 
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: 'CVV',
         size: 3
@@ -44,7 +43,7 @@ creditCardType.addCard({
     type:     'cetelem'
 });
 
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: '',
         size: 0
@@ -56,7 +55,7 @@ creditCardType.addCard({
     type:     'cofinoga'
 });
 
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: '',
         size: 0
@@ -108,7 +107,8 @@ export function removeSpaces(value : string) : string {
 // Detect the card type metadata for a card number
 export function detectCardType(number : string) : CardType {
     if (number.length > 0) {
-        const cardTypes = creditCardType(number);
+        console.log(cardValidator.creditCardType)
+        const cardTypes = cardValidator.creditCardType.default(number);
         if (cardTypes.length > 0) {
             return cardTypes[0];
         }

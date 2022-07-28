@@ -1,11 +1,13 @@
 /* @flow */
 
-import { types } from 'credit-card-type';
+import cardValidator from 'card-validator';
 import { CARD } from '@paypal/sdk-constants/src';
 
 import { FRAME_NAME } from '../constants';
 
 import type { FieldStyle, CardType, CardPlaceholder } from './types';
+
+const { types } = cardValidator.creditCardType;
 
 export const CARD_FIELD_TYPE = {
     SINGLE: 'single',
