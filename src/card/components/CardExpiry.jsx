@@ -13,7 +13,7 @@ import {
     defaultInputState,
     navigateOnKeyDown,
     moveCursor,
-    isValidAttribute
+    exportMethods
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
@@ -59,6 +59,10 @@ export function CardExpiry(
     const expiryRef = useRef()
 
     useEffect(() => {
+        exportMethods(expiryRef);
+    }, []);
+
+    useEffect(() => {
         const validity = checkExpiry(maskedInputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
@@ -72,21 +76,6 @@ export function CardExpiry(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
-
-    useEffect(() => {
-        window.xprops.export({
-            setAttribute: (attribute, value) => {
-                if (isValidAttribute(attribute)) {
-                    expiryRef?.current?.setAttribute(attribute, value);
-                }
-            },
-            removeAttribute: (attribute) => {
-                if (isValidAttribute(attribute)) {
-                    expiryRef?.current?.removeAttribute(attribute);
-                }
-            }
-        });
-    });
 
     const setDateMask : (InputEvent) => void = (event : InputEvent) : void => {
         const { value : rawValue, selectionStart, selectionEnd } = event.target;

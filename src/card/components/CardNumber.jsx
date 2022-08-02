@@ -15,7 +15,7 @@ import {
     defaultInputState,
     navigateOnKeyDown,
     maskValidCard,
-    isValidAttribute
+    exportMethods
 } from '../lib';
 import type {
     CardNumberChangeEvent,
@@ -87,7 +87,12 @@ export function CardNumber(
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultCardNumberInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+
     const numberRef = useRef()
+
+    useEffect(() => {
+        exportMethods(numberRef);
+    }, []);
 
     useEffect(() => {
         const validity = checkCardNumber(inputValue, cardType);
@@ -104,21 +109,6 @@ export function CardNumber(
         }
 
     }, [ isValid, isPotentiallyValid ]);
-
-    useEffect(() => {
-        window.xprops.export({
-            setAttribute: (attribute, value) => {
-                if (isValidAttribute(attribute)) {
-                    numberRef?.current?.setAttribute(attribute, value);
-                }
-            },
-            removeAttribute: (attribute) => {
-                if (isValidAttribute(attribute)) {
-                    numberRef?.current?.removeAttribute(attribute);
-                }
-            }
-        });
-    }, []);
 
     const setValueAndCursor : (InputEvent) => void = (event : InputEvent) : void => {
         const { value: rawValue, selectionStart, selectionEnd } = event.target;

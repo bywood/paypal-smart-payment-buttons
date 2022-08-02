@@ -4,7 +4,7 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkName, defaultNavigation, defaultInputState, navigateOnKeyDown, isValidAttribute } from '../lib';
+import { checkName, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardNameProps = {|
@@ -47,6 +47,10 @@ export function CardName(
     const nameRef = useRef()
 
     useEffect(() => {
+        exportMethods(nameRef);
+    }, []);
+
+    useEffect(() => {
         const validity = checkName(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
@@ -59,21 +63,6 @@ export function CardName(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
-
-    useEffect(() => {
-        window.xprops.export({
-            setAttribute: (attribute, value) => {
-                if (isValidAttribute(attribute)) {
-                    nameRef?.current?.setAttribute(attribute, value);
-                }
-            },
-            removeAttribute: (attribute) => {
-                if (isValidAttribute(attribute)) {
-                    nameRef?.current?.removeAttribute(attribute);
-                }
-            }
-        });
-    }, [])
 
     const setNameValue : (InputEvent) => void = (event : InputEvent) : void => {
         const { value  } = event.target;

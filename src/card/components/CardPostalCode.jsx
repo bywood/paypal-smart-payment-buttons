@@ -4,7 +4,7 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, isValidAttribute } from '../lib';
+import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardPostalCodeProps = {|
@@ -44,7 +44,12 @@ export function CardPostalCode(
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
+
     const postalCodeRef = useRef();
+
+    useEffect(() => {
+        exportMethods(postalCodeRef);
+    }, []);
 
     useEffect(() => {
         const validity = checkPostalCode(inputValue, minLength);
@@ -59,21 +64,6 @@ export function CardPostalCode(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
-
-    useEffect(() => {
-        window.xprops.export({
-            setAttribute: (attribute, value) => {
-                if (isValidAttribute(attribute)) {
-                    postalCodeRef?.current?.setAttribute(attribute, value);
-                }
-            },
-            removeAttribute: (attribute) => {
-                if (isValidAttribute(attribute)) {
-                    postalCodeRef?.current?.removeAttribute(attribute);
-                }
-            }
-        });
-    },[]);
 
     const setPostalCodeValue : (InputEvent) => void = (event : InputEvent) : void => {
         const { value } = event.target;
