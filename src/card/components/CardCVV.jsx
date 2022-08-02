@@ -2,15 +2,14 @@
 /** @jsx h */
 
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown } from '../lib';
+import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, isValidAttribute} from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardCvvProps = {|
     name : string,
     autocomplete? : string,
-    ref : () => void,
     type : string,
     state? : InputState,
     className : string,
@@ -34,7 +33,6 @@ export function CardCVV(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
         className,
         placeholder,
@@ -50,6 +48,8 @@ export function CardCVV(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
+    const cvvRef = useRef()
+
     useEffect(() => {
         const validity = checkCVV(inputValue, cardType);
         setInputState(newState => ({ ...newState, ...validity }));
@@ -63,6 +63,16 @@ export function CardCVV(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
+
+    useEffect(() => {
+        window.xprops.export({
+            setAttribute: (attribute, value) => {
+                if(isValidAttribute(attribute)){
+                    cvvRef?.current?.setAttribute(attribute, value);
+                }
+            }
+        })
+    }, [])
 
     const setCvvValue : (InputEvent) => void = (event : InputEvent) : void => {
         const { value : rawValue } = event.target;
@@ -107,7 +117,7 @@ export function CardCVV(
             name={ name }
             autocomplete={ autocomplete }
             inputmode='numeric'
-            ref={ ref }
+            ref={ cvvRef }
             type={ type }
             className={ className }
             placeholder={ placeholder }
