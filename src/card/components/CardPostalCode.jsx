@@ -2,14 +2,13 @@
 /** @jsx h */
 
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown } from '../lib';
+import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, isValidAttribute } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardPostalCodeProps = {|
     name : string,
-    ref : () => void,
     type : string,
     state? : InputState,
     className : string,
@@ -31,7 +30,6 @@ export function CardPostalCode(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
         className,
         placeholder,
@@ -46,6 +44,7 @@ export function CardPostalCode(
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
+    const postalCodeRef = useRef();
 
     useEffect(() => {
         const validity = checkPostalCode(inputValue, minLength);
@@ -60,6 +59,16 @@ export function CardPostalCode(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
+
+    useEffect(() => {
+        window.xprops.export({
+            setAttribute: (attribute, value) => {
+                if(isValidAttribute(attribute)) {
+                    postalCodeRef?.current?.setAttribute(attribute, value)
+                }
+            }
+        })
+    },[]);
 
     const setPostalCodeValue : (InputEvent) => void = (event : InputEvent) : void => {
         const { value } = event.target;
@@ -102,7 +111,7 @@ export function CardPostalCode(
         <input
             name={ name }
             inputmode='numeric'
-            ref={ ref }
+            ref={ postalCodeRef }
             type={ type }
             className={ className }
             placeholder={ placeholder }
