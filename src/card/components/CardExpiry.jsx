@@ -76,11 +76,16 @@ export function CardExpiry(
     useEffect(() => {
         window.xprops.export({
             setAttribute: (attribute, value) => {
-                if(isValidAttribute(attribute)){
-                    expiryRef?.current?.setAttribute(attribute, value)
+                if (isValidAttribute(attribute)) {
+                    expiryRef?.current?.setAttribute(attribute, value);
+                }
+            },
+            removeAttribute: (attribute) => {
+                if (isValidAttribute(attribute)) {
+                    expiryRef?.current?.removeAttribute(attribute);
                 }
             }
-        })
+        });
     });
 
     const setDateMask : (InputEvent) => void = (event : InputEvent) : void => {

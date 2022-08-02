@@ -63,11 +63,16 @@ export function CardPostalCode(
     useEffect(() => {
         window.xprops.export({
             setAttribute: (attribute, value) => {
-                if(isValidAttribute(attribute)) {
-                    postalCodeRef?.current?.setAttribute(attribute, value)
+                if (isValidAttribute(attribute)) {
+                    postalCodeRef?.current?.setAttribute(attribute, value);
+                }
+            },
+            removeAttribute: (attribute) => {
+                if (isValidAttribute(attribute)) {
+                    postalCodeRef?.current?.removeAttribute(attribute);
                 }
             }
-        })
+        });
     },[]);
 
     const setPostalCodeValue : (InputEvent) => void = (event : InputEvent) : void => {

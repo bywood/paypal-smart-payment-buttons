@@ -63,11 +63,16 @@ export function CardName(
     useEffect(() => {
         window.xprops.export({
             setAttribute: (attribute, value) => {
-                if(isValidAttribute(attribute)) {
-                    nameRef?.current?.setAttribute(attribute, value)
+                if (isValidAttribute(attribute)) {
+                    nameRef?.current?.setAttribute(attribute, value);
+                }
+            },
+            removeAttribute: (attribute) => {
+                if (isValidAttribute(attribute)) {
+                    nameRef?.current?.removeAttribute(attribute);
                 }
             }
-        })
+        });
     }, [])
 
     const setNameValue : (InputEvent) => void = (event : InputEvent) : void => {

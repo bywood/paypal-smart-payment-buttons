@@ -86,7 +86,6 @@ export function CardNumber(
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultCardNumberInputState, ...state });
-
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
     const numberRef = useRef()
 
@@ -94,7 +93,6 @@ export function CardNumber(
         const validity = checkCardNumber(inputValue, cardType);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
-
 
     useEffect(() => {
         if (typeof onValidityChange === 'function') {
@@ -110,12 +108,17 @@ export function CardNumber(
     useEffect(() => {
         window.xprops.export({
             setAttribute: (attribute, value) => {
-                if(isValidAttribute(attribute)){
-                    numberRef?.current?.setAttribute(attribute, value)
+                if (isValidAttribute(attribute)) {
+                    numberRef?.current?.setAttribute(attribute, value);
+                }
+            },
+            removeAttribute: (attribute) => {
+                if (isValidAttribute(attribute)) {
+                    numberRef?.current?.removeAttribute(attribute);
                 }
             }
-        })
-    }, [])
+        });
+    }, []);
 
     const setValueAndCursor : (InputEvent) => void = (event : InputEvent) : void => {
         const { value: rawValue, selectionStart, selectionEnd } = event.target;

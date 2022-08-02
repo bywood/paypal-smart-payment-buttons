@@ -67,11 +67,16 @@ export function CardCVV(
     useEffect(() => {
         window.xprops.export({
             setAttribute: (attribute, value) => {
-                if(isValidAttribute(attribute)){
+                if (isValidAttribute(attribute)) {
                     cvvRef?.current?.setAttribute(attribute, value);
                 }
+            },
+            removeAttribute: (attribute) => {
+                if (isValidAttribute(attribute)) {
+                    cvvRef?.current?.removeAttribute(attribute);
+                }
             }
-        })
+        });
     }, [])
 
     const setCvvValue : (InputEvent) => void = (event : InputEvent) : void => {
