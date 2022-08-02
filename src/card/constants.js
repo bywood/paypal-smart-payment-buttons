@@ -295,3 +295,10 @@ export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
 export const VALID_EXTRA_FIELDS = [
     'billingAddress'
 ];
+
+export const ALLOWED_ATTRIBUTES = [
+    "aria-invalid",
+    "aria-required",
+    "disabled",
+    "placeholder",
+];

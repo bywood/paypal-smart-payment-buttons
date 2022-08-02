@@ -16,7 +16,8 @@ import {
     FILTER_CSS_VALUES,
     GQL_ERRORS,
     VALID_EXTRA_FIELDS,
-    VALIDATOR_TO_TYPE_MAP
+    VALIDATOR_TO_TYPE_MAP,
+    ALLOWED_ATTRIBUTES
 } from '../constants';
 import { getLogger } from '../../lib';
 
@@ -510,7 +511,6 @@ export function autoFocusOnFirstInput(input? : HTMLInputElement) {
             timeoutID = null;
         }
     });
-
 }
 
 // Function that returns the field value in the correct format
@@ -584,4 +584,13 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
         }
         return acc;
     }, {});
+}
+
+export function isValidAttribute(attribute: string) : boolean {
+    if(!ALLOWED_ATTRIBUTES.includes(attribute.toLocaleLowerCase())) {
+        getLogger().warn('attribute_warning', { warn: `HTML Attribute "${attribute}" was ignored. See allowed attribute list.`})
+        return false
+    };
+
+    return true
 }

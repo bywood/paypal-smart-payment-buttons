@@ -2,7 +2,7 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
 import {
     maskCard,
@@ -14,7 +14,8 @@ import {
     defaultNavigation,
     defaultInputState,
     navigateOnKeyDown,
-    maskValidCard
+    maskValidCard,
+    isValidAttribute
 } from '../lib';
 import type {
     CardNumberChangeEvent,
@@ -51,7 +52,6 @@ function getIconId(type) : string {
 type CardNumberProps = {|
     name : string,
     autocomplete? : string,
-    ref : () => void,
     type : string,
     state? : InputState,
     className : string,
@@ -73,7 +73,6 @@ export function CardNumber(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
         className,
         placeholder,
@@ -89,6 +88,7 @@ export function CardNumber(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultCardNumberInputState, ...state });
 
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+    const numberRef = useRef()
 
     useEffect(() => {
         const validity = checkCardNumber(inputValue, cardType);
@@ -107,6 +107,15 @@ export function CardNumber(
 
     }, [ isValid, isPotentiallyValid ]);
 
+    useEffect(() => {
+        window.xprops.export({
+            setAttribute: (attribute, value) => {
+                if(isValidAttribute(attribute)){
+                    numberRef?.current?.setAttribute(attribute, value)
+                }
+            }
+        })
+    }, [])
 
     const setValueAndCursor : (InputEvent) => void = (event : InputEvent) : void => {
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
@@ -194,7 +203,7 @@ export function CardNumber(
                 name={ name }
                 autocomplete={ autocomplete }
                 inputmode='numeric'
-                ref={ ref }
+                ref={ numberRef }
                 type={ type }
                 className={ `${className} ${inputState.displayCardIcon ? 'display-icon' : ''}` }
                 placeholder={ placeholder }
