@@ -2,7 +2,7 @@
 /** @jsx h */
 
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
 import {
     formatDate,
@@ -12,14 +12,14 @@ import {
     defaultNavigation,
     defaultInputState,
     navigateOnKeyDown,
-    moveCursor
+    moveCursor,
+    isValidAttribute
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardExpiryProps = {|
     name : string,
     autocomplete? : string,
-    ref : () => void,
     type : string,
     state? : InputState,
     className : string,
@@ -41,7 +41,6 @@ export function CardExpiry(
         autocomplete = 'cc-exp',
         navigation = defaultNavigation,
         state,
-        ref,
         type,
         className,
         placeholder,
@@ -57,6 +56,7 @@ export function CardExpiry(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
 
+    const expiryRef = useRef()
 
     useEffect(() => {
         const validity = checkExpiry(maskedInputValue);
@@ -72,6 +72,16 @@ export function CardExpiry(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
+
+    useEffect(() => {
+        window.xprops.export({
+            setAttribute: (attribute, value) => {
+                if(isValidAttribute(attribute)){
+                    expiryRef?.current?.setAttribute(attribute, value)
+                }
+            }
+        })
+    });
 
     const setDateMask : (InputEvent) => void = (event : InputEvent) : void => {
         const { value : rawValue, selectionStart, selectionEnd } = event.target;
@@ -141,7 +151,7 @@ export function CardExpiry(
             name={ name }
             autocomplete={ autocomplete }
             inputmode='numeric'
-            ref={ ref }
+            ref={ expiryRef }
             type={ type }
             className={ className }
             placeholder={ placeholder }
