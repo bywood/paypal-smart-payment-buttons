@@ -1,8 +1,6 @@
 /* @flow */
 
 import { noop, values } from '@krakenjs/belter';
-import creditCardType from 'credit-card-type';
-import luhn10 from 'card-validator/src/luhn-10';
 import cardValidator from 'card-validator';
 
 import type { CardType, CardNavigation, InputState, FieldValidity, InputEvent, Card, ExtraFields } from '../types';
@@ -22,7 +20,7 @@ import {
 import { getLogger } from '../../lib';
 
 // Add additional supported card types
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: 'CVV',
         size: 3
@@ -34,7 +32,7 @@ creditCardType.addCard({
     type:     'cb-nationale'
 });
 
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: 'CVV',
         size: 3
@@ -46,7 +44,7 @@ creditCardType.addCard({
     type:     'cetelem'
 });
 
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: '',
         size: 0
@@ -58,7 +56,7 @@ creditCardType.addCard({
     type:     'cofinoga'
 });
 
-creditCardType.addCard({
+cardValidator.creditCardType.addCard({
     code: {
         name: '',
         size: 0
@@ -110,7 +108,7 @@ export function removeSpaces(value : string) : string {
 // Detect the card type metadata for a card number
 export function detectCardType(number : string) : CardType {
     if (number.length > 0) {
-        const cardTypes = creditCardType(number);
+        const cardTypes = cardValidator.creditCardType.default(number);
         if (cardTypes.length > 0) {
             return cardTypes[0];
         }
@@ -301,19 +299,15 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
     return true;
 }
 
-export function checkCardNumber(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const trimmedValue = removeSpaces(value);
-    const { lengths } = cardType;
+export function checkCardNumber(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+    const { number } = cardValidator;
 
-    const validLength = lengths.some((length) => length === trimmedValue.length);
-    const validLuhn = luhn10(trimmedValue);
-
-    const maxLength = Math.max.apply(null, lengths);
+    const {isValid, isPotentiallyValid} = number(value);
 
     return {
-        isValid:            validLength && validLuhn,
-        isPotentiallyValid: validLength || trimmedValue.length < maxLength
-    };
+        isValid,
+        isPotentiallyValid
+    }
 }
 
 export function checkCVV(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
@@ -328,14 +322,9 @@ export function checkCVV(value : string, cardType : CardType) : {| isValid : boo
 }
 
 export function checkName(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    let isValid = false;
-    if (value.length >= 1 && value.length <= 255) {
-        isValid = true;
-    }
-    return {
-        isValid,
-        isPotentiallyValid: true
-    };
+    const { cardholderName } = cardValidator
+
+    return cardholderName(value)
 }
 
 export function checkExpiry(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {

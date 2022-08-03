@@ -98,7 +98,7 @@ export function CardNumber(
     }, []);
 
     useEffect(() => {
-        const validity = checkCardNumber(inputValue, cardType);
+        const validity = checkCardNumber(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 
