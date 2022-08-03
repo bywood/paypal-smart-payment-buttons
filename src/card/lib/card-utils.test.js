@@ -10,7 +10,8 @@ import {
     filterStyle,
     styleToString,
     filterExtraFields,
-    checkPostalCode
+    checkPostalCode,
+    isValidAttribute
 } from './card-utils';
 
 jest.mock('../../lib/dom');
@@ -475,6 +476,26 @@ describe('card utils', () => {
             expect(extraFields.billingAddress).toBe('Av. test, 12324');
 
         });
+    });
+
+    describe('isValidAttribute', () => {
+
+        it('should return true if the attribute name is valid', () => {
+            expect(isValidAttribute('aria-invalid')).toBe(true);
+            expect(isValidAttribute('Aria-Invalid')).toBe(true);
+            expect(isValidAttribute('aria-required')).toBe(true);
+            expect(isValidAttribute('disabled')).toBe(true);
+            expect(isValidAttribute('placeholder')).toBe(true);
+        });
+
+        it('should return false and log a warning if the attribute name is not valid', () => {
+            const originalLoggerWarn = getLogger().warn;
+            getLogger().warn = jest.fn();
+            expect(isValidAttribute('invalid')).toBe(false);
+            expect(getLogger().warn).toHaveBeenCalledWith('attribute_warning', { warn: 'HTML Attribute "invalid" was ignored. See allowed attribute list.' });
+            getLogger().warn = originalLoggerWarn;
+        });
+
     });
 
 });
