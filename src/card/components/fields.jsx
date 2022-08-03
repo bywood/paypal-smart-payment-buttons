@@ -228,6 +228,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
+    const [ cardEligibility, setCardEligibility ] : [ boolean, (boolean) => boolean ] = useState(true);
     const numberRef = useRef();
 
     const { isValid, isPotentiallyValid } = numberValidity;
@@ -248,9 +249,9 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     }, [ gqlErrors ]);
 
     useEffect(() => {
-        const errors = setErrors({ isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
+        const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
         onChange({ value: number, valid: numberValidity.isValid, errors });
-    }, [ number, isValid, isPotentiallyValid ]);
+    }, [ number, cardEligibility, isValid, isPotentiallyValid ]);
 
     return (
         <Fragment>
@@ -268,6 +269,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 maxLength='24'
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
+                onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
             />
         </Fragment>
     );

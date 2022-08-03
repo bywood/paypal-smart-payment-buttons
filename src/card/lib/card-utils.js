@@ -110,12 +110,9 @@ export function removeSpaces(value : string) : string {
 // Detect the card type metadata for a card number
 export function detectCardType(number : string) : CardType {
     if (number.length > 0) {
-        const cardType = creditCardType(number)?.[0];
-        if (cardType) {
-            return {
-                ...cardType,
-                type: VALIDATOR_TO_TYPE_MAP[cardType.type]
-            };
+        const cardTypes = creditCardType(number);
+        if (cardTypes.length > 0) {
+            return cardTypes[0];
         }
     }
     return DEFAULT_CARD_TYPE;
@@ -155,7 +152,6 @@ export function maskValidCard(number : string) : string {
 export function removeDateMask(date : string) : string {
     return date.trim().replace(/\s|\//g, '');
 }
-
 
 // Format expiry date
 export function formatDate(date : string, prevFormat? : string = '') : string {
@@ -290,6 +286,21 @@ export function getCvvLength(cardType? : CardType) : number {
     return 3;
 }
 
+export function checkCardEligibility(value : string, cardType : CardType) : boolean  {
+    // check if the card type is eligible
+    const fundingEligibility = window.xprops.fundingEligibility;
+    const type = VALIDATOR_TO_TYPE_MAP[cardType.type];
+    // only mark as ineligible if the card vendor is explicitly set to not be eligible
+    if (type && fundingEligibility?.card?.eligible) {
+        const vendor = fundingEligibility.card.vendors?.[type];
+        if (vendor && !vendor.eligible) {
+            return false;
+        }
+    }
+    // otherwise default to be eligible
+    return true;
+}
+
 export function checkCardNumber(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     const trimmedValue = removeSpaces(value);
     const { lengths } = cardType;
@@ -346,13 +357,19 @@ export function checkPostalCode(value : string, minLength? : number) : {| isVali
     };
 }
 
-export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameValid, isPostalCodeValid, gqlErrorsObject = {} } : {| isNumberValid? : boolean, isCvvValid? : boolean, isExpiryValid? : boolean, isNameValid? : boolean, isPostalCodeValid? : boolean, gqlErrorsObject? : {| field : string, errors : [] |} |}) : [$Values<typeof CARD_ERRORS>] | [] {
+export function setErrors({ isCardEligible, isNumberValid, isCvvValid, isExpiryValid, isNameValid, isPostalCodeValid, gqlErrorsObject = {} } : {| isCardEligible? : boolean, isNumberValid? : boolean, isCvvValid? : boolean, isExpiryValid? : boolean, isNameValid? : boolean, isPostalCodeValid? : boolean, gqlErrorsObject? : {| field : string, errors : [] |} |}) : [$Values<typeof CARD_ERRORS>] | [] {
     const errors = [];
-
     const { field, errors: gqlErrors } = gqlErrorsObject;
 
-    if (isNumberValid === false) {
+    if (isCardEligible === false) {
+        if (field === CARD_FIELD_TYPE.NUMBER && gqlErrors.length) {
+            errors.push(...gqlErrors);
+        } else {
+            errors.push(CARD_ERRORS.INELIGIBLE_CARD);
+        }
+    }
 
+    if (isNumberValid === false) {
         if (field === CARD_FIELD_TYPE.NUMBER && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
@@ -361,17 +378,14 @@ export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameVali
     }
 
     if (isExpiryValid === false) {
-
         if (field === CARD_FIELD_TYPE.EXPIRY  && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
             errors.push(CARD_ERRORS.INVALID_EXPIRY);
         }
-
     }
 
     if (isCvvValid === false) {
-
         if (field === CARD_FIELD_TYPE.CVV  && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
@@ -380,7 +394,6 @@ export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameVali
     }
 
     if (isNameValid === false) {
-
         if (field === CARD_FIELD_TYPE.NAME && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
@@ -389,7 +402,6 @@ export function setErrors({ isNumberValid, isCvvValid, isExpiryValid, isNameVali
     }
 
     if (isPostalCodeValid === false) {
-
         if (field === CARD_FIELD_TYPE.POSTAL && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
