@@ -12,7 +12,8 @@ import {
     goToNextField,
     goToPreviousField,
     convertDateFormat,
-    getCSSText
+    getCSSText,
+    markValidity
 } from '../lib';
 import type {
     CardStyle,
@@ -132,42 +133,17 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
         const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, isCvvValid: cvvValidity.isValid, isExpiryValid: expiryValidity.isValid, gqlErrorsObject });
 
-        let element = null;
-        element = numberRef?.current?.base;
-        if (element) {
-            if (!cardEligibility) {
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            } else {
-                if (numberValidity.isPotentiallyValid || numberValidity.isValid) {
-                    element.classList.add('valid');
-                    element.classList.remove('invalid');
-                } else{
-                    element.classList.add('invalid');
-                    element.classList.remove('valid');
-                }
-            }
-        }
-        element = expiryRef?.current?.base;
-        if (element) {
-            if (expiryValidity.isPotentiallyValid || expiryValidity.isValid) {
-                element.classList.add('valid');
-                element.classList.remove('invalid');
-            } else{
+        if (!cardEligibility) {
+            const element = numberRef?.current?.base;
+            if (element) {
                 element.classList.add('invalid');
                 element.classList.remove('valid');
             }
+        } else {
+            markValidity(numberRef, numberValidity);
         }
-        element = cvvRef?.current?.base;
-        if (element) {
-            if (cvvValidity.isPotentiallyValid || cvvValidity.isValid) {
-                element.classList.add('valid');
-                element.classList.remove('invalid');
-            } else{
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            }
-        }
+        markValidity(expiryRef, expiryValidity);
+        markValidity(cvvRef, cvvValidity);
 
         onChange({ value: { number, cvv, expiry }, valid, errors });
 
@@ -287,20 +263,14 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
     useEffect(() => {
         const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
-        const element = numberRef?.current?.base;
-        if (element) {
-            if (!cardEligibility) {
+        if (!cardEligibility) {
+            const element = numberRef?.current?.base;
+            if (element) {
                 element.classList.add('invalid');
                 element.classList.remove('valid');
-            } else {
-                if (numberValidity.isPotentiallyValid || numberValidity.isValid) {
-                    element.classList.add('valid');
-                    element.classList.remove('invalid');
-                } else{
-                    element.classList.add('invalid');
-                    element.classList.remove('valid');
-                }
             }
+        } else {
+            markValidity(numberRef, numberValidity);
         }
         onChange({ value: number, valid: numberValidity.isValid, errors });
     }, [ number, cardEligibility, isValid, isPotentiallyValid ]);
@@ -360,16 +330,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     
     useEffect(() => {
         const errors = setErrors({ isExpiryValid: expiryValidity.isValid });
-        const element = expiryRef?.current?.base;
-        if (element) {
-            if (expiryValidity.isPotentiallyValid || expiryValidity.isValid) {
-                element.classList.add('valid');
-                element.classList.remove('invalid');
-            } else{
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            }
-        }
+        markValidity(expiryRef, expiryValidity);
         onChange({ value: expiry, valid: expiryValidity.isValid, errors });
     }, [ expiry, isValid, isPotentiallyValid ]);
 
@@ -425,16 +386,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
     useEffect(() => {
         const errors = setErrors({ isCvvValid: cvvValidity.isValid });
-        const element = cvvRef?.current?.base;
-        if (element) {
-            if (cvvValidity.isPotentiallyValid || cvvValidity.isValid) {
-                element.classList.add('valid');
-                element.classList.remove('invalid');
-            } else{
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            }
-        }
+        markValidity(cvvRef, cvvValidity);
         onChange({ value: cvv, valid: cvvValidity.isValid, errors });
     }, [ cvv, isValid, isPotentiallyValid  ]);
 
@@ -490,16 +442,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
     useEffect(() => {
         const errors = setErrors({ isNameValid: nameValidity.isValid });
-        const element = nameRef?.current?.base;
-        if (element) {
-            if (nameValidity.isPotentiallyValid || nameValidity.isValid) {
-                element.classList.add('valid');
-                element.classList.remove('invalid');
-            } else{
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            }
-        }
+        markValidity(nameRef, nameValidity);
         onChange({ value: name, valid: nameValidity.isValid, errors });
     }, [ name, isValid, isPotentiallyValid  ]);
 
@@ -557,16 +500,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
 
     useEffect(() => {
         const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
-        const element = postalRef?.current?.base;
-        if (element) {
-            if (postalCodeValidity.isPotentiallyValid || postalCodeValidity.isValid) {
-                element.classList.add('valid');
-                element.classList.remove('invalid');
-            } else{
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            }
-        }
+        markValidity(postalRef, postalCodeValidity);
         onChange({ value: postalCode, valid: postalCodeValidity.isValid, errors });
     }, [ postalCode, isValid, isPotentiallyValid  ]);
 

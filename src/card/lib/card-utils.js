@@ -177,6 +177,20 @@ export function getCSSText(cardFieldStyle : Object, customStyle : Object) : stri
     return s.join('\n');
 }
 
+// mark the ref's HTMLElement as valid or invalid
+export function markValidity(ref : Object, validity : FieldValidity) {
+    const element = ref?.current?.base;
+    if (element) {
+        if (validity.isPotentiallyValid || validity.isValid) {
+            element.classList.add('valid');
+            element.classList.remove('invalid');
+        } else{
+            element.classList.add('invalid');
+            element.classList.remove('valid');
+        }
+    }
+}
+
 export function removeNonDigits(value : string) : string {
     const trimmedValue = removeSpaces(value);
     return trimmedValue.replace(/\D/g, '');
