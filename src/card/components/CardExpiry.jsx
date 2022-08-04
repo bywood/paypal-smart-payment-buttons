@@ -22,7 +22,6 @@ type CardExpiryProps = {|
     autocomplete? : string,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -42,7 +41,6 @@ export function CardExpiry(
         navigation = defaultNavigation,
         state,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -147,7 +145,7 @@ export function CardExpiry(
             inputmode='numeric'
             ref={ expiryRef }
             type={ type }
-            className={ className }
+            className='expiry'
             placeholder={ placeholder }
             value={ maskedInputValue }
             style={ style }

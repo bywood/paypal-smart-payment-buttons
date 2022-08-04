@@ -12,7 +12,6 @@ type CardCvvProps = {|
     autocomplete? : string,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -34,7 +33,6 @@ export function CardCVV(
         allowNavigation = false,
         state,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -113,7 +111,7 @@ export function CardCVV(
             inputmode='numeric'
             ref={ cvvRef }
             type={ type }
-            className={ className }
+            className='cvv'
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

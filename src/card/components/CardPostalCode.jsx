@@ -11,7 +11,6 @@ type CardPostalCodeProps = {|
     name : string,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : number,
@@ -31,7 +30,6 @@ export function CardPostalCode(
         allowNavigation = false,
         state,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -108,7 +106,7 @@ export function CardPostalCode(
             inputmode='numeric'
             ref={ postalCodeRef }
             type={ type }
-            className={ className }
+            className='postal-code'
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

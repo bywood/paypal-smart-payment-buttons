@@ -13,6 +13,12 @@ export function exportMethods(ref : Object) : void {
             if (isValidAttribute(name)) {
                 ref?.current?.removeAttribute(name);
             }
+        },
+        addClass: (name) => {
+            ref?.current?.classList.add(name);
+        },
+        removeClass: (name) => {
+            ref?.current?.classList.remove(name);
         }
     });
 };

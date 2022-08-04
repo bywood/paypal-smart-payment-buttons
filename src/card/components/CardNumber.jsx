@@ -30,11 +30,6 @@ import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
 
-const defaultCardNumberInputState : InputState = {
-    ...defaultInputState,
-    displayCardIcon: false
-}
-
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
     const { inputValue, isValid, maskedInputValue, cursorStart, contentPasted } = inputState;
@@ -55,7 +50,6 @@ type CardNumberProps = {|
     autocomplete? : string,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -76,7 +70,6 @@ export function CardNumber(
         allowNavigation = false,
         state,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -88,7 +81,7 @@ export function CardNumber(
     } : CardNumberProps
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
-    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultCardNumberInputState, ...state });
+    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
 
     const numberRef = useRef()
@@ -162,8 +155,13 @@ export function CardNumber(
             onFocus(event);
         }
 
+        const element = numberRef?.current;
+        if (element) {
+            element.classList.add('display-icon');
+        }
+
         const maskedValue = maskCard(inputValue);
-        const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
+        const updatedState = { ...inputState, maskedInputValue: maskedValue };
         if (!isValid) {
             updatedState.isPotentiallyValid = true;
         }
@@ -172,7 +170,16 @@ export function CardNumber(
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
-        const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false, displayCardIcon: inputState.inputValue.length > 0 };
+        const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false };
+
+        const element = numberRef?.current;
+        if (element) {
+            if (inputState.inputValue.length > 0) {
+                element.classList.add('display-icon');
+            } else {
+                element.classList.remove('display-icon');
+            }
+        }
 
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
@@ -207,7 +214,7 @@ export function CardNumber(
                 inputmode='numeric'
                 ref={ numberRef }
                 type={ type }
-                className={ `${className} ${inputState.displayCardIcon ? 'display-icon' : ''}` }
+                className='number'
                 placeholder={ placeholder }
                 value={ maskedInputValue }
                 style={ style }

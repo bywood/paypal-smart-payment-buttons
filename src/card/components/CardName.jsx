@@ -11,7 +11,6 @@ type CardNameProps = {|
     name : string,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -31,7 +30,6 @@ export function CardName(
         allowNavigation = false,
         state,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -107,7 +105,7 @@ export function CardName(
             inputmode='text'
             ref={ nameRef }
             type={ type }
-            className={ className }
+            className="name"
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

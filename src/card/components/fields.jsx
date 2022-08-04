@@ -132,6 +132,43 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
         const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, isCvvValid: cvvValidity.isValid, isExpiryValid: expiryValidity.isValid, gqlErrorsObject });
 
+        let element = null;
+        element = numberRef?.current?.base;
+        if (element) {
+            if (!cardEligibility) {
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            } else {
+                if (numberValidity.isPotentiallyValid || numberValidity.isValid) {
+                    element.classList.add('valid');
+                    element.classList.remove('invalid');
+                } else{
+                    element.classList.add('invalid');
+                    element.classList.remove('valid');
+                }
+            }
+        }
+        element = expiryRef?.current?.base;
+        if (element) {
+            if (expiryValidity.isPotentiallyValid || expiryValidity.isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else{
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
+        element = cvvRef?.current?.base;
+        if (element) {
+            if (cvvValidity.isPotentiallyValid || cvvValidity.isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else{
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
+
         onChange({ value: { number, cvv, expiry }, valid, errors });
 
     }, [
@@ -163,8 +200,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     autocomplete={ autocomplete }
                     navigation={ cardNumberNavivation }
                     type='text'
-                    // eslint-disable-next-line react/forbid-component-props, no-nested-ternary
-                    className={ `number ${ !cardEligibility ? 'invalid' : (numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid')}`}
                     allowNavigation={ true }
                     placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
                     maxLength='24'
@@ -179,8 +214,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     autocomplete={ autocomplete }
                     navigation={ cardExpiryNavivation }
                     type='text'
-                    // eslint-disable-next-line react/forbid-component-props
-                    className={ `expiry ${ expiryValidity.isPotentiallyValid || expiryValidity.isValid ? 'valid' : 'invalid' }` }
                     allowNavigation={ true }
                     placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
                     maxLength='7'
@@ -195,8 +228,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     navigation={ cardCvvNavivation }
                     type='text'
                     cardType={ cardType }
-                    // eslint-disable-next-line react/forbid-component-props
-                    className={ `cvv ${ cvvValidity.isPotentiallyValid || cvvValidity.isValid ? 'valid' : 'invalid' }` }
                     allowNavigation={ true }
                     placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
                     maxLength={ getCvvLength(cardType) }
@@ -256,6 +287,21 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
     useEffect(() => {
         const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
+        const element = numberRef?.current?.base;
+        if (element) {
+            if (!cardEligibility) {
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            } else {
+                if (numberValidity.isPotentiallyValid || numberValidity.isValid) {
+                    element.classList.add('valid');
+                    element.classList.remove('invalid');
+                } else{
+                    element.classList.add('invalid');
+                    element.classList.remove('valid');
+                }
+            }
+        }
         onChange({ value: number, valid: numberValidity.isValid, errors });
     }, [ number, cardEligibility, isValid, isPotentiallyValid ]);
 
@@ -269,8 +315,6 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 ref={ numberRef }
                 type='text'
                 autocomplete={ autocomplete }
-                // eslint-disable-next-line react/forbid-component-props, no-nested-ternary
-                className={ `number ${ !cardEligibility ? 'invalid' : (numberValidity.isPotentiallyValid || numberValidity.isValid ? 'valid' : 'invalid')}`}
                 placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
                 maxLength='24'
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
@@ -316,7 +360,16 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     
     useEffect(() => {
         const errors = setErrors({ isExpiryValid: expiryValidity.isValid });
-
+        const element = expiryRef?.current?.base;
+        if (element) {
+            if (expiryValidity.isPotentiallyValid || expiryValidity.isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else{
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
         onChange({ value: expiry, valid: expiryValidity.isValid, errors });
     }, [ expiry, isValid, isPotentiallyValid ]);
 
@@ -329,8 +382,6 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
                 ref={ expiryRef }
                 type='text'
                 autocomplete={ autocomplete }
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `expiry ${ expiryValidity.isPotentiallyValid || expiryValidity.isValid ? 'valid' : 'invalid' }` }
                 placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
                 maxLength='7'
                 onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
@@ -374,7 +425,16 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
     useEffect(() => {
         const errors = setErrors({ isCvvValid: cvvValidity.isValid });
-
+        const element = cvvRef?.current?.base;
+        if (element) {
+            if (cvvValidity.isPotentiallyValid || cvvValidity.isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else{
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
         onChange({ value: cvv, valid: cvvValidity.isValid, errors });
     }, [ cvv, isValid, isPotentiallyValid  ]);
 
@@ -387,8 +447,6 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
                 ref={ cvvRef }
                 type='text'
                 autocomplete={ autocomplete }
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `cvv ${ cvvValidity.isPotentiallyValid || cvvValidity.isValid ? 'valid' : 'invalid' }` }
                 placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
                 maxLength='4'
                 onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
@@ -432,7 +490,16 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
     useEffect(() => {
         const errors = setErrors({ isNameValid: nameValidity.isValid });
-
+        const element = nameRef?.current?.base;
+        if (element) {
+            if (nameValidity.isPotentiallyValid || nameValidity.isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else{
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
         onChange({ value: name, valid: nameValidity.isValid, errors });
     }, [ name, isValid, isPotentiallyValid  ]);
 
@@ -444,8 +511,6 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
             <CardName
                 ref={ nameRef }
                 type='text'
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `name ${ nameValidity.isPotentiallyValid || nameValidity.isValid ? 'valid' : 'invalid' }` }
                 placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.name }
                 maxLength='255'
                 onChange={ ({ cardName } : CardNameChangeEvent) => setName(cardName) }
@@ -492,7 +557,16 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
 
     useEffect(() => {
         const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
-
+        const element = postalRef?.current?.base;
+        if (element) {
+            if (postalCodeValidity.isPotentiallyValid || postalCodeValidity.isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else{
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
         onChange({ value: postalCode, valid: postalCodeValidity.isValid, errors });
     }, [ postalCode, isValid, isPotentiallyValid  ]);
 
@@ -506,8 +580,6 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
                 type='text'
                 autocomplete={ autocomplete }
                 placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.postal }
-                // eslint-disable-next-line react/forbid-component-props
-                className={ `expiry ${ postalCodeValidity.isPotentiallyValid || postalCodeValidity.isValid ? 'valid' : 'invalid' }` }
                 minLength={ minLength }
                 maxLength={ maxLength }
                 onChange={ ({ cardPostalCode } : CardPostalCodeChangeEvent) => setPostalCode(cardPostalCode) }
