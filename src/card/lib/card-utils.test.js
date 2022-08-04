@@ -3,16 +3,20 @@
 import { getLogger } from '../../lib';
 
 import {
-    autoFocusOnFirstInput,
+    checkCardNumber,
+    checkName,
+    checkPostalCode
+} from './card-checks';
+import {
+    autoFocusOnFirstInput
+} from './card-focus';
+import {
     maskValidCard,
     formatDate,
     parseGQLErrors,
     filterStyle,
     styleToString,
     filterExtraFields,
-    checkPostalCode,
-    checkName,
-    checkCardNumber,
     isValidAttribute
 } from './card-utils';
 
