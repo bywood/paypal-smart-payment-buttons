@@ -87,7 +87,7 @@ export function CardNumber(
     const numberRef = useRef()
 
     useEffect(() => {
-        if (!allowNavigation){
+        if (!allowNavigation) {
             exportMethods(numberRef);
         }
     }, []);

@@ -71,7 +71,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const expiryRef = useRef();
     const cvvRef = useRef();
     const cardFieldRef = useRef();
-    console.log(cardFieldRef)
     
     const cardNumberNavivation : CardNavigation = { next: goToNextField(expiryRef), previous: () => noop };
     const cardExpiryNavivation : CardNavigation = { next: goToNextField(cvvRef), previous: goToPreviousField(numberRef) };
@@ -174,7 +173,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                 { cssText }
             </style>
             <Icons />
-            <div ref={ cardFieldRef } className={ `card-field ${ hasFocus ? 'focus' : ''}`}>
+            <div ref={ cardFieldRef } className={ `card-field ${ hasFocus ? 'focus' : '' } ${ !validationMessage.length ? '' : 'invalid' }` }>
                 <CardNumber
                     ref={ numberRef }
                     autocomplete={ autocomplete }
