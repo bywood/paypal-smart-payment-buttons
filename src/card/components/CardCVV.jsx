@@ -1,6 +1,7 @@
 /* @flow */
 /** @jsx h */
 
+import { cvv } from 'card-validator/dist/cvv';
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
@@ -49,7 +50,9 @@ export function CardCVV(
     const cvvRef = useRef()
 
     useEffect(() => {
-        exportMethods(cvvRef);
+        if (!allowNavigation){
+            exportMethods(cvvRef);
+        }
     }, []);
 
     useEffect(() => {

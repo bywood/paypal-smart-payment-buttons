@@ -3,6 +3,7 @@
 import { isValidAttribute } from './card-utils';
 
 export function exportMethods(ref : Object) : void {
+    console.log(window.xprops)
     window.xprops.export({
         setAttribute: (name, value) => {
             if (isValidAttribute(name)) {

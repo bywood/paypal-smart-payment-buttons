@@ -13,7 +13,8 @@ import {
     goToPreviousField,
     convertDateFormat,
     getCSSText,
-    markValidity
+    markValidity,
+    exportMethods
 } from '../lib';
 import type {
     CardStyle,
@@ -69,7 +70,9 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const numberRef = useRef();
     const expiryRef = useRef();
     const cvvRef = useRef();
-
+    const cardFieldRef = useRef();
+    console.log(cardFieldRef)
+    
     const cardNumberNavivation : CardNavigation = { next: goToNextField(expiryRef), previous: () => noop };
     const cardExpiryNavivation : CardNavigation = { next: goToNextField(cvvRef), previous: goToPreviousField(numberRef) };
     const cardCvvNavivation : CardNavigation = { next:     () =>  noop, previous: goToPreviousField(expiryRef) };
@@ -92,6 +95,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
     useEffect(() => {
         autoFocusRef(numberRef);
+        exportMethods(cardFieldRef);
     }, []);
 
     useEffect(() => {
@@ -170,7 +174,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                 { cssText }
             </style>
             <Icons />
-            <div className={ `card-field ${ hasFocus ? 'focus' : '' } ${ !validationMessage.length ? '' : 'invalid' }` }>
+            <div ref={ cardFieldRef } className={ `card-field ${ hasFocus ? 'focus' : ''}`}>
                 <CardNumber
                     ref={ numberRef }
                     autocomplete={ autocomplete }
