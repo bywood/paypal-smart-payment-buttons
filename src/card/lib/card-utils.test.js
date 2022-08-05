@@ -3,14 +3,6 @@
 import { getLogger } from '../../lib';
 
 import {
-    checkCardNumber,
-    checkName,
-    checkPostalCode
-} from './card-checks';
-import {
-    autoFocusOnFirstInput
-} from './card-focus';
-import {
     maskValidCard,
     formatDate,
     parseGQLErrors,
@@ -22,99 +14,7 @@ import {
 
 jest.mock('../../lib/dom');
 
-function triggerFocusListener(input) {
-
-    const focusListener = window.addEventListener.mock.calls.find((args) => {
-        return args[0] === 'focus';
-    })[1];
-
-    focusListener();
-
-    if (input) {
-
-        const focusinListener = window.addEventListener.mock.calls.find((args) => {
-            return args[0] === 'focusin';
-        })[1];
-
-        focusinListener({ target: input });
-    }
-
-    jest.runAllTimers();
-
-}
-
 describe('card utils', () => {
-    describe('autoFocusOnFirstInput', () => {
-        let input : HTMLInputElement;
-
-        beforeEach(() => {
-            jest.useFakeTimers();
-            jest.spyOn(window, 'addEventListener').mockImplementation(jest.fn());
-            input = document.createElement('input');
-        });
-
-        it('noops when no input is passed', () => {
-            autoFocusOnFirstInput();
-
-            expect(window.addEventListener).not.toBeCalled();
-        });
-
-        it('adds a focus and focusin listener when input is available', () => {
-            autoFocusOnFirstInput(input);
-
-            expect(window.addEventListener).toBeCalledTimes(2);
-            expect(window.addEventListener).toBeCalledWith('focus', expect.any(Function));
-            expect(window.addEventListener).toBeCalledWith('focusin', expect.any(Function));
-        });
-
-        it('noops when the an HTMLInputElement gets focus', () => {
-            const spy = jest.spyOn(input, 'focus');
-
-            autoFocusOnFirstInput(input);
-
-            triggerFocusListener(input);
-
-            expect(spy).not.toBeCalled();
-        });
-
-        it('focuses on input when the window gets focus', () => {
-            const spy = jest.spyOn(input, 'focus');
-
-            autoFocusOnFirstInput(input);
-
-            triggerFocusListener();
-
-            expect(spy).toBeCalledTimes(1);
-        });
-
-        it('applies a focus patch for Safari using setSelectionRange', () => {
-            input.value = 'foo';
-
-            input.setSelectionRange(1, 2);
-
-            const spy = jest.spyOn(input, 'setSelectionRange');
-            autoFocusOnFirstInput(input);
-
-            triggerFocusListener();
-
-            expect(spy).toBeCalledTimes(2);
-            expect(spy).toBeCalledWith(0, 0);
-            expect(spy).toBeCalledWith(1, 2);
-        });
-
-        it('adjusts and resets the inputs value when it is empty to accomodate Safari quirk', () => {
-            input.value = '';
-
-            const spy = jest.spyOn(input, 'value', 'set');
-            autoFocusOnFirstInput(input);
-
-            triggerFocusListener();
-
-            expect(spy).toBeCalledTimes(2);
-            expect(spy).toBeCalledWith(' ');
-            expect(spy).toBeCalledWith('');
-        });
-    });
 
     describe('maskValidCard', () => {
         it('masks all but the last 4 of the card number with •', () => {
@@ -437,82 +337,6 @@ describe('card utils', () => {
             expect(typeof styleString).toBe('string');
             expect(styleString).toBe(targetString)
         });
-    });
-
-    describe('checkPostalCode', () => {
-        it('returns true for isValid for a 5-digit postal code', () => {
-            const postalCode = '12345';
-
-            expect(checkPostalCode(postalCode).isValid).toBe(true)
-        });
-
-        it('returns false for isValid for a postal code < 5 digits', () => {
-            const postalCode = '1234';
-
-            expect(checkPostalCode(postalCode, 5).isValid).toBe(false)
-        });
-
-        it('retusn false for isValid for a postal code that is not a string', () => {
-            const postalCode = 12345
-
-            // $FlowFixMe
-            expect(checkPostalCode(postalCode).isValid).toBe(false)
-        })
-    });
-
-    describe('checkName', () => {
-        it('returns true for isValid for a name less than 255 characters and is not comprised of only numbers, hyphens and spaces', () => {
-            const name = "Test Name";
-
-            expect(checkName(name).isValid).toBe(true);
-        });
-
-        it('returns false for isValid, and isPotentiallyValid for a name longer than 255 characters', () => {
-            const name = "Ekjgfsekldjghdsfkghdksgdfkgksafghefsgkvshdbbfkshdfkbdsfgkbdskfbndfskljbndfakljvbnadflkvbadlkfvnsljkdfvhnkldsfzvnlkdsfvnladkfjvnldkfsjvnsdlkjfvnakljdfvaasdkfjgvbefskldjvblsjkdfvnbaljkdfnvkdadfjvnklsdjfnvdksdjfvnksdfvnfdjdavnkddsafvnkadljfvwertydhfjdksjdddas";
-        
-            const validity = checkName(name);
-
-            expect(validity.isValid).toBe(false);
-            expect(validity.isPotentiallyValid).toBe(false);
-        });
-
-        it('returns false for isValid for a name comprised of only numbers', () => {
-            const name = "4111111111111111";
-
-            expect(checkName(name).isValid).toBe(false);
-        });
-
-        it('returns false for isValid for a name comprised of only hyphens', () => {
-            const name = "-----";
-
-            expect(checkName(name).isValid).toBe(false);
-        });
-
-        it('returns false for isValid for a name comprised of only spaces', () => {
-            const name = "   ";
-
-            expect(checkName(name).isValid).toBe(false);
-        });
-    });
-
-    describe('checkCardNumber', ( ) => {
-        it('returns true for isValid if card number passes luhn validation', () => {
-            const cardNumber = '4111 1111 1111 1111';
-
-            expect(checkCardNumber(cardNumber).isValid).toBe(true);
-        });
-
-        it('returns false for isValid if card number does not pass luhn validation', () => {
-            const cardNumber = '4111 1111';
-
-            expect(checkCardNumber(cardNumber).isValid).toBe(false);
-        });
-
-        it('returns false for isPotentiallyValid is a non-numeric character is entered', () => {
-            const cardNumber = '411x';
-
-            expect(checkCardNumber(cardNumber).isPotentiallyValid).toBe(false)
-        })
     });
 
     describe('filterExtraFields', () => {
