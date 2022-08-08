@@ -162,6 +162,22 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
         cardType
     ]);
 
+    useEffect(() => {
+        const element = cardFieldRef?.current;
+        if (element) {
+            if (hasFocus) {
+                element.classList.add('focus');
+            } else {
+                element.classList.remove('focus');
+            }
+            if (validationMessage.length > 0) {
+                element.classList.add('invalid');
+            } else {
+                element.classList.remove('invalid');
+            }
+        }
+    }, [ hasFocus, validationMessage ]);
+
     const onChangeNumber : (CardNumberChangeEvent) => void = ({ cardNumber, cardType : type } : CardNumberChangeEvent) : void => {
         setNumber(cardNumber);
         setCardType({ ...type });
@@ -173,7 +189,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                 { cssText }
             </style>
             <Icons />
-            <div ref={ cardFieldRef } className={ `card-field ${ hasFocus ? 'focus' : '' } ${ !validationMessage.length ? '' : 'invalid' }` }>
+            <fieldset ref={ cardFieldRef } className='card-field'>
                 <CardNumber
                     ref={ numberRef }
                     autocomplete={ autocomplete }
@@ -215,7 +231,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     onFocus={ () => setHasFocus(true) }
                     onBlur={ () => setHasFocus(false) }
                 />
-            </div>
+            </fieldset>
             <ValidationMessage message={ validationMessage } />
         </Fragment>
     );
