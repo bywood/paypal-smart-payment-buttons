@@ -46,11 +46,7 @@ function getIconId(type) : string {
     if (element) {
         return iconId;
     }
-<<<<<<< HEAD
     return 'icon-unknown';
-=======
-    return 'icon-UNKNOWN';
->>>>>>> upstream/Unbranded-Multi-Card-Fields
 }
 
 type CardNumberProps = {|
