@@ -2,17 +2,15 @@
 /** @jsx h */
 
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown } from '../lib';
+import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardPostalCodeProps = {|
     name : string,
-    ref : () => void,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : number,
@@ -31,9 +29,7 @@ export function CardPostalCode(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -46,6 +42,12 @@ export function CardPostalCode(
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
+
+    const postalCodeRef = useRef();
+
+    useEffect(() => {
+        exportMethods(postalCodeRef);
+    }, []);
 
     useEffect(() => {
         const validity = checkPostalCode(inputValue, minLength);
@@ -102,9 +104,9 @@ export function CardPostalCode(
         <input
             name={ name }
             inputmode='numeric'
-            ref={ ref }
+            ref={ postalCodeRef }
             type={ type }
-            className={ className }
+            className='postal-code'
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

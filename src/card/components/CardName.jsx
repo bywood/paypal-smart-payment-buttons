@@ -2,17 +2,15 @@
 /** @jsx h */
 
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkName, defaultNavigation, defaultInputState, navigateOnKeyDown } from '../lib';
+import { checkName, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardNameProps = {|
     name : string,
-    ref : () => void,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -31,9 +29,7 @@ export function CardName(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -45,6 +41,12 @@ export function CardName(
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
+
+    const nameRef = useRef()
+
+    useEffect(() => {
+        exportMethods(nameRef);
+    }, []);
 
     useEffect(() => {
         const validity = checkName(inputValue);
@@ -101,9 +103,9 @@ export function CardName(
         <input
             name={ name }
             inputmode='text'
-            ref={ ref }
+            ref={ nameRef }
             type={ type }
-            className={ className }
+            className="name"
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

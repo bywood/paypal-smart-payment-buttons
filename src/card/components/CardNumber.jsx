@@ -2,7 +2,7 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
 import {
     maskCard,
@@ -15,7 +15,8 @@ import {
     defaultNavigation,
     defaultInputState,
     navigateOnKeyDown,
-    maskValidCard
+    maskValidCard,
+    exportMethods
 } from '../lib';
 import type {
     CardNumberChangeEvent,
@@ -28,11 +29,6 @@ import type {
 import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
-
-const defaultCardNumberInputState : InputState = {
-    ...defaultInputState,
-    displayCardIcon: false
-}
 
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
@@ -52,10 +48,8 @@ function getIconId(type) : string {
 type CardNumberProps = {|
     name : string,
     autocomplete? : string,
-    ref : () => void,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -75,9 +69,7 @@ export function CardNumber(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -89,9 +81,16 @@ export function CardNumber(
     } : CardNumberProps
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
-    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultCardNumberInputState, ...state });
-
+    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+
+    const numberRef = useRef()
+
+    useEffect(() => {
+        if (!allowNavigation) {
+            exportMethods(numberRef);
+        }
+    }, []);
 
     useEffect(() => {
         const validity = checkCardNumber(inputValue);
@@ -114,7 +113,6 @@ export function CardNumber(
         }
 
     }, [ isValid, isPotentiallyValid ]);
-
 
     const setValueAndCursor : (InputEvent) => void = (event : InputEvent) : void => {
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
@@ -159,6 +157,11 @@ export function CardNumber(
             onFocus(event);
         }
 
+        const element = numberRef?.current;
+        if (element) {
+            element.classList.add('display-icon');
+        }
+
         const maskedValue = maskCard(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
         if (!isValid) {
@@ -170,6 +173,15 @@ export function CardNumber(
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         const updatedState = { maskedInputValue, isPotentiallyValid, contentPasted: false, displayCardIcon: inputState.inputValue.length > 0 };
+
+        const element = numberRef?.current;
+        if (element) {
+            if (inputState.inputValue.length > 0) {
+                element.classList.add('display-icon');
+            } else {
+                element.classList.remove('display-icon');
+            }
+        }
 
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
@@ -202,9 +214,9 @@ export function CardNumber(
                 name={ name }
                 autocomplete={ autocomplete }
                 inputmode='numeric'
-                ref={ ref }
+                ref={ numberRef }
                 type={ type }
-                className={ `${className} ${inputState.displayCardIcon ? 'display-icon' : ''}` }
+                className='number'
                 placeholder={ placeholder }
                 value={ maskedInputValue }
                 style={ style }

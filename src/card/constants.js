@@ -214,7 +214,9 @@ export const DEFAULT_STYLE_SINGLE_CARD = {
         'border-radius':  '0.25rem',
         'box-sizing':     'border-box',
         'display':        'flex',
-        'flex-direction': 'row'
+        'flex-direction': 'row',
+        'margin':         '0',
+        'padding':        '0'
     },
     '.focus': {
         'border-color': '#000000',
@@ -291,4 +293,11 @@ export const DEFAULT_PLACEHOLDERS : CardPlaceholder = {
 
 export const VALID_EXTRA_FIELDS = [
     'billingAddress'
+];
+
+export const ALLOWED_ATTRIBUTES = [
+    "aria-invalid",
+    "aria-required",
+    "disabled",
+    "placeholder",
 ];

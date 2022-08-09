@@ -2,18 +2,16 @@
 /** @jsx h */
 
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown } from '../lib';
+import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardCvvProps = {|
     name : string,
     autocomplete? : string,
-    ref : () => void,
     type : string,
     state? : InputState,
-    className : string,
     placeholder : string,
     style : Object,
     maxLength : string,
@@ -34,9 +32,7 @@ export function CardCVV(
         navigation = defaultNavigation,
         allowNavigation = false,
         state,
-        ref,
         type,
-        className,
         placeholder,
         style,
         maxLength,
@@ -49,6 +45,14 @@ export function CardCVV(
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
+
+    const cvvRef = useRef()
+
+    useEffect(() => {
+        if (!allowNavigation) {
+            exportMethods(cvvRef);
+        }
+    }, []);
 
     useEffect(() => {
         const validity = checkCVV(inputValue, cardType);
@@ -107,9 +111,9 @@ export function CardCVV(
             name={ name }
             autocomplete={ autocomplete }
             inputmode='numeric'
-            ref={ ref }
+            ref={ cvvRef }
             type={ type }
-            className={ className }
+            className='cvv'
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }
