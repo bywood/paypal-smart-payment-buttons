@@ -224,7 +224,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     type='text'
                     cardType={ cardType }
                     allowNavigation={ true }
-                    placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
+                    placeholder={ placeholder.cvv }
                     maxLength={ getCvvLength(cardType) }
                     onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
                     onValidityChange={ (validity : FieldValidity) => setCvvValidity({ ...validity }) }
@@ -418,7 +418,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
                 ref={ cvvRef }
                 type='text'
                 autocomplete={ autocomplete }
-                placeholder={ placeholder.cvv ?? DEFAULT_PLACEHOLDERS.cvv }
+                placeholder={ placeholder.cvv}
                 maxLength='4'
                 onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
                 onValidityChange={ (validity : FieldValidity) => setCvvValidity(validity) }

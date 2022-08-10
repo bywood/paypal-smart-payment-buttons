@@ -341,3 +341,7 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
         return acc;
     }, {});
 }
+
+export function getContext(win : Object) : string {
+    return win.xprops?.parent?.uid || win.xprops?.uid;
+}

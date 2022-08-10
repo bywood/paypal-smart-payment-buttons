@@ -4,6 +4,7 @@
 import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
+import { getPostRobot } from '../../lib';
 import {
     maskCard,
     checkForNonDigits,
@@ -100,6 +101,17 @@ export function CardNumber(
     useEffect(() => {
         if (typeof onEligibilityChange === 'function') {
             onEligibilityChange(checkCardEligibility(inputValue, cardType));
+        }
+        // communicate card type change to sibling components
+        const postRobot = getPostRobot();
+        if (postRobot) {
+            const frames = window.parent.frames;
+            for (const frame of frames) {
+                postRobot.send(frame, 'cardTypeChange', cardType, {
+                    domain: window.location.origin,
+                    fireAndForget: true
+                });
+            }
         }
     }, [ cardType ]);
 
