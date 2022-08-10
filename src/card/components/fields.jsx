@@ -7,7 +7,6 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 
 import {
     setErrors,
-    getCvvLength,
     initFieldValidity,
     goToNextField,
     goToPreviousField,
@@ -25,14 +24,12 @@ import type {
     CardNameChangeEvent,
     CardPostalCodeChangeEvent,
     FieldValidity,
-    CardNavigation,
-    CardType
+    CardNavigation
 } from '../types';
 import {
     CARD_ERRORS,
     DEFAULT_STYLE_MULTI_CARD,
     DEFAULT_STYLE_SINGLE_CARD,
-    DEFAULT_CARD_TYPE,
     DEFAULT_PLACEHOLDERS,
     CARD_FIELD_TYPE
 } from '../constants';
@@ -65,7 +62,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
-    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     const numberRef = useRef();
     const expiryRef = useRef();
@@ -158,8 +154,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
         numberValidity,
         cardEligibility,
         cvvValidity,
-        expiryValidity,
-        cardType
+        expiryValidity
     ]);
 
     useEffect(() => {
@@ -178,9 +173,8 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
         }
     }, [ hasFocus, validationMessage ]);
 
-    const onChangeNumber : (CardNumberChangeEvent) => void = ({ cardNumber, cardType : type } : CardNumberChangeEvent) : void => {
+    const onChangeNumber : (CardNumberChangeEvent) => void = ({ cardNumber } : CardNumberChangeEvent) : void => {
         setNumber(cardNumber);
-        setCardType({ ...type });
     };
 
     return (
@@ -222,10 +216,9 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     autocomplete={ autocomplete }
                     navigation={ cardCvvNavivation }
                     type='text'
-                    cardType={ cardType }
                     allowNavigation={ true }
                     placeholder={ placeholder.cvv }
-                    maxLength={ getCvvLength(cardType) }
+                    maxLength='4'
                     onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
                     onValidityChange={ (validity : FieldValidity) => setCvvValidity({ ...validity }) }
                     onFocus={ () => setHasFocus(true) }
