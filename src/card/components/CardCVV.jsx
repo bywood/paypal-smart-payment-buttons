@@ -5,7 +5,7 @@ import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getPostRobot } from '../../lib';
-import { DEFAULT_PLACEHOLDERS } from '../constants';
+import { DEFAULT_CARD_TYPE } from '../constants';
 import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
@@ -16,8 +16,6 @@ type CardCvvProps = {|
     state? : InputState,
     placeholder : string,
     style : Object,
-    maxLength : string,
-    cardType : CardType,
     navigation : CardNavigation,
     onChange : (cvvEvent : CardCvvChangeEvent) => void,
     onFocus : (event : InputEvent) => void,
@@ -37,17 +35,15 @@ export function CardCVV(
         type,
         placeholder,
         style,
-        maxLength,
         onChange,
         onFocus,
         onBlur,
-        onValidityChange,
-        cardType
+        onValidityChange
     } : CardCvvProps
 ) : mixed {
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
-    const [ cvvMaxLength, setCvvMaxLength ] = useState(maxLength);
-    const [ cvvPlaceholder, setCvvPlaceholder ] = useState(placeholder);
+    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [ touched, setTouched ] = useState(false);
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const cvvRef = useRef()
@@ -60,15 +56,12 @@ export function CardCVV(
         const postRobot = getPostRobot();
         if (postRobot) {
             const context = getContext(window);
-            postRobot.on('cardTypeChange', (event) => {
+            postRobot.on('cardTypeChange', {
+                domain: window.location.origin
+             }, (event) => {
                 const messageContext = getContext(event.source);
                 if (messageContext === context) {
-                    if ((placeholder === undefined || placeholder === DEFAULT_PLACEHOLDERS.cvv) && event.data.code?.name) {
-                        setCvvPlaceholder(event.data.code.name);
-                    }
-                    if (event.data.code?.size) {
-                        setCvvMaxLength(event.data.code.size);
-                    }
+                    setCardType(event.data);
                 }
             });
         }
@@ -78,6 +71,14 @@ export function CardCVV(
         const validity = checkCVV(inputValue, cardType);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
+
+    useEffect(() => {
+        const validity = checkCVV(inputValue, cardType);
+        if (touched) {
+            validity.isPotentiallyValid = false;
+        }
+        setInputState(newState => ({ ...newState, ...validity }));
+    }, [ cardType ]);
 
     useEffect(() => {
         if (typeof onValidityChange === 'function') {
@@ -109,6 +110,9 @@ export function CardCVV(
     };
 
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
+        if (!touched) {
+            setTouched(true);
+        }
         if (typeof onFocus === 'function') {
             onFocus(event);
         }
@@ -134,10 +138,10 @@ export function CardCVV(
             ref={ cvvRef }
             type={ type }
             className='cvv'
-            placeholder={ cvvPlaceholder }
+            placeholder={ placeholder ?? cardType.code.name }
             value={ inputValue }
             style={ style }
-            maxLength={ cvvMaxLength }
+            maxLength={ cardType.code.size }
             onKeyDown={ onKeyDownEvent }
             onInput={ setCvvValue }
             onFocus={ onFocusEvent }
