@@ -53,7 +53,6 @@ type CardNumberProps = {|
     state? : InputState,
     placeholder : string,
     style : Object,
-    maxLength : string,
     navigation? : CardNavigation,
     allowNavigation? : boolean,
     onChange : (numberEvent : CardNumberChangeEvent) => void,
@@ -73,7 +72,6 @@ export function CardNumber(
         type,
         placeholder,
         style,
-        maxLength,
         onChange,
         onFocus,
         onBlur,
@@ -82,6 +80,7 @@ export function CardNumber(
     } : CardNumberProps
 ) : mixed {
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [ maxLength, setMaxLength ] : [ number, (number) => number ] = useState(24);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
 
@@ -101,6 +100,16 @@ export function CardNumber(
     useEffect(() => {
         if (typeof onEligibilityChange === 'function') {
             onEligibilityChange(checkCardEligibility(inputValue, cardType));
+        }
+        if (cardType && cardType.lengths) {
+            // get the maximum card length for the given card type
+            const cardMaxLength = cardType.lengths.reduce((previousValue, currentValue) => {
+                return Math.max(previousValue, currentValue);
+            });
+            if (cardMaxLength) {
+                // set maxLength to the maximum card length, plus the number of spaces for the gaps
+                setMaxLength(cardMaxLength + (cardType.gaps?.length ?? 0));
+            }
         }
         // communicate card type change to sibling components
         const postRobot = getPostRobot();

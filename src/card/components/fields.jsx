@@ -191,7 +191,6 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     type='text'
                     allowNavigation={ true }
                     placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
-                    maxLength='24'
                     onChange={ onChangeNumber }
                     onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
                     onValidityChange={ (validity : FieldValidity) => setNumberValidity({ ...validity }) }
@@ -297,7 +296,6 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 type='text'
                 autocomplete={ autocomplete }
                 placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
-                maxLength='24'
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
                 onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
