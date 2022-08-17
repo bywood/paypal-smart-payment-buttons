@@ -52,6 +52,7 @@ type CardFieldProps = {|
 |};
 
 export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autoFocusRef, autocomplete } : CardFieldProps) : mixed {
+    const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({});
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
@@ -90,7 +91,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
     useEffect(() => {
         autoFocusRef(numberRef);
-        exportMethods(cardFieldRef);
+        exportMethods(cardFieldRef, setAttributes);
     }, []);
 
     useEffect(() => {
@@ -183,7 +184,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                 { cssText }
             </style>
             <Icons />
-            <fieldset ref={ cardFieldRef } className='card-field'>
+            <fieldset ref={ cardFieldRef } className='card-field' { ...attributes }>
                 <CardNumber
                     ref={ numberRef }
                     autocomplete={ autocomplete }

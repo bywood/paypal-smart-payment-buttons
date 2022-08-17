@@ -41,6 +41,7 @@ export function CardCVV(
         onValidityChange
     } : CardCvvProps
 ) : mixed {
+    const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ touched, setTouched ] = useState(false);
@@ -50,7 +51,7 @@ export function CardCVV(
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(cvvRef);
+            exportMethods(cvvRef, setAttributes);
         }
         // listen for card type changes
         const postRobot = getPostRobot();
@@ -138,7 +139,6 @@ export function CardCVV(
             ref={ cvvRef }
             type={ type }
             className='cvv'
-            placeholder={ placeholder ?? cardType.code.name }
             value={ inputValue }
             style={ style }
             maxLength={ cardType.code.size }
@@ -146,6 +146,8 @@ export function CardCVV(
             onInput={ setCvvValue }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
+            { ...attributes }
+            placeholder={ attributes.placeholder ?? cardType.code.name }
         />
     );
 }

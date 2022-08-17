@@ -79,6 +79,7 @@ export function CardNumber(
         onEligibilityChange
     } : CardNumberProps
 ) : mixed {
+    const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ maxLength, setMaxLength ] : [ number, (number) => number ] = useState(24);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
@@ -88,7 +89,7 @@ export function CardNumber(
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(numberRef);
+            exportMethods(numberRef, setAttributes);
         }
     }, []);
 
@@ -238,7 +239,6 @@ export function CardNumber(
                 ref={ numberRef }
                 type={ type }
                 className='number'
-                placeholder={ placeholder }
                 value={ maskedInputValue }
                 style={ style }
                 maxLength={ maxLength }
@@ -247,6 +247,7 @@ export function CardNumber(
                 onBlur={ onBlurEvent }
                 onKeyDown={ onKeyDownEvent }
                 onPaste={ onPasteEvent }
+                { ...attributes }
             />
             <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" />
         </Fragment>

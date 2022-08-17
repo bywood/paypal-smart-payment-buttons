@@ -2,16 +2,26 @@
 
 import { isValidAttribute } from './card-utils';
 
-export function exportMethods(ref : Object) : void {
+export function exportMethods(ref : Object, setAttributes : Function) : void {
     window.xprops.export({
-        setAttribute: (name, value) => {
-            if (isValidAttribute(name)) {
-                ref?.current?.setAttribute(name, value);
+        setAttribute: (key, value) => {
+            if (isValidAttribute(key)) {
+                setAttributes((currentAttributes) => {
+                    return {
+                        ...currentAttributes,
+                        [key]: value
+                    }
+                });
             }
         },
-        removeAttribute: (name) => {
-            if (isValidAttribute(name)) {
-                ref?.current?.removeAttribute(name);
+        removeAttribute: (key) => {
+            if (isValidAttribute(key)) {
+                setAttributes((currentAttributes) => {
+                    return {
+                        ...currentAttributes,
+                        [key]: ''
+                    }
+                });
             }
         },
         addClass: (name) => {
