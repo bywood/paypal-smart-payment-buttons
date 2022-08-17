@@ -4,22 +4,22 @@ import { isValidAttribute } from './card-utils';
 
 export function exportMethods(ref : Object, setAttributes : Function) : void {
     window.xprops.export({
-        setAttribute: (key, value) => {
-            if (isValidAttribute(key)) {
+        setAttribute: (name, value) => {
+            if (isValidAttribute(name)) {
                 setAttributes((currentAttributes) => {
                     return {
                         ...currentAttributes,
-                        [key]: value
+                        [name]: value
                     }
                 });
             }
         },
-        removeAttribute: (key) => {
-            if (isValidAttribute(key)) {
+        removeAttribute: (name) => {
+            if (isValidAttribute(name)) {
                 setAttributes((currentAttributes) => {
                     return {
                         ...currentAttributes,
-                        [key]: ''
+                        [name]: ''
                     }
                 });
             }
