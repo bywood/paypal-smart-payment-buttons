@@ -242,13 +242,13 @@ type CardNumberFieldProps = {|
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
-    placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string  |},
+    placeholder : string,
     autoFocusRef : (mixed) => void,
     autocomplete? : string,
     gqlErrors : []
 |};
 
-export function CardNumberField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
+export function CardNumberField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ cardEligibility, setCardEligibility ] : [ boolean, (boolean) => boolean ] = useState(true);
@@ -296,7 +296,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 ref={ numberRef }
                 type='text'
                 autocomplete={ autocomplete }
-                placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
+                placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.number }
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
                 onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
@@ -309,13 +309,13 @@ type CardExpiryFieldProps = {|
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
-    placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string  |},
+    placeholder : string,
     autoFocusRef : (mixed) => void,
     autocomplete? : string,
     gqlErrors : []
 |};
 
-export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardExpiryFieldProps) : mixed {
+export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, autocomplete, gqlErrors = [] } : CardExpiryFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -353,7 +353,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
                 ref={ expiryRef }
                 type='text'
                 autocomplete={ autocomplete }
-                placeholder={ placeholder.expiry ?? DEFAULT_PLACEHOLDERS.expiry }
+                placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.expiry }
                 maxLength='7'
                 onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
                 onValidityChange={ (validity : FieldValidity) => setExpiryValidity(validity) }
@@ -365,13 +365,13 @@ type CardCvvFieldProps = {|
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
-    placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string  |},
+    placeholder : string,
     autoFocusRef : (mixed) => void,
     autocomplete? : string,
     gqlErrors : []
 |};
 
-export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, autocomplete, gqlErrors = [] } : CardCvvFieldProps) : mixed {
+export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, autocomplete, gqlErrors = [] } : CardCvvFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -409,7 +409,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
                 ref={ cvvRef }
                 type='text'
                 autocomplete={ autocomplete }
-                placeholder={ placeholder.cvv}
+                placeholder={ placeholder }
                 onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
                 onValidityChange={ (validity : FieldValidity) => setCvvValidity(validity) }
             />
@@ -421,12 +421,12 @@ type CardNameFieldProps = {|
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
-    placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string  |},
+    placeholder : string,
     autoFocusRef : (mixed) => void,
     gqlErrors : []
 |};
 
-export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder = {}, autoFocusRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
+export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ name, setName ] : [ string, (string) => string ] = useState('');
     const [ nameValidity, setNameValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -463,7 +463,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
             <CardName
                 ref={ nameRef }
                 type='text'
-                placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.name }
+                placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.name }
                 maxLength='255'
                 onChange={ ({ cardName } : CardNameChangeEvent) => setName(cardName) }
                 onValidityChange={ (validity : FieldValidity) => setNameValidity(validity) }
@@ -476,7 +476,7 @@ type CardPostalFieldProps = {|
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
-    placeholder : {| number? : string, expiry? : string, cvv? : string, name? : string |},
+    placeholder : string,
     minLength : number,
     maxLength: number,
     autoFocusRef : (mixed) => void,
@@ -484,7 +484,7 @@ type CardPostalFieldProps = {|
     gqlErrors : []
 |};
 
-export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, placeholder = {}, minLength, maxLength, autoFocusRef, autocomplete, gqlErrors = [] } : CardPostalFieldProps) : mixed {
+export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, placeholder, minLength, maxLength, autoFocusRef, autocomplete, gqlErrors = [] } : CardPostalFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ postalCode, setPostalCode ] : [ string, (string) => string ] = useState('');
     const [ postalCodeValidity, setPostalCodeValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -522,7 +522,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
                 ref={ postalRef }
                 type='text'
                 autocomplete={ autocomplete }
-                placeholder={ placeholder.name ?? DEFAULT_PLACEHOLDERS.postal }
+                placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.postal }
                 minLength={ minLength }
                 maxLength={ maxLength }
                 onChange={ ({ cardPostalCode } : CardPostalCodeChangeEvent) => setPostalCode(cardPostalCode) }
