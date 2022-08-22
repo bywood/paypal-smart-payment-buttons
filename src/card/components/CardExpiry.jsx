@@ -147,7 +147,7 @@ export function CardExpiry(
             inputmode='numeric'
             ref={ expiryRef }
             type={ type }
-            className='expiry'
+            className='card-field-expiry'
             placeholder={ placeholder }
             value={ maskedInputValue }
             style={ style }

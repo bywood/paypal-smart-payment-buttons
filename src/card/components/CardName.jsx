@@ -105,7 +105,7 @@ export function CardName(
             inputmode='text'
             ref={ nameRef }
             type={ type }
-            className="name"
+            className="card-field-name"
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

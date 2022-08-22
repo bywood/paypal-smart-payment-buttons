@@ -53,7 +53,7 @@ export function navigateOnKeyDown(event : InputEvent, navigation : CardNavigatio
 
 // Safari (both iOS and Desktop) has an unconvential behavior,
 // where it won't let an iframe that includes an input get
-// focus programatically from outisde of the input.
+// focus programmatically from outside of the input.
 // Big props to the devs at Stripe that figured out
 // you run this selection range hack to force the focus back
 // onto the input.
@@ -85,7 +85,7 @@ export function autoFocusOnFirstInput(input? : HTMLInputElement) {
 
     window.addEventListener('focus', () => {
         // the set timeout is required here, because in some browsers (Firefox, for instance)
-        // when tabbing backward into the iframe, it will have the html element focussed
+        // when tabbing backward into the iframe, it will have the html element focused
         // initially, but then passes focus to the input
         timeoutID = setTimeout(() => {
             timeoutID = null;

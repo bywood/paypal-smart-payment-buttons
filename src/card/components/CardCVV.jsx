@@ -113,7 +113,7 @@ export function CardCVV(
             inputmode='numeric'
             ref={ cvvRef }
             type={ type }
-            className='cvv'
+            className='card-field-cvv'
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

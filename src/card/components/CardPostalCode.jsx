@@ -106,7 +106,7 @@ export function CardPostalCode(
             inputmode='numeric'
             ref={ postalCodeRef }
             type={ type }
-            className='postal-code'
+            className='card-field-postal-code'
             placeholder={ placeholder }
             value={ inputValue }
             style={ style }

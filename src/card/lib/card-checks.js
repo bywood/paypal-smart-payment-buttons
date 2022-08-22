@@ -57,9 +57,9 @@ cardValidator.creditCardType.addCard({
 });
 
 // Detect the card type metadata for a card number
-export function detectCardType(number : string) : CardType {
-    if (number.length > 0) {
-        const cardTypes = cardValidator.creditCardType.default(number);
+export function detectCardType(cardNumber : string) : CardType {
+    if (cardNumber.length > 0) {
+        const cardTypes = cardValidator.creditCardType.default(cardNumber);
         if (cardTypes.length > 0) {
             return cardTypes[0];
         }
@@ -69,24 +69,26 @@ export function detectCardType(number : string) : CardType {
 
 // Mask a card number for display given a card type. If a card type is
 // not provided, attempt to detect it and mask based on that type.
-export function maskCard(number : string, cardType? : CardType) : string {
-    assertString(number);
-    number = number.trim().replace(/[^0-9]/g, '').replace(/\s/g, '');
+export function maskCardNumber(cardNumber : string, cardType? : CardType) : string {
+    assertString(cardNumber);
+    // Remove all non-digits and all whitespaces
+    cardNumber = cardNumber.trim().replace(/[^0-9]/g, '').replace(/\s/g, '');
     // $FlowFixMe
-    const gaps = cardType?.gaps || detectCardType(number)?.gaps;
+    const gaps = cardType?.gaps || detectCardType(cardNumber)?.gaps;
 
+    // The gaps indicate where a space is inserted into the card number for display
     if (gaps) {
         for (let idx = 0; idx < gaps.length; idx++) {
             const splicePoint = gaps[idx] + idx;
-            if (splicePoint > number.length - 1) {
+            if (splicePoint > cardNumber.length - 1) {
                 // We're beyond the end of the number
                 break;
             }
 
-            number = splice(number, splicePoint, ' ');
+            cardNumber = splice(cardNumber, splicePoint, ' ');
         }
     }
-    return number;
+    return cardNumber;
 }
 
 export function getCvvLength(cardType? : CardType) : number {
