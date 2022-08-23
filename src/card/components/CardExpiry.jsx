@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 
 import {
     formatDate,
-    checkExpiry,
+    validateExpiry,
     removeNonDigits,
     removeDateMask,
     defaultNavigation,
@@ -64,7 +64,7 @@ export function CardExpiry(
     }, []);
 
     useEffect(() => {
-        const validity = checkExpiry(maskedInputValue);
+        const validity = validateExpiry(maskedInputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 
@@ -148,7 +148,7 @@ export function CardExpiry(
             inputmode='numeric'
             ref={ expiryRef }
             type={ type }
-            className='expiry'
+            className='card-field-expiry'
             value={ maskedInputValue }
             style={ style }
             maxLength={ maxLength }

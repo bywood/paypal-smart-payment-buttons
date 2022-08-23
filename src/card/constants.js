@@ -248,18 +248,18 @@ export const DEFAULT_STYLE_SINGLE_CARD = {
         'border':     'none',
         'box-shadow': 'none'
     },
-    'input.number': {
+    'input.card-field-number': {
         'flex':          '1',
         'min-width':     '4ch',
         'padding-right': '0.375rem'
     },
-    'input.expiry': {
+    'input.card-field-expiry': {
         'padding-left':  '0.375rem',
         'padding-right': '0.375rem',
         'text-align':    'center',
         'width':         '7ch'
     },
-    'input.cvv': {
+    'input.card-field-cvv': {
         'padding-left': '0.375rem',
         'text-align':   'center',
         'width':        '4ch'

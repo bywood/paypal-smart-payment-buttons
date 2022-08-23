@@ -59,7 +59,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
     const [ isValid, setIsValid ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ validationMessage, setValidationMessage ] : [ string, (string) => string ] = useState('');
-    const [ cardEligibility, setCardEligibility ] : [ boolean, (boolean) => boolean ] = useState(true);
+    const [ isCardEligible, setIsCardEligible ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
@@ -74,7 +74,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
     const cardCvvNavivation : CardNavigation = { next:     () =>  noop, previous: goToPreviousField(expiryRef) };
 
     function getValidationMessage() : string {
-        if (!cardEligibility) {
+        if (!isCardEligible) {
             return 'This card type is not eligible.';
         }
         if (!numberValidity.isPotentiallyValid && !numberValidity.isValid) {
@@ -131,9 +131,9 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
         setIsValid(valid);
 
-        const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, isCvvValid: cvvValidity.isValid, isExpiryValid: expiryValidity.isValid, gqlErrorsObject });
+        const errors = setErrors({ isCardEligible, isNumberValid: numberValidity.isValid, isCvvValid: cvvValidity.isValid, isExpiryValid: expiryValidity.isValid, gqlErrorsObject });
 
-        if (!cardEligibility) {
+        if (!isCardEligible) {
             const element = numberRef?.current?.base;
             if (element) {
                 element.classList.add('invalid');
@@ -153,7 +153,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
         expiry,
         isValid,
         numberValidity,
-        cardEligibility,
+        isCardEligible,
         cvvValidity,
         expiryValidity
     ]);
@@ -193,7 +193,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                     allowNavigation={ true }
                     placeholder={ placeholder.number ?? DEFAULT_PLACEHOLDERS.number }
                     onChange={ onChangeNumber }
-                    onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
+                    onEligibilityChange={ (eligibility : boolean) => setIsCardEligible(eligibility) }
                     onValidityChange={ (validity : FieldValidity) => setNumberValidity({ ...validity }) }
                     onFocus={ () => setHasFocus(true) }
                     onBlur={ () => setHasFocus(false) }
@@ -251,7 +251,7 @@ type CardNumberFieldProps = {|
 export function CardNumberField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
-    const [ cardEligibility, setCardEligibility ] : [ boolean, (boolean) => boolean ] = useState(true);
+    const [ isCardEligible, setIsCardEligible ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const numberRef = useRef();
 
@@ -273,8 +273,8 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     }, [ gqlErrors ]);
 
     useEffect(() => {
-        const errors = setErrors({ isCardEligible: cardEligibility, isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
-        if (!cardEligibility) {
+        const errors = setErrors({ isCardEligible, isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
+        if (!isCardEligible) {
             const element = numberRef?.current?.base;
             if (element) {
                 element.classList.add('invalid');
@@ -284,7 +284,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
             markValidity(numberRef, numberValidity);
         }
         onChange({ value: number, valid: numberValidity.isValid, errors });
-    }, [ number, cardEligibility, isValid, isPotentiallyValid ]);
+    }, [ number, isCardEligible, isValid, isPotentiallyValid ]);
 
     return (
         <Fragment>
@@ -298,7 +298,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 autocomplete={ autocomplete }
                 placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.number }
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
-                onEligibilityChange={ (eligibility : boolean) => setCardEligibility(eligibility) }
+                onEligibilityChange={ (eligibility : boolean) => setIsCardEligible(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
             />
         </Fragment>

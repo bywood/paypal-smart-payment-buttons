@@ -3,45 +3,45 @@
 import { DEFAULT_CARD_TYPE } from "../constants";
 
 import {
-  checkCardNumber,
-  checkName,
-  checkPostalCode,
+  validateCardNumber,
+  validateCardName,
+  validatePostalCode,
   detectCardType,
 } from "./card-checks";
 
 describe("card-checks", () => {
-  describe("checkCardNumber", () => {
+  describe("validateCardNumber", () => {
     it("returns true for isValid if card number passes luhn validation", () => {
       const cardNumber = "4111 1111 1111 1111";
 
-      expect(checkCardNumber(cardNumber).isValid).toBe(true);
+      expect(validateCardNumber(cardNumber).isValid).toBe(true);
     });
 
     it("returns false for isValid if card number does not pass luhn validation", () => {
       const cardNumber = "4111 1111";
 
-      expect(checkCardNumber(cardNumber).isValid).toBe(false);
+      expect(validateCardNumber(cardNumber).isValid).toBe(false);
     });
 
     it("returns false for isPotentiallyValid is a non-numeric character is entered", () => {
       const cardNumber = "411x";
 
-      expect(checkCardNumber(cardNumber).isPotentiallyValid).toBe(false);
+      expect(validateCardNumber(cardNumber).isPotentiallyValid).toBe(false);
     });
   });
 
-  describe("checkName", () => {
+  describe("validateCardName", () => {
     it("returns true for isValid for a name less than 255 characters and is not comprised of only numbers, hyphens and spaces", () => {
       const name = "Test Name";
 
-      expect(checkName(name).isValid).toBe(true);
+      expect(validateCardName(name).isValid).toBe(true);
     });
 
     it("returns false for isValid, and isPotentiallyValid for a name longer than 255 characters", () => {
       const name =
         "Ekjgfsekldjghdsfkghdksgdfkgksafghefsgkvshdbbfkshdfkbdsfgkbdskfbndfskljbndfakljvbnadflkvbadlkfvnsljkdfvhnkldsfzvnlkdsfvnladkfjvnldkfsjvnsdlkjfvnakljdfvaasdkfjgvbefskldjvblsjkdfvnbaljkdfnvkdadfjvnklsdjfnvdksdjfvnksdfvnfdjdavnkddsafvnkadljfvwertydhfjdksjdddas";
 
-      const validity = checkName(name);
+      const validity = validateCardName(name);
 
       expect(validity.isValid).toBe(false);
       expect(validity.isPotentiallyValid).toBe(false);
@@ -50,40 +50,40 @@ describe("card-checks", () => {
     it("returns false for isValid for a name comprised of only numbers", () => {
       const name = "4111111111111111";
 
-      expect(checkName(name).isValid).toBe(false);
+      expect(validateCardName(name).isValid).toBe(false);
     });
 
     it("returns false for isValid for a name comprised of only hyphens", () => {
       const name = "-----";
 
-      expect(checkName(name).isValid).toBe(false);
+      expect(validateCardName(name).isValid).toBe(false);
     });
 
     it("returns false for isValid for a name comprised of only spaces", () => {
       const name = "   ";
 
-      expect(checkName(name).isValid).toBe(false);
+      expect(validateCardName(name).isValid).toBe(false);
     });
   });
 
-  describe("checkPostalCode", () => {
+  describe("validatePostalCode", () => {
     it("returns true for isValid for a 5-digit postal code", () => {
       const postalCode = "12345";
 
-      expect(checkPostalCode(postalCode).isValid).toBe(true);
+      expect(validatePostalCode(postalCode).isValid).toBe(true);
     });
 
     it("returns false for isValid for a postal code < 5 digits", () => {
       const postalCode = "1234";
 
-      expect(checkPostalCode(postalCode, 5).isValid).toBe(false);
+      expect(validatePostalCode(postalCode, 5).isValid).toBe(false);
     });
 
     it("retusn false for isValid for a postal code that is not a string", () => {
       const postalCode = 12345;
 
       // $FlowFixMe
-      expect(checkPostalCode(postalCode).isValid).toBe(false);
+      expect(validatePostalCode(postalCode).isValid).toBe(false);
     });
   });
 

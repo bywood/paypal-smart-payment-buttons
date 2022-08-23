@@ -4,7 +4,7 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkName, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
+import { validateCardName, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardNameProps = {|
@@ -50,7 +50,7 @@ export function CardName(
     }, []);
 
     useEffect(() => {
-        const validity = checkName(inputValue);
+        const validity = validateCardName(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 
@@ -106,7 +106,7 @@ export function CardName(
             inputmode='text'
             ref={ nameRef }
             type={ type }
-            className="name"
+            className="card-field-name"
             value={ inputValue }
             style={ style }
             maxLength={ maxLength }

@@ -6,12 +6,12 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getPostRobot } from '../../lib';
 import {
-    maskCard,
+    maskCardNumber,
     checkForNonDigits,
     removeNonDigits,
     detectCardType,
     checkCardEligibility,
-    checkCardNumber,
+    validateCardNumber,
     moveCursor,
     defaultNavigation,
     defaultInputState,
@@ -59,7 +59,7 @@ type CardNumberProps = {|
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
-    onEligibilityChange? : (cardEligibility : boolean) => void
+    onEligibilityChange? : (isCardEligible : boolean) => void
 |};
 
 export function CardNumber(
@@ -94,7 +94,7 @@ export function CardNumber(
     }, []);
 
     useEffect(() => {
-        const validity = checkCardNumber(inputValue);
+        const validity = validateCardNumber(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 
@@ -140,7 +140,7 @@ export function CardNumber(
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
         const value = removeNonDigits(rawValue);
         const detectedCardType = detectCardType(value);
-        const maskedValue = maskCard(value);
+        const maskedValue = maskCardNumber(value);
 
         let startCursorPosition = selectionStart;
         let endCursorPosition = selectionEnd;
@@ -184,7 +184,7 @@ export function CardNumber(
             element.classList.add('display-icon');
         }
 
-        const maskedValue = maskCard(inputValue);
+        const maskedValue = maskCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
         if (!isValid) {
             updatedState.isPotentiallyValid = true;
@@ -238,7 +238,7 @@ export function CardNumber(
                 inputmode='numeric'
                 ref={ numberRef }
                 type={ type }
-                className='number'
+                className='card-field-number'
                 value={ maskedInputValue }
                 style={ style }
                 maxLength={ maxLength }

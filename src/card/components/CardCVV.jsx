@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getPostRobot } from '../../lib';
 import { DEFAULT_CARD_TYPE } from '../constants';
-import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
+import { validateCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardCvvProps = {|
@@ -69,12 +69,12 @@ export function CardCVV(
     }, []);
 
     useEffect(() => {
-        const validity = checkCVV(inputValue, cardType);
+        const validity = validateCVV(inputValue, cardType);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 
     useEffect(() => {
-        const validity = checkCVV(inputValue, cardType);
+        const validity = validateCVV(inputValue, cardType);
         if (touched) {
             validity.isPotentiallyValid = false;
         }
@@ -138,7 +138,7 @@ export function CardCVV(
             inputmode='numeric'
             ref={ cvvRef }
             type={ type }
-            className='cvv'
+            className='card-field-cvv'
             value={ inputValue }
             style={ style }
             maxLength={ cardType.code.size }
