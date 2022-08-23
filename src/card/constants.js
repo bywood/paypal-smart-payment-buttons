@@ -176,13 +176,13 @@ export const DEFAULT_STYLE = {
         'top':            '1.6875rem', // calc(0.375rem + 0.0625rem + 1.25rem)
         'left':           '1.1875rem' // calc(0.375rem + 0.0625rem + 0.75rem)
     },
-    'input.number.display-icon': {
+    'input.card-field-number.display-icon': {
         'padding-left': 'calc(1.2rem + 40px)' // calc(0.75rem + 40px + 0.375rem)' 
     },
-    'input.number.display-icon + .card-icon': {
+    'input.card-field-number.display-icon + .card-icon': {
         'display': 'block'
     },
-    'input.number + .card-icon': {
+    'input.card-field-number + .card-icon': {
         'display': 'none'
     }
 };
