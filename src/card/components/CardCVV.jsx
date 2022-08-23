@@ -4,7 +4,7 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
+import { validateCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardCvvProps = {|
@@ -55,7 +55,7 @@ export function CardCVV(
     }, []);
 
     useEffect(() => {
-        const validity = checkCVV(inputValue, cardType);
+        const validity = validateCVV(inputValue, cardType);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 

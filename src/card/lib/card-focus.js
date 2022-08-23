@@ -76,6 +76,10 @@ function applyFocusWorkaroundForSafari (input : HTMLInputElement) {
     }
 }
 
+// With some browsers, when the focus transitions to the iframe,
+// the browser will pass the focus on to the first input field.
+// This is to handle the case when that doesn't happen.
+// In this case the iframe itself will receive focus and this will need to shift the focus to the input field.
 export function autoFocusOnFirstInput(input? : HTMLInputElement) {
     if (!input) {
         return;
@@ -83,10 +87,10 @@ export function autoFocusOnFirstInput(input? : HTMLInputElement) {
 
     let timeoutID = null;
 
+    // Listen for when the iframe gets focus.
     window.addEventListener('focus', () => {
-        // the set timeout is required here, because in some browsers (Firefox, for instance)
-        // when tabbing backward into the iframe, it will have the html element focused
-        // initially, but then passes focus to the input
+        // If the iframe gets focus, then wait for the next event loop to set the focus on the input field.
+        // This allows the below focusin listener to prevent shifting the focus if the input already has the focus.
         timeoutID = setTimeout(() => {
             timeoutID = null;
 
@@ -96,10 +100,13 @@ export function autoFocusOnFirstInput(input? : HTMLInputElement) {
             // it focus, but Firefox requires an explicit focus call.
             // Also, just calling `focus` on Safari does not work at all
             input.focus();
-        }, 1);
+        });
     });
 
+    // Listen for when the input field gets focus.
     window.addEventListener('focusin', (event) => {
+        // If there is a set timeout waiting to happen, then clear the timeout.
+        // This will prevent the above from unnecessarily setting the focus.
         if (timeoutID && event.target instanceof HTMLInputElement) {
             clearTimeout(timeoutID);
             timeoutID = null;

@@ -10,7 +10,7 @@ import {
     removeNonDigits,
     detectCardType,
     checkCardEligibility,
-    checkCardNumber,
+    validateCardNumber,
     moveCursor,
     defaultNavigation,
     defaultInputState,
@@ -93,7 +93,7 @@ export function CardNumber(
     }, []);
 
     useEffect(() => {
-        const validity = checkCardNumber(inputValue);
+        const validity = validateCardNumber(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 

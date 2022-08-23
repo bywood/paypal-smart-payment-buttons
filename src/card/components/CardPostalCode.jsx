@@ -4,7 +4,7 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { checkPostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
+import { validatePostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardPostalCodeProps = {|
@@ -50,7 +50,7 @@ export function CardPostalCode(
     }, []);
 
     useEffect(() => {
-        const validity = checkPostalCode(inputValue, minLength);
+        const validity = validatePostalCode(inputValue, minLength);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 

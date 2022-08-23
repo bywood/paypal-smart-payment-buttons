@@ -122,7 +122,7 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
     return true;
 }
 
-export function checkCardNumber(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+export function validateCardNumber(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     const { number } = cardValidator;
 
     const {isValid, isPotentiallyValid} = number(value);
@@ -133,7 +133,7 @@ export function checkCardNumber(value : string) : {| isValid : boolean, isPotent
     }
 }
 
-export function checkCVV(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+export function validateCVV(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     let isValid = false;
     if (value.length === getCvvLength(cardType)) {
         isValid = true;
@@ -144,13 +144,13 @@ export function checkCVV(value : string, cardType : CardType) : {| isValid : boo
     };
 }
 
-export function checkName(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+export function validateCardName(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     const { cardholderName } = cardValidator
 
     return cardholderName(value)
 }
 
-export function checkExpiry(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+export function validateExpiry(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     const { expirationDate } = cardValidator;
     const { isValid } = expirationDate(value);
 
@@ -160,7 +160,7 @@ export function checkExpiry(value : string) : {| isValid : boolean, isPotentiall
     };
 }
 
-export function checkPostalCode(value : string, minLength? : number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
+export function validatePostalCode(value : string, minLength? : number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
     const { postalCode } = cardValidator;
     const { isValid } = postalCode(value, {minLength})
     return {
