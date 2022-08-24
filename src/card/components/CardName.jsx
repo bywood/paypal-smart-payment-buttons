@@ -39,13 +39,14 @@ export function CardName(
         onValidityChange
     } : CardNameProps
 ) : mixed {
+    const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const nameRef = useRef()
 
     useEffect(() => {
-        exportMethods(nameRef);
+        exportMethods(nameRef, setAttributes);
     }, []);
 
     useEffect(() => {
@@ -106,7 +107,6 @@ export function CardName(
             ref={ nameRef }
             type={ type }
             className="card-field-name"
-            placeholder={ placeholder }
             value={ inputValue }
             style={ style }
             maxLength={ maxLength }
@@ -114,6 +114,7 @@ export function CardName(
             onInput={ setNameValue }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
+            { ...attributes }
         />
     );
 }

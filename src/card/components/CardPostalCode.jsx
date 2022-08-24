@@ -40,13 +40,14 @@ export function CardPostalCode(
         minLength
     } : CardPostalCodeProps
 ) : mixed {
+    const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const postalCodeRef = useRef();
 
     useEffect(() => {
-        exportMethods(postalCodeRef);
+        exportMethods(postalCodeRef, setAttributes);
     }, []);
 
     useEffect(() => {
@@ -107,7 +108,6 @@ export function CardPostalCode(
             ref={ postalCodeRef }
             type={ type }
             className='card-field-postal-code'
-            placeholder={ placeholder }
             value={ inputValue }
             style={ style }
             maxLength={ maxLength }
@@ -116,6 +116,7 @@ export function CardPostalCode(
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
             minLength={ minLength }
+            { ...attributes }
         />
     )
 }

@@ -91,22 +91,6 @@ export function maskCardNumber(cardNumber : string, cardType? : CardType) : stri
     return cardNumber;
 }
 
-export function getCvvLength(cardType? : CardType) : number {
-    if (cardType && typeof cardType === 'object') {
-        const { code } = cardType;
-
-        if (typeof code === 'object') {
-            const { size } = code;
-
-            if (typeof size === 'number') {
-                return size;
-            }
-        }
-    }
-
-    return 3;
-}
-
 export function checkCardEligibility(value : string, cardType : CardType) : boolean  {
     // check if the card type is eligible
     const fundingEligibility = window.xprops.fundingEligibility;
@@ -123,37 +107,19 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
 }
 
 export function validateCardNumber(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const { number } = cardValidator;
-
-    const {isValid, isPotentiallyValid} = number(value);
-
-    return {
-        isValid,
-        isPotentiallyValid
-    }
+    return cardValidator.number(value);
 }
 
 export function validateCVV(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    let isValid = false;
-    if (value.length === getCvvLength(cardType)) {
-        isValid = true;
-    }
-    return {
-        isValid,
-        isPotentiallyValid: true
-    };
+    return cardValidator.cvv(value, cardType?.code?.size);
 }
 
 export function validateCardName(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const { cardholderName } = cardValidator
-
-    return cardholderName(value)
+    return cardValidator.cardholderName(value);
 }
 
 export function validateExpiry(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const { expirationDate } = cardValidator;
-    const { isValid } = expirationDate(value);
-
+    const { isValid } = cardValidator.expirationDate(value);
     return {
         isValid,
         isPotentiallyValid: true
@@ -161,8 +127,7 @@ export function validateExpiry(value : string) : {| isValid : boolean, isPotenti
 }
 
 export function validatePostalCode(value : string, minLength? : number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const { postalCode } = cardValidator;
-    const { isValid } = postalCode(value, {minLength})
+    const { isValid } = cardValidator.postalCode(value, { minLength });
     return {
         isValid,
         isPotentiallyValid: true
