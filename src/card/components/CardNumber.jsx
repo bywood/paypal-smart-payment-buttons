@@ -7,7 +7,7 @@ import cardValidator from 'card-validator';
 
 import { getPostRobot } from '../../lib';
 import {
-    maskCardNumber,
+    addGapsToCardNumber,
     checkForNonDigits,
     removeNonDigits,
     detectCardType,
@@ -140,7 +140,7 @@ export function CardNumber(
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
         const value = removeNonDigits(rawValue);
         const detectedCardType = detectCardType(value);
-        const maskedValue = maskCardNumber(value);
+        const maskedValue = addGapsToCardNumber(value);
 
         let startCursorPosition = selectionStart;
         let endCursorPosition = selectionEnd;
@@ -184,7 +184,7 @@ export function CardNumber(
             element.classList.add('display-icon');
         }
 
-        const maskedValue = maskCardNumber(inputValue);
+        const maskedValue = addGapsToCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
         if (!isValid) {
             updatedState.isPotentiallyValid = true;

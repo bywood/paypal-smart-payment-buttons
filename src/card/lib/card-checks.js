@@ -67,9 +67,9 @@ export function detectCardType(cardNumber : string) : CardType {
     return DEFAULT_CARD_TYPE;
 }
 
-// Mask a card number for display given a card type. If a card type is
-// not provided, attempt to detect it and mask based on that type.
-export function maskCardNumber(cardNumber : string, cardType? : CardType) : string {
+// Add gaps to a card number for display given a card type. If a card type is
+// not provided, attempt to detect it and add gaps based on that type.
+export function addGapsToCardNumber(cardNumber : string, cardType? : CardType) : string {
     assertString(cardNumber);
     // Remove all non-digits and all whitespaces
     cardNumber = cardNumber.trim().replace(/[^0-9]/g, '').replace(/\s/g, '');
@@ -95,11 +95,17 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
     // check if the card type is eligible
     const fundingEligibility = window.xprops.fundingEligibility;
     const type = VALIDATOR_TO_TYPE_MAP[cardType.type];
-    // only mark as ineligible if the card vendor is explicitly set to not be eligible
-    if (type && fundingEligibility?.card?.eligible) {
-        const vendor = fundingEligibility.card.vendors?.[type];
-        if (vendor && !vendor.eligible) {
+    if (fundingEligibility && fundingEligibility.card) {
+        // mark as ineligible if card payments are explicitly set to not be eligible
+        if (!fundingEligibility.card.eligible) {
             return false;
+        }
+        // mark as ineligible if the card vendor is explicitly set to not be eligible
+        if (type && fundingEligibility.card.vendors) {
+            const vendor = fundingEligibility.card.vendors[type];
+            if (vendor && !vendor.eligible) {
+                return false;
+            }
         }
     }
     // otherwise default to be eligible
