@@ -3,10 +3,10 @@
 
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import cardValidator from 'card-validator';
 
 import {
     formatDate,
-    validateExpiry,
     removeNonDigits,
     removeDateMask,
     defaultNavigation,
@@ -64,7 +64,7 @@ export function CardExpiry(
     }, []);
 
     useEffect(() => {
-        const validity = validateExpiry(maskedInputValue);
+        const validity = cardValidator.expirationDate(maskedInputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 

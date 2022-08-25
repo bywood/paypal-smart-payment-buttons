@@ -3,8 +3,9 @@
 
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import cardValidator from 'card-validator';
 
-import { validateCardName, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
+import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardNameProps = {|
@@ -50,7 +51,7 @@ export function CardName(
     }, []);
 
     useEffect(() => {
-        const validity = validateCardName(inputValue);
+        const validity = cardValidator.cardholderName(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 

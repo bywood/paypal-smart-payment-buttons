@@ -3,10 +3,11 @@
 
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import cardValidator from 'card-validator';
 
 import { getPostRobot } from '../../lib';
 import { DEFAULT_CARD_TYPE } from '../constants';
-import { validateCVV, removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
+import { removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardCvvProps = {|
@@ -69,12 +70,12 @@ export function CardCVV(
     }, []);
 
     useEffect(() => {
-        const validity = validateCVV(inputValue, cardType);
+        const validity = cardValidator.cvv(inputValue, cardType?.code?.size);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 
     useEffect(() => {
-        const validity = validateCVV(inputValue, cardType);
+        const validity = cardValidator.cvv(inputValue, cardType?.code?.size);
         if (touched) {
             validity.isPotentiallyValid = false;
         }

@@ -105,31 +105,3 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
     // otherwise default to be eligible
     return true;
 }
-
-export function validateCardNumber(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    return cardValidator.number(value);
-}
-
-export function validateCVV(value : string, cardType : CardType) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    return cardValidator.cvv(value, cardType?.code?.size);
-}
-
-export function validateCardName(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    return cardValidator.cardholderName(value);
-}
-
-export function validateExpiry(value : string) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const { isValid } = cardValidator.expirationDate(value);
-    return {
-        isValid,
-        isPotentiallyValid: true
-    };
-}
-
-export function validatePostalCode(value : string, minLength? : number) : {| isValid : boolean, isPotentiallyValid : boolean |} {
-    const { isValid } = cardValidator.postalCode(value, { minLength });
-    return {
-        isValid,
-        isPotentiallyValid: true
-    };
-}

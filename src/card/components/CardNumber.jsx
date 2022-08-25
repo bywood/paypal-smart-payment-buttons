@@ -3,6 +3,7 @@
 
 import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import cardValidator from 'card-validator';
 
 import { getPostRobot } from '../../lib';
 import {
@@ -11,7 +12,6 @@ import {
     removeNonDigits,
     detectCardType,
     checkCardEligibility,
-    validateCardNumber,
     moveCursor,
     defaultNavigation,
     defaultInputState,
@@ -94,7 +94,7 @@ export function CardNumber(
     }, []);
 
     useEffect(() => {
-        const validity = validateCardNumber(inputValue);
+        const validity = cardValidator.number(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 

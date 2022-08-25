@@ -3,8 +3,9 @@
 
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import cardValidator from 'card-validator';
 
-import { validatePostalCode, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
+import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 type CardPostalCodeProps = {|
@@ -51,7 +52,7 @@ export function CardPostalCode(
     }, []);
 
     useEffect(() => {
-        const validity = validatePostalCode(inputValue, minLength);
+        const validity = cardValidator.postalCode(inputValue, { minLength });
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue ]);
 
