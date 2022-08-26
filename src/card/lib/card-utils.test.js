@@ -9,8 +9,13 @@ import {
     filterStyle,
     styleToString,
     filterExtraFields,
-    isValidAttribute
+    isValidAttribute,
+    removeNonDigits,
+    checkForNonDigits,
+    convertDateFormat,
+    getContext
 } from './card-utils';
+
 
 jest.mock('../../lib/dom');
 
@@ -379,6 +384,54 @@ describe('card utils', () => {
             expect(isValidAttribute('invalid')).toBe(false);
             expect(getLogger().warn).toHaveBeenCalledWith('attribute_warning', { warn: 'HTML Attribute "invalid" was ignored. See allowed attribute list.' });
             getLogger().warn = originalLoggerWarn;
+        });
+
+    });
+
+    describe('removeNonDigits', () => {
+
+        it('should remove non-digits', () => {
+            expect(removeNonDigits('abc123')).toBe('123');
+        });
+
+    });
+
+    describe('checkForNonDigits', () => {
+
+        it('should check for non-digits', () => {
+            expect(checkForNonDigits('abc123')).toBe(true);
+            expect(checkForNonDigits('123123')).toBe(false);
+        });
+
+    });
+
+    describe('convertDateFormat', () => {
+
+        it('should format the date as MM/YYYY', () => {
+            expect(convertDateFormat('11/23')).toBe('11/2023');
+            expect(convertDateFormat('11 / 23')).toBe('11/2023');
+            expect(convertDateFormat('11 / 2023')).toBe('11/2023');
+        });
+
+    });
+
+    describe('getContext', () => {
+
+        beforeEach(() => {
+            window.xprops = {};
+        });
+
+        it('should return the UID of the component', () => {
+            window.xprops.uid = 'abc123';
+            expect(getContext(window)).toBe('abc123');
+        });
+
+        it('should return the UID of the parent of the component', () => {
+            window.xprops.uid = 'abc123';
+            window.xprops.parent = {
+                uid: 'xyz789'
+            };
+            expect(getContext(window)).toBe('xyz789');
         });
 
     });
