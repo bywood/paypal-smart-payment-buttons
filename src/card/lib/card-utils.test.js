@@ -13,7 +13,8 @@ import {
     removeNonDigits,
     checkForNonDigits,
     convertDateFormat,
-    getContext
+    getContext,
+    markValidity
 } from './card-utils';
 
 
@@ -436,4 +437,45 @@ describe('card utils', () => {
 
     });
 
+    describe.only('markValidity', () => {
+
+        it('marks the refs HTMLelement as valid when isValid is true', () => {
+
+            const element = document.createElement('div')
+
+            const ref = {
+                current: {
+                    base: element
+                }
+            };
+
+            const validity = {
+                isValid: true
+            };
+
+            markValidity(ref, validity)
+
+            expect(element.classList.contains('valid')).toBe(true)
+        })
+
+        it('marks the refs HTMLelement as invalid when isValid is false', () => {
+
+            const element = document.createElement('div')
+
+            const ref = {
+                current: {
+                    base: element
+                }
+            };
+
+            const validity = {
+                isValid: false
+            };
+
+            markValidity(ref, validity)
+
+            expect(element.classList.contains('invalid')).toBe(true)
+            expect(element.classList.contains('valid')).toBe(false)
+        })
+    })
 });
