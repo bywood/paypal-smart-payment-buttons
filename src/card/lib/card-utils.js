@@ -2,7 +2,7 @@
 
 import { values } from '@krakenjs/belter';
 
-import type { InputState, FieldValidity, Card, ExtraFields } from '../types';
+import type { InputState, FieldValidity, ExtraFields } from '../types';
 import {
     CARD_ERRORS,
     CARD_FIELD_TYPE,
@@ -267,19 +267,6 @@ export function convertDateFormat(date : string) : string {
     }
 
     return formattedDate;
-}
-
-// Function that returns the field value in the correct format
-export function formatFieldValue(value : string | Card) : string | Card {
-    let newValue;
-    // Single card field case
-    if (typeof value === 'object') {
-        newValue = { ...value };
-    // Individual field case
-    } else {
-        newValue = value;
-    }
-    return newValue;
 }
 
 // Parse errors from ProcessPayment GQL mutation

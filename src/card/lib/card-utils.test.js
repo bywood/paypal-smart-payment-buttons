@@ -437,7 +437,7 @@ describe('card utils', () => {
 
     });
 
-    describe.only('markValidity', () => {
+    describe('markValidity', () => {
 
         it('marks the refs HTMLelement as valid when isValid is true', () => {
 
@@ -450,7 +450,8 @@ describe('card utils', () => {
             };
 
             const validity = {
-                isValid: true
+                isValid: true,
+                isPotentiallyValid: true
             };
 
             markValidity(ref, validity)
@@ -469,7 +470,8 @@ describe('card utils', () => {
             };
 
             const validity = {
-                isValid: false
+                isValid: false,
+                isPotentiallyValid: false
             };
 
             markValidity(ref, validity)
@@ -477,5 +479,5 @@ describe('card utils', () => {
             expect(element.classList.contains('invalid')).toBe(true)
             expect(element.classList.contains('valid')).toBe(false)
         })
-    })
+    });
 });
