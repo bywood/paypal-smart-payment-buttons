@@ -4,15 +4,12 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
+import RestrictedInput from 'restricted-input';
 
 import {
-    formatDate,
-    removeNonDigits,
-    removeDateMask,
     defaultNavigation,
     defaultInputState,
     navigateOnKeyDown,
-    moveCursor,
     exportMethods
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
@@ -52,8 +49,8 @@ export function CardExpiry(
     } : CardExpiryProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
-    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
-    const { inputValue, maskedInputValue, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+    const [ inputState, setInputState ] : [ InputState, (InputState | (InputState) => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
+    const { inputValue, maskedInputValue, isValid, isPotentiallyValid } = inputState;
 
     const expiryRef = useRef()
 
@@ -61,10 +58,26 @@ export function CardExpiry(
         if (!allowNavigation) {
             exportMethods(expiryRef, setAttributes);
         }
+        const element = expiryRef?.current;
+        if (element) {
+            // eslint-disable-next-line no-unused-vars
+            const restrictedInput = new RestrictedInput({
+                element,
+                pattern: "{{99}} / {{99}}",
+            });
+            element.addEventListener('input', (event) => {
+                const { value } = event.target;
+                setInputState({
+                    ...inputState,
+                    inputValue: value
+                });
+                onChange({ event, date: value, maskedDate: value });
+            });
+        }
     }, []);
 
     useEffect(() => {
-        const validity = cardValidator.expirationDate(maskedInputValue);
+        const validity = cardValidator.expirationDate(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 
@@ -78,42 +91,7 @@ export function CardExpiry(
         }
     }, [ isValid, isPotentiallyValid ]);
 
-    const setDateMask : (InputEvent) => void = (event : InputEvent) : void => {
-        const { value : rawValue, selectionStart, selectionEnd } = event.target;
-        const value = removeNonDigits(rawValue);
-        const mask = formatDate(value, rawValue);
-
-        let startCursorPosition = selectionStart;
-        let endCursorPosition = selectionEnd;
-
-        if (mask.trim().slice(-1) === '/' || contentPasted) {
-            startCursorPosition = mask.length;
-            endCursorPosition = mask.length;
-        }
-
-        moveCursor(event.target, startCursorPosition, endCursorPosition);
-
-        setInputState({
-            ...inputState,
-            inputValue:       rawValue,
-            maskedInputValue: mask,
-            contentPasted:    false,
-            keyStrokeCount:   keyStrokeCount + 1
-        });
-
-        onChange({ event, date: value, maskedDate: mask });
-
-    };
-
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
-        const { target: { value }, key } = event;
-
-        const last = value.trim().slice(-1);
-        if (last === '/' && key === 'Backspace') {
-            const month = removeDateMask(value);
-            setInputState({ ...inputState, inputValue: value, maskedInputValue: month });
-        }
-
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
@@ -149,11 +127,10 @@ export function CardExpiry(
             ref={ expiryRef }
             type={ type }
             className='card-field-expiry'
-            value={ maskedInputValue }
+            value={ inputValue }
             style={ style }
             maxLength={ maxLength }
             onKeyDown={ onKeyDownEvent }
-            onInput={ setDateMask }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
             onPaste={ onPasteEvent }

@@ -95,19 +95,18 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
     // check if the card type is eligible
     const fundingEligibility = window.xprops.fundingEligibility;
     const type = VALIDATOR_TO_TYPE_MAP[cardType.type];
-    if (fundingEligibility && fundingEligibility.card) {
-        // mark as ineligible if card payments are explicitly set to not be eligible
-        if (!fundingEligibility.card.eligible) {
-            return false;
-        }
-        // mark as ineligible if the card vendor is explicitly set to not be eligible
+    if (value.length === 0) {
+        return true;
+    }
+    if (fundingEligibility && fundingEligibility.card && fundingEligibility.card.eligible) {
+        // mark as eligible if the card vendor is explicitly set to be eligible
         if (type && fundingEligibility.card.vendors) {
             const vendor = fundingEligibility.card.vendors[type];
-            if (vendor && !vendor.eligible) {
-                return false;
+            if (vendor && vendor.eligible) {
+                return true;
             }
         }
     }
-    // otherwise default to be eligible
-    return true;
+    // otherwise default to be not eligible
+    return false;
 }

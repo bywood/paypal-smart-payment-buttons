@@ -208,7 +208,7 @@ export function setErrors({ isCardEligible, isNumberValid, isCvvValid, isExpiryV
         if (field === CARD_FIELD_TYPE.NUMBER && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
-            errors.push(CARD_ERRORS.INELIGIBLE_CARD);
+            errors.push(CARD_ERRORS.INELIGIBLE_CARD_VENDOR);
         }
     }
 

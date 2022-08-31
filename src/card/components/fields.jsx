@@ -75,7 +75,7 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
 
     function getValidationMessage() : string {
         if (!isCardEligible) {
-            return 'This card type is not eligible.';
+            return 'This card vendor is not eligible.';
         }
         if (!numberValidity.isPotentiallyValid && !numberValidity.isValid) {
             return 'This card number is not valid.';
