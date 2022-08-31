@@ -68,7 +68,7 @@ describe("card-checks", () => {
       window.xprops = {};
     });
 
-    it("should find the card eligible", () => {
+    it("should find the card eligible when the vendor is eligible", () => {
       window.xprops.fundingEligibility = {
         card: {
           eligible: true,
@@ -84,7 +84,7 @@ describe("card-checks", () => {
       expect(checkCardEligibility(cardNumber, cardType)).toBe(true);
     });
 
-    it("should find the card not eligible", () => {
+    it("should find the card not eligible when the vendor in not eligible", () => {
       window.xprops.fundingEligibility = {
         card: {
           eligible: true,
@@ -100,7 +100,7 @@ describe("card-checks", () => {
       expect(checkCardEligibility(cardNumber, cardType)).toBe(false);
     });
 
-    it("should find card payments not eligible", () => {
+    it("should find card payments not eligible when the merchant is not onboarded for card payments", () => {
       window.xprops.fundingEligibility = {
         card: {
           eligible: false
@@ -111,8 +111,14 @@ describe("card-checks", () => {
       expect(checkCardEligibility(cardNumber, cardType)).toBe(false);
     });
 
-    it("should default to eligible if there is no funding eligibility specified", () => {
+    it("should default to ineligible if there is no funding eligibility specified", () => {
       const cardNumber = "4111111111111111";
+      const cardType = detectCardType(cardNumber);
+      expect(checkCardEligibility(cardNumber, cardType)).toBe(false);
+    });
+
+    it("should default to eligible if there is no card number entered", () => {
+      const cardNumber = "";
       const cardType = detectCardType(cardNumber);
       expect(checkCardEligibility(cardNumber, cardType)).toBe(true);
     });
