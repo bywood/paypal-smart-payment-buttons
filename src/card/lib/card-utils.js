@@ -61,41 +61,41 @@ export function removeDateMask(date : string) : string {
 }
 
 // Format expiry date
-export function formatDate(date : string, prevFormat? : string = '') : string {
-    assertString(date);
+// export function formatDate(date : string, prevFormat? : string = '') : string {
+//     assertString(date);
 
-    if (prevFormat && prevFormat.includes('/')) {
-        const [ month ] = removeSpaces(prevFormat).split('/');
-        if (month.length < 2) {
-            return prevFormat;
-        }
-    }
+//     if (prevFormat && prevFormat.includes('/')) {
+//         const [ month ] = removeSpaces(prevFormat).split('/');
+//         if (month.length < 2) {
+//             return prevFormat;
+//         }
+//     }
 
-    if (date.trim().slice(-1) === '/') {
-        return date.slice(0, 2);
-    }
+//     if (date.trim().slice(-1) === '/') {
+//         return date.slice(0, 2);
+//     }
 
-    date = removeDateMask(date);
+//     date = removeDateMask(date);
 
-    if (date.length < 2) {
-        const first = date[0];
-        if (parseInt(first, 10) > 1) {
-            return `0${ first } / `;
-        }
-        return date;
-    }
+//     if (date.length < 2) {
+//         const first = date[0];
+//         if (parseInt(first, 10) > 1) {
+//             return `0${ first } / `;
+//         }
+//         return date;
+//     }
 
-    const month = date.slice(0, 2);
-    if (parseInt(month, 10) > 12) {
-        const first = month[0];
-        const second = month[1];
-        return `0${ first } / ${ second }`;
-    }
+//     const month = date.slice(0, 2);
+//     if (parseInt(month, 10) > 12) {
+//         const first = month[0];
+//         const second = month[1];
+//         return `0${ first } / ${ second }`;
+//     }
 
-    const year = date.slice(2, 4);
-    return `${ month } / ${ year }`;
+//     const year = date.slice(2, 4);
+//     return `${ month } / ${ year }`;
 
-}
+// }
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
 function isValidValue(value : string | number) : boolean {

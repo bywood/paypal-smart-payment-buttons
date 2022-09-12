@@ -301,3 +301,7 @@ export const ALLOWED_ATTRIBUTES = [
     "disabled",
     "placeholder",
 ];
+
+export const DEFAULT_EXPIRY_PATTERN = "{{99}} / {{9999}}";
+
+export const ZERO_PADDED_EXPIRY_PATTERN = "0{{9}} / {{9999}}";

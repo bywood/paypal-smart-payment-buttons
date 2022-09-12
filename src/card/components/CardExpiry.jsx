@@ -13,6 +13,7 @@ import {
     exportMethods
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
+import { DEFAULT_EXPIRY_PATTERN, ZERO_PADDED_EXPIRY_PATTERN } from '../constants';
 
 type CardExpiryProps = {|
     name : string,
@@ -51,6 +52,7 @@ export function CardExpiry(
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ inputState, setInputState ] : [ InputState, (InputState | (InputState) => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, isValid, isPotentiallyValid } = inputState;
+    const [restrictedInput, setRestrictedInput] : [Object, (Object) => Object] = useState({})
 
     const expiryRef = useRef()
 
@@ -58,26 +60,18 @@ export function CardExpiry(
         if (!allowNavigation) {
             exportMethods(expiryRef, setAttributes);
         }
-        const element = expiryRef?.current;
+        const element = expiryRef?.current
         if (element) {
-            // eslint-disable-next-line no-unused-vars
-            const restrictedInput = new RestrictedInput({
-                element,
-                pattern: "{{99}} / {{99}}",
-            });
-            element.addEventListener('input', (event) => {
-                const { value } = event.target;
-                setInputState({
-                    ...inputState,
-                    inputValue: value
-                });
-                onChange({ event, date: value, maskedDate: value });
-            });
+           const restrictedInput = new RestrictedInput({
+            element,
+            pattern: DEFAULT_EXPIRY_PATTERN
+           }) ;
+           setRestrictedInput(restrictedInput)
         }
     }, []);
-
+            
     useEffect(() => {
-        const validity = cardValidator.expirationDate(inputValue);
+        const validity = cardValidator.expirationDate(maskedInputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
 
@@ -90,6 +84,37 @@ export function CardExpiry(
             navigation.next();
         }
     }, [ isValid, isPotentiallyValid ]);
+
+    useEffect(() => {
+        const element = expiryRef?.current;
+        if (element.value) {
+            const value = element.value 
+            console.log('expiryRef value 1: ', expiryRef.current.value)
+            if ((value.length > 0 && value[0] != "0" && value[0] != "1") || value[1] === "/"){
+                console.log('setting pattern to 0 padded')
+                restrictedInput.setPattern(ZERO_PADDED_EXPIRY_PATTERN)
+                console.log("value", value)
+            } else {
+                console.log('setting pattern to default')
+                restrictedInput.setPattern(DEFAULT_EXPIRY_PATTERN)
+                console.log("value", value)
+            }
+            console.log('expiryRef value 2: ', expiryRef.current.value)
+            setInputState({
+                ...inputState,
+                inputValue: restrictedInput.getUnformattedValue(),
+                maskedInputValue: expiryRef.current.value
+            });
+            console.log('expiryRef value 3: ', expiryRef.current.value)
+            console.log("maskedInputValue: ", maskedInputValue)
+            // onChange({event, date: value, maskedDate: value});
+        }
+    }, [inputValue]);
+
+   
+
+    const formatExpiryDate : (InputEvent) => void = (event: InputEvent) : void => {
+    }
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (allowNavigation) {
@@ -127,9 +152,10 @@ export function CardExpiry(
             ref={ expiryRef }
             type={ type }
             className='card-field-expiry'
-            value={ inputValue }
+            value={ maskedInputValue }
             style={ style }
-            maxLength={ maxLength }
+            maxLength= { maxLength }
+            // onInput= { formatExpiryDate }
             onKeyDown={ onKeyDownEvent }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
