@@ -10,7 +10,8 @@ import {
     defaultNavigation,
     defaultInputState,
     navigateOnKeyDown,
-    exportMethods
+    exportMethods,
+    shouldUseZeroPaddedExpiryPattern
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 import { DEFAULT_EXPIRY_PATTERN, ZERO_PADDED_EXPIRY_PATTERN } from '../constants';
@@ -85,41 +86,32 @@ export function CardExpiry(
         }
     }, [ isValid, isPotentiallyValid ]);
 
-    useEffect(() => {
-        const element = expiryRef?.current;
-        if (element.value) {
-            const value = element.value 
-            console.log('expiryRef value 1: ', expiryRef.current.value)
-            if ((value.length > 0 && value[0] != "0" && value[0] != "1") || value[1] === "/"){
-                console.log('setting pattern to 0 padded')
-                restrictedInput.setPattern(ZERO_PADDED_EXPIRY_PATTERN)
-                console.log("value", value)
-            } else {
-                console.log('setting pattern to default')
-                restrictedInput.setPattern(DEFAULT_EXPIRY_PATTERN)
-                console.log("value", value)
-            }
-            console.log('expiryRef value 2: ', expiryRef.current.value)
-            setInputState({
-                ...inputState,
-                inputValue: restrictedInput.getUnformattedValue(),
-                maskedInputValue: expiryRef.current.value
-            });
-            console.log('expiryRef value 3: ', expiryRef.current.value)
-            console.log("maskedInputValue: ", maskedInputValue)
-            // onChange({event, date: value, maskedDate: value});
-        }
-    }, [inputValue]);
-
-   
-
     const formatExpiryDate : (InputEvent) => void = (event: InputEvent) : void => {
+        const value = event.target.value
+        console.log('Value from event target', value)
+        console.log("Input value before padding check: ", expiryRef.current.value)
+        if(!value.includes("/")) {
+            if (shouldUseZeroPaddedExpiryPattern(value, event.key)) {
+                restrictedInput.setPattern(ZERO_PADDED_EXPIRY_PATTERN)
+            } else {
+                restrictedInput.setPattern(DEFAULT_EXPIRY_PATTERN)
+            }
+        }
+        console.log("Input value after padding check: ", expiryRef.current.value)
+        setInputState({
+            ...inputState,
+            inputValue: restrictedInput.getUnformattedValue(),
+            maskedInputValue: expiryRef.current.value
+        });
+        console.log("--------------------")
+        // onChange({event, date: expiryRef.current.value, maskedDate: expiryRef.current.value});
     }
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
+        // formatExpiryDate(event)
     };
 
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
@@ -152,10 +144,10 @@ export function CardExpiry(
             ref={ expiryRef }
             type={ type }
             className='card-field-expiry'
-            value={ maskedInputValue }
+            // value={ inputState.maskedInputValue }
             style={ style }
             maxLength= { maxLength }
-            // onInput= { formatExpiryDate }
+            onKeyUp= { formatExpiryDate }
             onKeyDown={ onKeyDownEvent }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }

@@ -60,42 +60,28 @@ export function removeDateMask(date : string) : string {
     return date.trim().replace(/\s|\//g, '');
 }
 
-// Format expiry date
-// export function formatDate(date : string, prevFormat? : string = '') : string {
-//     assertString(date);
+export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) {
+    let useZeroPaddedExpiryPattern
 
-//     if (prevFormat && prevFormat.includes('/')) {
-//         const [ month ] = removeSpaces(prevFormat).split('/');
-//         if (month.length < 2) {
-//             return prevFormat;
-//         }
-//     }
+    switch (true) {
+        case (value.length === 0):
+            useZeroPaddedExpiryPattern = false
+            break
+        case (value[0] === "1" && key === "/"):
+            useZeroPaddedExpiryPattern = true
+            break
+        case (value[0] != "1" && value[0] != "0"):
+            useZeroPaddedExpiryPattern = true
+            break
+        case (value[0] === "1"):
+            useZeroPaddedExpiryPattern = false
+            break
+        default:
+            useZeroPaddedExpiryPattern = false
+    }
 
-//     if (date.trim().slice(-1) === '/') {
-//         return date.slice(0, 2);
-//     }
-
-//     date = removeDateMask(date);
-
-//     if (date.length < 2) {
-//         const first = date[0];
-//         if (parseInt(first, 10) > 1) {
-//             return `0${ first } / `;
-//         }
-//         return date;
-//     }
-
-//     const month = date.slice(0, 2);
-//     if (parseInt(month, 10) > 12) {
-//         const first = month[0];
-//         const second = month[1];
-//         return `0${ first } / ${ second }`;
-//     }
-
-//     const year = date.slice(2, 4);
-//     return `${ month } / ${ year }`;
-
-// }
+    return useZeroPaddedExpiryPattern
+}
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
 function isValidValue(value : string | number) : boolean {
