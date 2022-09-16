@@ -47,7 +47,7 @@ export function CardName(
     const nameRef = useRef()
 
     useEffect(() => {
-        exportMethods(nameRef, setAttributes);
+        exportMethods(nameRef, setAttributes, setInputState);
     }, []);
 
     useEffect(() => {

@@ -48,7 +48,7 @@ export function CardPostalCode(
     const postalCodeRef = useRef();
 
     useEffect(() => {
-        exportMethods(postalCodeRef, setAttributes);
+        exportMethods(postalCodeRef, setAttributes, setInputState);
     }, []);
 
     useEffect(() => {

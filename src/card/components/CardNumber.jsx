@@ -89,7 +89,7 @@ export function CardNumber(
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(numberRef, setAttributes);
+            exportMethods(numberRef, setAttributes, setInputState);
         }
     }, []);
 

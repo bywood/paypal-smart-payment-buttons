@@ -52,7 +52,7 @@ export function CardCVV(
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(cvvRef, setAttributes);
+            exportMethods(cvvRef, setAttributes, setInputState);
         }
         // listen for card type changes
         const postRobot = getPostRobot();

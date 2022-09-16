@@ -2,7 +2,7 @@
 /** @jsx h */
 
 import { h, render, Fragment } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
@@ -26,6 +26,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
+    const initialRender = useRef(true)
 
     let autocomplete;
     if (disableAutocomplete) {
@@ -77,13 +78,15 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     };
 
     useEffect(() => {
-        if(typeof onChange === 'function') {
+        if ( initialRender.current ) {
+            initialRender.current = false
+        } else if(typeof onChange === 'function') {
             onChange({
-                isValid:  fieldValid,
-                errors:   fieldErrors
+                isValid: fieldValid,
+                errors: fieldErrors
             });
         }
-    }, [ fieldValid, fieldErrors ]);
+    }, [ fieldValid ]);
 
     useEffect(() => {
         autoFocusOnFirstInput(mainRef);

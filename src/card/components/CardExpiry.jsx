@@ -59,7 +59,7 @@ export function CardExpiry(
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(expiryRef, setAttributes);
+            exportMethods(expiryRef, setAttributes, setInputState);
         }
         const element = expiryRef?.current
         if (element) {
