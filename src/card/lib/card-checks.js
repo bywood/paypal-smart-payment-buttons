@@ -94,6 +94,7 @@ export function addGapsToCardNumber(cardNumber : string, cardType? : CardType) :
 export function checkCardEligibility(value : string, cardType : CardType) : boolean  {
     // check if the card type is eligible
     const fundingEligibility = window.xprops.fundingEligibility;
+    console.log('fundingEligibility', fundingEligibility)
     const type = VALIDATOR_TO_TYPE_MAP[cardType.type];
     if (value.length === 0) {
         return true;
@@ -102,7 +103,7 @@ export function checkCardEligibility(value : string, cardType : CardType) : bool
         // mark as eligible if the card vendor is explicitly set to be eligible
         if (type && fundingEligibility.card.vendors) {
             const vendor = fundingEligibility.card.vendors[type];
-            if (vendor && vendor.eligible) {
+            if (vendor && vendor.eligible && !vendor.branded) {
                 return true;
             }
         }

@@ -111,6 +111,18 @@ describe("card-checks", () => {
       expect(checkCardEligibility(cardNumber, cardType)).toBe(false);
     });
 
+    it("should find unbranded card payments not eligible if the merchant is only eligible for branded payments", () => {
+      window.xprops.fundingEligibility = {
+        card: {
+          branded: true
+        }
+      };
+
+      const cardNumber = "4111111111111111";
+      const cardType = detectCardType(cardNumber);
+      expect(checkCardEligibility(cardNumber, cardType)).toBe(false);
+    })
+
     it("should default to ineligible if there is no funding eligibility specified", () => {
       const cardNumber = "4111111111111111";
       const cardType = detectCardType(cardNumber);
