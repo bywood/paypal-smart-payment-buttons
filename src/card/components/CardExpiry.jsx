@@ -70,7 +70,7 @@ export function CardExpiry(
            setRestrictedInput(restrictedInput)
         }
     }, []);
-            
+
     useEffect(() => {
         const validity = cardValidator.expirationDate(maskedInputValue);
         setInputState(newState => ({ ...newState, ...validity }));
