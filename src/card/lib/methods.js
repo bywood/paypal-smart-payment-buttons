@@ -31,7 +31,7 @@ export function exportMethods(ref : Object, setAttributes : Function, setInputSt
             ref?.current?.classList.remove(name);
         },
         clear: () => {
-            if (ref && ref.current) {
+            if (ref && ref.current && typeof setInputState === 'function') {
                 setInputState((currentInputState) => {
                     return {
                         ...currentInputState,
