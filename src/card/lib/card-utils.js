@@ -60,7 +60,7 @@ export function removeDateMask(date : string) : string {
     return date.trim().replace(/\s|\//g, '');
 }
 
-export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) {
+export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) : boolean {
     let useZeroPaddedExpiryPattern
 
     switch (true) {
@@ -70,7 +70,7 @@ export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) {
         case (value[0] === "1" && key === "/"):
             useZeroPaddedExpiryPattern = true
             break
-        case (value[0] != "1" && value[0] != "0"):
+        case (value[0] !== "1" && value[0] !== "0"):
             useZeroPaddedExpiryPattern = true
             break
         case (value[0] === "1"):

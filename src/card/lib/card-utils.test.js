@@ -4,7 +4,6 @@ import { getLogger } from '../../lib';
 
 import {
     maskValidCard,
-    formatDate,
     parseGQLErrors,
     filterStyle,
     styleToString,
@@ -42,39 +41,6 @@ describe('card utils', () => {
             expect(maskValidCard('1')).toBe('1');
             expect(maskValidCard('')).toBe('');
         });
-    });
-
-    describe('formatDate', () => {
-        it('format valid number sequence', () => {
-            const masked = formatDate('1022');
-
-            expect(masked).toBe('10 / 22');
-        });
-
-        it('add slash at the end of a valid month', () => {
-            const masked = formatDate('10');
-
-            expect(masked).toBe('10 / ');
-        });
-
-        it('format number by adding a slash to separate the month from the year', () => {
-            const masked = formatDate('22');
-
-            expect(masked).toBe('02 / 2');
-        });
-
-        it('returns prevMask if it is valid', () => {
-            const masked = formatDate('22');
-
-            expect(masked).toBe('02 / 2');
-        });
-
-        it('returns only the month section when the string finished with slash', () => {
-            const masked = formatDate('12 /');
-
-            expect(masked).toBe('12');
-        });
-
     });
 
     describe('parseGQLErrors', () => {

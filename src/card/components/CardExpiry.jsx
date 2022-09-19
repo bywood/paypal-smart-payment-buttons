@@ -63,11 +63,11 @@ export function CardExpiry(
         }
         const element = expiryRef?.current
         if (element) {
-           const restrictedInput = new RestrictedInput({
+           const initialRestrictedInput = new RestrictedInput({
             element,
             pattern: DEFAULT_EXPIRY_PATTERN
            }) ;
-           setRestrictedInput(restrictedInput)
+           setRestrictedInput(initialRestrictedInput)
         }
     }, []);
 
