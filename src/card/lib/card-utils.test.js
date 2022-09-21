@@ -26,7 +26,7 @@ describe('card utils', () => {
     describe('assertType', () => {
         it('throws an error with the provided message when the assertion criteria is not met', () => {
             function assertNumber() {
-                assertType(typeof '5' === 'number', 'Expected a number')
+                assertType( ["2"].every((n) => typeof n === 'number')  , 'Expected a number')
             }
 
             expect(assertNumber).toThrow(/Expected a number/)
