@@ -13,13 +13,24 @@ import {
     checkForNonDigits,
     convertDateFormat,
     getContext,
-    markValidity
+    markValidity,
+    assertType
 } from './card-utils';
 
 
 jest.mock('../../lib/dom');
 
 describe('card utils', () => {
+
+    describe('assertType', () => {
+        it('throws an error with the provided message when the assertion criteria is not met', () => {
+            function assertNumber() {
+                assertType(typeof '5' === 'number', 'Expected a number')
+            }
+
+            expect(assertNumber).toThrow(/Expected a number/)
+        });
+    });
 
     describe('maskValidCard', () => {
         it('masks all but the last 4 of the card number with •', () => {

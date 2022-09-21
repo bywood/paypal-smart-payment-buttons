@@ -56,10 +56,6 @@ export function maskValidCard(number : string) : string {
     return maskedNumber + lastFour;
 }
 
-export function removeDateMask(date : string) : string {
-    return date.trim().replace(/\s|\//g, '');
-}
-
 export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) : boolean {
     let useZeroPaddedExpiryPattern
 
