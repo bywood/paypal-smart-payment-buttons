@@ -14,7 +14,8 @@ import {
     convertDateFormat,
     getContext,
     markValidity,
-    assertType
+    assertType,
+    shouldUseZeroPaddedExpiryPattern
 } from './card-utils';
 
 
@@ -456,5 +457,38 @@ describe('card utils', () => {
             expect(element.classList.contains('invalid')).toBe(true)
             expect(element.classList.contains('valid')).toBe(false)
         })
+    });
+
+    describe('shouldUseZeroPaddedExpiryPattern', () => {
+        it('should return false if the value is an empty string', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('','backspace')
+
+            expect(result).toBe(false)
+        });
+
+        it('should return true if the first digit is a 1 and the key typed is a forward slash', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('1','/')
+
+            expect(result).toBe(true)
+        });
+
+        it('should return true if the first digit is 2-9', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('2','2')
+
+            expect(result).toBe(true)
+        });
+
+        it('should return false if the first digit is a 1', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('1', '2')
+
+            expect(result).toBe(false)
+        });
+
+        it('should default to false', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('0','5')
+
+            expect(result).toBe(false)
+        });
+
     });
 });
