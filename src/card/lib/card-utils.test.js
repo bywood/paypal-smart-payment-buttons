@@ -26,7 +26,8 @@ describe('card utils', () => {
     describe('assertType', () => {
         it('throws an error with the provided message when the assertion criteria is not met', () => {
             function assertNumber() {
-                assertType( ["2"].every((n) => typeof n === 'number')  , 'Expected a number')
+                // $FlowFixMe
+                assertType( typeof '5' === 'number')  , 'Expected a number')
             }
 
             expect(assertNumber).toThrow(/Expected a number/)
