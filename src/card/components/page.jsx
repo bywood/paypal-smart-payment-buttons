@@ -82,7 +82,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
         // any value in the depenency array has changed. We
         // only want to fire off the onChange event if the
         // validity changes after the first render. So in
-        // order to do that we add this guard to not noop
+        // order to do that we add this guard to noop
         // when the component first renders. We leverage
         // useRef to store the value of initialRender as
         // we want that to persist across re-renders.
