@@ -57,26 +57,19 @@ export function maskValidCard(number : string) : string {
 }
 
 export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) : boolean {
-    let useZeroPaddedExpiryPattern
-
-    switch (true) {
-        case (value.length === 0):
-            useZeroPaddedExpiryPattern = false
-            break
-        case (value[0] === "1" && key === "/"):
-            useZeroPaddedExpiryPattern = true
-            break
-        case (value[0] !== "1" && value[0] !== "0"):
-            useZeroPaddedExpiryPattern = true
-            break
-        case (value[0] === "1"):
-            useZeroPaddedExpiryPattern = false
-            break
-        default:
-            useZeroPaddedExpiryPattern = false
+    if (value.length === 0) {
+        return false;
     }
-
-    return useZeroPaddedExpiryPattern
+    if (value[0] === "1" && key === "/") {
+        return true;
+    }
+    if (value[0] !== "1" && value[0] !== "0") {
+        return true;
+    }
+    if (value[0] === "1") {
+        return false;
+    }
+    return false;
 }
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
