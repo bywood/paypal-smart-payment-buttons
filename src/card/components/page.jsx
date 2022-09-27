@@ -78,6 +78,15 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     };
 
     useEffect(() => {
+        // useEffect is fired on first render as well as when
+        // any value in the depenency array has changed. We
+        // only want to fire off the onChange event if the
+        // validity changes after the first render. So in
+        // order to do that we add this guard to not noop
+        // when the component first renders. We leverage
+        // useRef to store the value of initialRender as
+        // we want that to persist across re-renders.
+        // See: https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
         if ( initialRender.current ) {
             initialRender.current = false
         } else if(typeof onChange === 'function') {
