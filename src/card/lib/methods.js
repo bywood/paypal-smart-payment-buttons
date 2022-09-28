@@ -42,6 +42,9 @@ export function exportMethods(ref : Object, setAttributes : Function, setInputSt
         },
         focus: () => {
             ref?.current?.focus();
+        },
+        setMessage: (message) => {
+            console.log('It is all wired up! Here is the message: ', message)
         }
     });
 };

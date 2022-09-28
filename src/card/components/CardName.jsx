@@ -8,6 +8,8 @@ import cardValidator from 'card-validator';
 import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
+import { Message } from './Message'
+
 type CardNameProps = {|
     name : string,
     type : string,
@@ -45,6 +47,7 @@ export function CardName(
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const nameRef = useRef()
+    const messageRef = useRef()
 
     useEffect(() => {
         exportMethods(nameRef, setAttributes, setInputState);
@@ -102,20 +105,24 @@ export function CardName(
     };
 
     return (
-        <input
-            name={ name }
-            inputmode='text'
-            ref={ nameRef }
-            type={ type }
-            className="card-field-name"
-            value={ inputValue }
-            style={ style }
-            maxLength={ maxLength }
-            onKeyDown={ onKeyDownEvent }
-            onInput={ setNameValue }
-            onFocus={ onFocusEvent }
-            onBlur={ onBlurEvent }
-            { ...attributes }
-        />
+        <div>
+            <input
+                aria-describedby={'test'}
+                name={ name }
+                inputmode='text'
+                ref={ nameRef }
+                type={ type }
+                className="card-field-name"
+                value={ inputValue }
+                style={ style }
+                maxLength={ maxLength }
+                onKeyDown={ onKeyDownEvent }
+                onInput={ setNameValue }
+                onFocus={ onFocusEvent }
+                onBlur={ onBlurEvent }
+                { ...attributes }
+                />
+            <Message ariaDescribeId={'test'}/>
+        </div>
     );
 }
