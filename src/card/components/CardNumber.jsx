@@ -30,6 +30,7 @@ import type {
 import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
+import { AriaMessage } from './AriaMessage'
 
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
@@ -86,10 +87,11 @@ export function CardNumber(
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
 
     const numberRef = useRef()
+    const ariaMessageRef = useRef()
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(numberRef, setAttributes, setInputState);
+            exportMethods(numberRef, setAttributes, setInputState, ariaMessageRef);
         }
     }, []);
 
@@ -233,6 +235,7 @@ export function CardNumber(
     return (
         <Fragment>
             <input
+                aria-describedby={'card-number-field-description'}
                 name={ name }
                 autocomplete={ autocomplete }
                 inputmode='numeric'
@@ -250,6 +253,10 @@ export function CardNumber(
                 { ...attributes }
             />
             <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" />
+            <AriaMessage
+                ariaMessageId={'card-number-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
         </Fragment>
     );
 }

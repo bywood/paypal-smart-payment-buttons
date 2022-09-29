@@ -2,7 +2,7 @@
 
 import { isValidAttribute } from './card-utils';
 
-export function exportMethods(ref : Object, setAttributes : Function, setInputState? : Function) : void {
+export function exportMethods(ref : Object, setAttributes : Function, setInputState? : Function, ariaMessageRef: Object) : void {
     window.xprops.export({
         setAttribute: (name, value) => {
             if (isValidAttribute(name)) {
@@ -44,7 +44,7 @@ export function exportMethods(ref : Object, setAttributes : Function, setInputSt
             ref?.current?.focus();
         },
         setMessage: (message) => {
-            console.log('It is all wired up! Here is the message: ', message)
+            ariaMessageRef.current.innerText = message
         }
     });
 };
