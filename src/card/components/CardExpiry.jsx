@@ -156,7 +156,7 @@ export function CardExpiry(
         <AriaMessage
             ariaMessageId={'card-expiry-field-description'}
             ariaMessageRef={ariaMessageRef}
-                />
+        />
         </Fragment>
     );
 }

@@ -123,10 +123,10 @@ export function CardPostalCode(
             minLength={ minLength }
             { ...attributes }
         />
-         <AriaMessage
+        <AriaMessage
             ariaMessageId={'card-postalCode-field-description'}
             ariaMessageRef={ariaMessageRef}
-          />
+        />
         </Fragment>
     )
 }

@@ -122,9 +122,9 @@ export function CardName(
                 { ...attributes }
                 />
             <AriaMessage
-            ariaMessageId={'card-name-field-description'}
-            ariaMessageRef={ariaMessageRef}
-                />
+                ariaMessageId={'card-name-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
         </Fragment>
     );
 }
