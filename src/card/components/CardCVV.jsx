@@ -1,7 +1,7 @@
 /* @flow */
 /** @jsx h */
 
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
 
@@ -10,6 +10,7 @@ import { DEFAULT_CARD_TYPE } from '../constants';
 import { removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
+import { AriaMessage } from './AriaMessage'
 type CardCvvProps = {|
     name : string,
     autocomplete? : string,
@@ -49,10 +50,11 @@ export function CardCVV(
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const cvvRef = useRef()
+    const ariaMessageRef = useRef()
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(cvvRef, setAttributes, setInputState);
+            exportMethods(cvvRef, setAttributes, setInputState, ariaMessageRef);
         }
         // listen for card type changes
         const postRobot = getPostRobot();
@@ -133,7 +135,9 @@ export function CardCVV(
     };
 
     return (
+        <Fragment>
         <input
+            aria-describedby={'card-cvv-field-description'}
             name={ name }
             autocomplete={ autocomplete }
             inputmode='numeric'
@@ -150,5 +154,10 @@ export function CardCVV(
             { ...attributes }
             placeholder={ attributes.placeholder ?? cardType.code.name }
         />
+        <AriaMessage
+            ariaMessageId={'card-cvv-field-description'}
+            ariaMessageRef={ariaMessageRef}
+                />
+        </Fragment>
     );
 }

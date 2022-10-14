@@ -1,7 +1,7 @@
 /* @flow */
 /** @jsx h */
 
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
 import RestrictedInput from 'restricted-input';
@@ -15,6 +15,8 @@ import {
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 import { DEFAULT_EXPIRY_PATTERN, ZERO_PADDED_EXPIRY_PATTERN } from '../constants';
+
+import { AriaMessage } from './AriaMessage'
 
 type CardExpiryProps = {|
     name : string,
@@ -56,10 +58,11 @@ export function CardExpiry(
     const [restrictedInput, setRestrictedInput] : [Object, (Object) => Object] = useState({})
 
     const expiryRef = useRef()
+    const ariaMessageRef = useRef()
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(expiryRef, setAttributes, setInputState);
+            exportMethods(expiryRef, setAttributes, setInputState, ariaMessageRef);
         }
         const element = expiryRef?.current
         if (element) {
@@ -132,7 +135,9 @@ export function CardExpiry(
     };
 
     return (
+        <Fragment>
         <input
+            aria-describedby={'card-expiry-field-description'}
             name={ name }
             autocomplete={ autocomplete }
             inputmode='numeric'
@@ -148,5 +153,10 @@ export function CardExpiry(
             onPaste={ onPasteEvent }
             { ...attributes }
         />
+        <AriaMessage
+            ariaMessageId={'card-expiry-field-description'}
+            ariaMessageRef={ariaMessageRef}
+                />
+        </Fragment>
     );
 }

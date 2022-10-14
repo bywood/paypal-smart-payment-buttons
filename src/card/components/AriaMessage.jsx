@@ -10,7 +10,7 @@ type MessageProps = {|
     ariaMessageRef: HTMLElement
 |}
 
-export function AriaMessage({ariaMessageId, message, ariaMessageRef} : MessageProps) : mixed {
+export function AriaMessage({ariaMessageId, ariaMessageRef} : MessageProps) : mixed {
     const messageRef = useRef()
     
     return (

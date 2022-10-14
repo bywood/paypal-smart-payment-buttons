@@ -1,13 +1,14 @@
 /* @flow */
 /** @jsx h */
 
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
 
 import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
+import { AriaMessage } from './AriaMessage'
 type CardPostalCodeProps = {|
     name : string,
     type : string,
@@ -46,9 +47,10 @@ export function CardPostalCode(
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const postalCodeRef = useRef();
+    const ariaMessageRef = useRef()
 
     useEffect(() => {
-        exportMethods(postalCodeRef, setAttributes, setInputState);
+        exportMethods(postalCodeRef, setAttributes, setInputState, ariaMessageRef);
     }, []);
 
     useEffect(() => {
@@ -103,7 +105,9 @@ export function CardPostalCode(
     };
 
     return (
+        <Fragment>
         <input
+            aria-describedby={'card-postalCode-field-description'}
             name={ name }
             inputmode='numeric'
             ref={ postalCodeRef }
@@ -119,5 +123,10 @@ export function CardPostalCode(
             minLength={ minLength }
             { ...attributes }
         />
+         <AriaMessage
+            ariaMessageId={'card-postalCode-field-description'}
+            ariaMessageRef={ariaMessageRef}
+          />
+        </Fragment>
     )
 }

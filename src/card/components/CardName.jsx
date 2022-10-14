@@ -1,13 +1,14 @@
 /* @flow */
 /** @jsx h */
 
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
 
 import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
+import { AriaMessage } from './AriaMessage'
 type CardNameProps = {|
     name : string,
     type : string,
@@ -45,9 +46,10 @@ export function CardName(
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const nameRef = useRef()
+    const ariaMessageRef = useRef()
 
     useEffect(() => {
-        exportMethods(nameRef, setAttributes, setInputState);
+        exportMethods(nameRef, setAttributes, setInputState, ariaMessageRef);
     }, []);
 
     useEffect(() => {
@@ -102,7 +104,9 @@ export function CardName(
     };
 
     return (
+        <Fragment>
             <input
+                aria-describedby={'card-name-field-description'}
                 name={ name }
                 inputmode='text'
                 ref={ nameRef }
@@ -117,5 +121,10 @@ export function CardName(
                 onBlur={ onBlurEvent }
                 { ...attributes }
                 />
+            <AriaMessage
+            ariaMessageId={'card-name-field-description'}
+            ariaMessageRef={ariaMessageRef}
+                />
+        </Fragment>
     );
 }
