@@ -2534,7 +2534,7 @@
             var _ref$amount = _ref.amount, _ref$vetted = _ref.vetted, _ref$allowBillingPaym = _ref.allowBillingPayments;
             return callGraphQL({
                 name: "GetSmartWallet",
-                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
+                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                    venmo {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
                 variables: {
                     clientID: _ref.clientID,
                     merchantID: _ref.merchantID,
@@ -2603,14 +2603,20 @@
         };
         var logo_LOGO_COLORS;
         (logo_LOGO_COLORS = {}).default = {
-            primary: "#005498",
-            secondary: "#FFD800"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF",
+            tertiary: "#FFFFFF",
+            quaternary: "#FFFFFF"
         }, logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF",
+            tertiary: "#FFFFFF",
+            quaternary: "#FFFFFF"
         }, logo_LOGO_COLORS.black = {
-            primary: "#005498",
-            secondary: "#FFD800"
+            primary: "#1E3764",
+            secondary: "#005AB9",
+            tertiary: "#FBA900",
+            quaternary: "#FFD800"
         };
         var glyph_logo_LOGO_COLORS;
         (glyph_logo_LOGO_COLORS = {}).default = {
@@ -2640,67 +2646,67 @@
         };
         var eps_logo_LOGO_COLORS;
         (eps_logo_LOGO_COLORS = {}).default = {
-            primary: "#c8036f",
-            secondary: "#71706f"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, eps_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, eps_logo_LOGO_COLORS.black = {
-            primary: "#71706F",
-            secondary: "#C8036F"
+            primary: "#C8036F",
+            secondary: "#71706F"
         };
         var giropay_logo_LOGO_COLORS;
         (giropay_logo_LOGO_COLORS = {}).default = {
-            primary: "#ED1C24",
-            secondary: "#ffffff",
-            tertiary: "#003a7d",
-            quaternary: "#FFFFFF"
-        }, giropay_logo_LOGO_COLORS.white = {
             primary: "#FFFFFF",
-            secondary: "#000000",
-            tertiary: "#FFFFFF",
-            quaternary: "#FFFFFF"
-        }, giropay_logo_LOGO_COLORS.black = {
-            primary: "#ED1C24",
+            secondary: "#003A7D",
+            tertiary: "#ED1C24",
+            quaternary: "#FFFFFF",
+            quinary: "#FFFFFF"
+        }, giropay_logo_LOGO_COLORS.white = {
+            primary: "#000000",
             secondary: "#FFFFFF",
-            tertiary: "#003a7d",
-            quaternary: "#FFFFFF"
+            tertiary: "#FFFFFF",
+            quaternary: "#000000",
+            quinary: "#FFFFFF"
+        }, giropay_logo_LOGO_COLORS.black = {
+            primary: "#FFFFFF",
+            secondary: "#003A7D",
+            tertiary: "#ED1C24",
+            quaternary: "#FFFFFF",
+            quinary: "#003A7D"
         };
         var ideal_logo_LOGO_COLORS;
         (ideal_logo_LOGO_COLORS = {}).default = {
-            primary: "#000000",
-            secondary: "#cd0067",
-            tertiary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#CC0066"
         }, ideal_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff",
-            tertiary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#CC0066"
         }, ideal_logo_LOGO_COLORS.black = {
-            primary: "#000000",
-            secondary: "#FFFFFF",
-            tertiary: "#CD0067"
+            primary: "#FFFFFF",
+            secondary: "#CC0066"
         };
         var mybank_logo_LOGO_COLORS;
         (mybank_logo_LOGO_COLORS = {}).default = {
             primary: "#00C0EE",
-            secondary: "#1a4b67"
+            secondary: "#FFFFFF"
         }, mybank_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, mybank_logo_LOGO_COLORS.black = {
-            primary: "#1A4B67",
-            secondary: "#00C0EE"
+            primary: "#00C0EE",
+            secondary: "#1A4B67"
         };
         var p24_logo_LOGO_COLORS;
         (p24_logo_LOGO_COLORS = {}).default = {
-            primary: "#d03238",
-            secondary: "#b3b1b1"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, p24_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, p24_logo_LOGO_COLORS.black = {
-            primary: "#d03238",
-            secondary: "#b3b1b1"
+            primary: "#B3B1B1",
+            secondary: "#D03238"
         };
         var _PAYPAL_LOGO_COLORS, _PP_LOGO_COLORS;
         (_PAYPAL_LOGO_COLORS = {}).default = {
@@ -2751,14 +2757,14 @@
         };
         var sofort_logo_LOGO_COLORS;
         (sofort_logo_LOGO_COLORS = {}).default = {
-            primary: "#FFFFFF",
-            secondary: "#EB6F93"
+            primary: "#EDEDED",
+            secondary: "#393A41"
         }, sofort_logo_LOGO_COLORS.white = {
             primary: "#FFFFFF",
-            secondary: "#2C2E2F"
+            secondary: "#000000"
         }, sofort_logo_LOGO_COLORS.black = {
-            primary: "#FFFFFF",
-            secondary: "#EB6F93"
+            primary: "#393A41",
+            secondary: "#EDEDED"
         };
         var venmo_logo_excluded = [ "logoColor" ];
         var venmo_logo_LOGO_COLORS;
@@ -2784,13 +2790,13 @@
         var wechatpay_logo_LOGO_COLORS;
         (wechatpay_logo_LOGO_COLORS = {}).default = {
             primary: "#1AAD19",
-            secondary: "#4D4D4D"
+            secondary: "#FFFFFF"
         }, wechatpay_logo_LOGO_COLORS.white = {
             primary: "#FFFFFF",
             secondary: "#FFFFFF"
         }, wechatpay_logo_LOGO_COLORS.black = {
-            primary: "#333030",
-            secondary: "#333030"
+            primary: "#1AAD19",
+            secondary: "#4D4D4D"
         };
         var zimpler_logo_LOGO_COLORS;
         (zimpler_logo_LOGO_COLORS = {}).default = {
@@ -2819,85 +2825,73 @@
         };
         var verkkopankki_logo_LOGO_COLORS;
         (verkkopankki_logo_LOGO_COLORS = {}).default = {
-            primary: "#FFFFFF",
-            secondary: "#CACCC8",
-            tertiary: "#2D59A1",
-            quaternary: "#1F3364",
-            quinary: "#4E4E4E",
-            senary: "#1B4482"
+            primary: "#2D59A1",
+            secondary: "#1F3364",
+            tertiary: "#FFFFFF",
+            quaternary: "#CACCC8",
+            quinary: "#FFFFFF",
+            senary: "#FFFFFF"
         }, verkkopankki_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#CACCC8",
-            tertiary: "#2D59A1",
-            quaternary: "#1F3364",
-            quinary: "#4E4E4E",
-            senary: "#1B4482"
-        }, verkkopankki_logo_LOGO_COLORS.black = {
             primary: "#000000",
             secondary: "#000000",
             tertiary: "#FFFFFF",
             quaternary: "#FFFFFF",
-            quinary: "#000000",
-            senary: "#000000"
+            quinary: "#FFFFFF",
+            senary: "#FFFFFF"
+        }, verkkopankki_logo_LOGO_COLORS.black = {
+            primary: "#2D59A1",
+            secondary: "#1F3364",
+            tertiary: "#FFFFFF",
+            quaternary: "#CACCC8",
+            quinary: "#1B4482",
+            senary: "#4E4E4E"
         };
         var blik_logo_LOGO_COLORS;
         (blik_logo_LOGO_COLORS = {}).default = {
-            primary: "#4D4D4F",
-            secondary: "#000000",
-            tertiary: "#FF0000",
-            quaternary: "#E83E49",
-            quinary: "#FF00FF",
+            primary: "#FF0000",
+            secondary: "#E83E49",
+            tertiary: "#FF00FF",
+            quaternary: "#000000",
             senary: "#FFFFFF"
         }, blik_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#FFFFFF",
+            primary: "#000000",
+            secondary: "#000000",
             tertiary: "#000000",
             quaternary: "#000000",
-            quinary: "#000000",
-            senary: "#000000"
+            senary: "#FFFFFF"
         }, blik_logo_LOGO_COLORS.black = {
-            primary: "#4D4D4F",
-            secondary: "#000000",
-            tertiary: "#FF0000",
-            quaternary: "#E83E49",
-            quinary: "#FF00FF",
+            primary: "#FF0000",
+            secondary: "#E83E49",
+            tertiary: "#FF00FF",
+            quaternary: "#4D4D4F",
             senary: "#FFFFFF"
         };
         var trustly_logo_LOGO_COLORS;
         (trustly_logo_LOGO_COLORS = {}).default = {
-            primary: "#020202",
-            secondary: "#64CC07"
+            primary: "#0EE06E"
         }, trustly_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#FFFFFF"
+            primary: "#FFFFFF"
         }, trustly_logo_LOGO_COLORS.black = {
-            primary: "#000000",
-            secondary: "#000000"
+            primary: "#000000"
         };
         var oxxo_logo_LOGO_COLORS;
         (oxxo_logo_LOGO_COLORS = {}).default = {
-            primary: "#EC1D24",
-            secondary: "#EDA42D",
-            tertiary: "#FEFEFE"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, oxxo_logo_LOGO_COLORS.white = {
-            primary: "#EC1D24",
-            secondary: "#EDA42D",
-            tertiary: "#FEFEFE"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, oxxo_logo_LOGO_COLORS.black = {
-            primary: "#EC1D24",
-            secondary: "#EDA42D",
-            tertiary: "#FEFEFE"
+            primary: "#E39E39",
+            secondary: "#D8232A"
         };
         var boleto_logo_LOGO_COLORS;
         (boleto_logo_LOGO_COLORS = {}).default = {
-            primary: "#1A1919",
-            secondary: "#FFFFFE"
+            primary: "#FFFFFF"
         }, boleto_logo_LOGO_COLORS.white = {
-            primary: "#1A1919",
-            secondary: "#FFFFFE"
+            primary: "#FFFFFF"
         }, boleto_logo_LOGO_COLORS.black = {
-            primary: "#1A1919",
-            secondary: "#FFFFFE"
+            primary: "#000000"
         };
         var maxima_logo_LOGO_COLORS;
         (maxima_logo_LOGO_COLORS = {}).default = {
@@ -2912,31 +2906,31 @@
         };
         var mercadopago_logo_LOGO_COLORS;
         (mercadopago_logo_LOGO_COLORS = {}).default = {
-            primary: "#2D3277",
+            primary: "#009EE3",
             secondary: "#FFFFFF",
             tertiary: "#009EE3",
-            quaternary: "#009EE3"
+            quaternary: "#FFFFFF"
         }, mercadopago_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#000000",
-            tertiary: "#FFFFFF",
-            quaternary: "#000000"
-        }, mercadopago_logo_LOGO_COLORS.black = {
-            primary: "#2D3277",
+            primary: "#000000",
             secondary: "#FFFFFF",
+            tertiary: "#000000",
+            quaternary: "#FFFFFF"
+        }, mercadopago_logo_LOGO_COLORS.black = {
+            primary: "#FFFFFF",
+            secondary: "#2D3277",
             tertiary: "#009EE3",
             quaternary: "#009EE3"
         };
         var multibanco_logo_LOGO_COLORS;
         (multibanco_logo_LOGO_COLORS = {}).default = {
-            primary: "#373535",
-            secondary: "#1866AB"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, multibanco_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, multibanco_logo_LOGO_COLORS.black = {
-            primary: "#373535",
-            secondary: "#1866AB"
+            primary: "#1866AB",
+            secondary: "#373535"
         };
         function ErrorMessage(_ref) {
             var resetFunc = _ref.resetFunc;
@@ -3187,7 +3181,7 @@
             logger.addTrackingBuilder((function() {
                 var _ref2;
                 return (_ref2 = {}).state_name = "smart_button", _ref2.context_type = "EC-Token", 
-                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.114", 
+                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.117", 
                 _ref2.user_id = buttonSessionID, _ref2;
             }));
             (function() {

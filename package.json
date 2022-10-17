@@ -1,6 +1,6 @@
 {
   "name": "@paypal/smart-payment-buttons",
-  "version": "5.0.114",
+  "version": "5.0.116",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
@@ -11,7 +11,6 @@
     "url": "https://github.com/paypal/paypal-smart-payment-buttons"
   },
   "jest": {
-    "coverageDirectory": "./server-coverage/",
     "restoreMocks": true,
     "transformIgnorePatterns": [
       "node_modules/(?!(@paypal|@krakenjs|get-browser-fingerprint))"
@@ -22,7 +21,6 @@
   },
   "files": [
     "dist",
-    "server",
     "src",
     "babel.config.js",
     "index.js",
@@ -36,7 +34,7 @@
   },
   "scripts": {
     "all-ci": "npm run lint && npm run typecheck && npm run test",
-    "babel": "babel server --ignore=node_modules --out-dir server && babel webpack.config.js globals.js --out-dir .",
+    "babel": "babel webpack.config.js globals.js --out-dir .",
     "build": "npm run webpack:release",
     "build-commit": "npm run build && git add dist && (git commit -m 'Dist' || echo 'Nothing to commit') && git push",
     "cdnify": "grabthar-cdnify --cdn=https://www.paypalobjects.com",
@@ -46,9 +44,8 @@
     "flow": "flow",
     "flow-typed": "rm -rf ./flow-typed && flow-typed install --ignoreDeps peer && flow-typed install jest@24 mocha@4 && flow-typed install express@4.16 && sed -i -e 's/http$IncomingMessage,/http$IncomingMessage<>,/g' ./flow-typed/npm/express_v4.16.x.js",
     "jest:client": "jest src/ --collectCoverage --collectCoverageFrom='src/' --testPathIgnorePatterns=/fixtures/ --no-cache --runInBand --env=jsdom",
-    "jest:server": "jest test/server --collectCoverage --collectCoverageFrom='server/' --env=node --no-cache --runInBand",
     "karma": "cross-env NODE_ENV=test babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/karma start",
-    "lint": "eslint --ext .js --ext .jsx src/ server/ test/ *.js",
+    "lint": "eslint --ext .js --ext .jsx src/ test/ *.js",
     "postactivate": "npm run cdnify -- --commitonly",
     "postpublish": "if [ \"$DRY_RUN\" != 'true' ]; then git clean -f && git checkout .; fi;",
     "postrelease": "npm run cdnify -- --commitonly",
@@ -58,8 +55,7 @@
     "release:cli": "rm -rf node_modules && npm i && npm run all-ci && npm run build-commit && grabthar-release",
     "release:dry-run": "DRY_RUN=true grabthar-release",
     "setup": "npm install && npm run flow-typed",
-    "start": "babel-node ./server/devServer",
-    "test": "npm run karma && npm run jest:server && npm run jest:client",
+    "test": "npm run karma && npm run jest:client",
     "typecheck": "npm run flow-typed && npm run flow -- check",
     "webpack": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack --progress",
     "webpack:release": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack"
@@ -76,12 +72,12 @@
     "@krakenjs/jsx-pragmatic": "^3.0.0",
     "@krakenjs/post-robot": "^11.0.0",
     "@krakenjs/zalgo-promise": "^2.0.0",
-    "@paypal/checkout-components": "^5.0.167",
-    "@paypal/common-components": "^1.0.16",
+    "@paypal/checkout-components": "^5.0.238",
+    "@paypal/common-components": "^1.0.33",
     "@paypal/installments": "^1.0.0",
     "@paypal/sdk-client": "^4.0.156",
     "@paypal/sdk-constants": "^1.0.123",
-    "@paypal/sdk-logos": "^1.0.43",
+    "@paypal/sdk-logos": "^2.0.0",
     "@paypal/sdk-release": "^5.0.138",
     "card-validator": "^8.1.1",
     "get-browser-fingerprint": "^1.1.0",

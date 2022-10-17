@@ -17,5 +17,3 @@ for (const [ module, alias ] of Object.entries(aliases)) {
     console.info(`Alias: ${ module } -> ${ alias }`); // eslint-disable-line no-console
     moduleAlias.addAlias(module, alias);
 }
-
-module.exports = require('./server');

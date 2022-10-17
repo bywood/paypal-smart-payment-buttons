@@ -87,6 +87,16 @@ export const getSmartWallet : GetSmartWallet = memoize(({ clientID, merchantID, 
                             oneClick
                         }
                     }
+                    venmo {
+                        instruments {
+                            type
+                            label
+                            logoUrl
+                            instrumentID
+                            tokenID
+                            oneClick
+                        }
+                    }
                 }
             }
         `,

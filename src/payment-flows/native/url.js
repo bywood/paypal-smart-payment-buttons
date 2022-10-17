@@ -9,12 +9,28 @@ import { WEB_CHECKOUT_URI } from '../../config';
 import { createExperiment, isIOSSafari } from '../../lib';
 import { USER_ACTION } from '../../constants';
 import { HASH } from '../../native/popup/constants';
-import { CHANNEL } from '../../../server/components/native/constants';
 import type { ButtonProps, ServiceData, Config } from '../../button/props';
-import type { NativePopupInputParams } from '../../../server/components/native/params';
 
 import { isNativeOptedIn } from './eligibility';
 import { NATIVE_DOMAIN, HISTORY_NATIVE_POPUP_DOMAIN, MOBILE_NATIVE_POPUP_DOMAIN, NATIVE_CHECKOUT_URI, NATIVE_CHECKOUT_POPUP_URI, NATIVE_CHECKOUT_FALLBACK_URI } from './config';
+
+const CHANNEL = {
+    DESKTOP: 'desktop-web',
+    MOBILE:  'mobile-web'
+};
+
+type NativePopupInputParams = {|
+    debug? : boolean,
+    parentDomain : string,
+    clientID : string,
+    sessionID : string,
+    buttonSessionID : string,
+    sdkCorrelationID : string,
+    env : $Values<typeof ENV>,
+    sdkMeta? : string,
+    channel : $Values<typeof CHANNEL>,
+    buyerCountry : $Values<typeof COUNTRY>
+|};
 
 export function getNativeDomain({ props } : {| props : ButtonProps |}) : string {
     const { env } = props;
