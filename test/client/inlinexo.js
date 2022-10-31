@@ -12,16 +12,16 @@ import {
     createButtonHTML,
     mockFunction,
     clickButton,
-    getRestfulGetOrderApiMock
+    getRestfulGetOrderApiMock,
+    DEFAULT_FUNDING_ELIGIBILITY
 } from './mocks';
 
 describe('Inline XO cases', () => {
     const fundingEligibility = {
-        [ FUNDING.PAYPAL ]: {
-            eligible: true
-        },
+        ...DEFAULT_FUNDING_ELIGIBILITY,
         [ FUNDING.CARD]: {
             eligible: true,
+            branded: false,
             vendors:  {
                 [ CARD.VISA ]: {
                     eligible: true
@@ -99,7 +99,7 @@ describe('Inline XO cases', () => {
             }));
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ experience: 'inline', merchantID: [ 'XYZ12345' ], fundingEligibility });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
             await clickButton(FUNDING.CARD);
         });
     });
@@ -188,7 +188,6 @@ describe('Inline XO cases', () => {
 
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({
-                experience: 'inline',
                 merchantID: [ 'XYZ12345' ],
                 fundingEligibility,
                 facilitatorAccessToken
@@ -215,7 +214,7 @@ describe('Inline XO cases', () => {
             window.xprops.onError = avoid('onError');
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ experience: 'inline', merchantID: [ 'XYZ12345' ], fundingEligibility });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
             await clickButton(FUNDING.CARD);
         });
     });
@@ -256,7 +255,7 @@ describe('Inline XO cases', () => {
             }));
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ experience: 'inline', merchantID: [ 'XYZ12345' ], fundingEligibility });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
             await clickButton(FUNDING.CARD);
         });
     });
@@ -295,7 +294,7 @@ describe('Inline XO cases', () => {
             }));
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ experience: 'inline', merchantID: [ 'XYZ12345' ], fundingEligibility });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
             await clickButton(FUNDING.CARD);
         });
     });
@@ -335,7 +334,7 @@ describe('Inline XO cases', () => {
             }));
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ experience: 'inline', merchantID: [ 'XYZ12345' ], fundingEligibility });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
             await clickButton(FUNDING.CARD);
         });
     });

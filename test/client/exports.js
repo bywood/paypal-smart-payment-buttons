@@ -137,7 +137,6 @@ describe('exports cases', () => {
                             tokenID,
                             branded:   true,
                             oneClick:  true,
-                            paymentMethodID,
                             accessToken
                         }
                     ]
@@ -147,16 +146,10 @@ describe('exports cases', () => {
             const fundingEligibility = {
                 [FUNDING.CARD]: {
                     eligible: true,
+                    branded: false,
                     vendors:  {
                         [CARD.VISA]: {
                             eligible:  true,
-                            type:      WALLET_INSTRUMENT.CARD,
-                            instrumentID,
-                            tokenID,
-                            branded:   true,
-                            oneClick:  true,
-                            paymentMethodID,
-                            accessToken
                         }
                     }
                 }
@@ -256,8 +249,11 @@ describe('exports cases', () => {
         await mockSetupButton({
             fundingEligibility: {
                 card: {
-                    guestEnabled
-                }
+                    guestEnabled,
+                    eligible: true,
+                    branded: false,
+                    vendors: {}
+                },
             }
         });
 

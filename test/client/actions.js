@@ -105,7 +105,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -187,7 +186,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -262,7 +260,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -336,7 +333,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -463,7 +459,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -534,7 +529,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -578,7 +572,6 @@ describe('actions cases', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);

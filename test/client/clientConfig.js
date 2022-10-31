@@ -97,6 +97,7 @@ describe('client config cases', () => {
             const fundingEligibility = {
                 [ FUNDING.CARD ]: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         [ CARD.VISA ]: {
                             eligible: true
@@ -145,7 +146,8 @@ describe('client config cases', () => {
 
             const fundingEligibility = {
                 [fundingSource]: {
-                    eligible: true
+                    eligible: true,
+                    branded: true
                 }
             };
 
@@ -189,7 +191,8 @@ describe('client config cases', () => {
 
             const fundingEligibility = {
                 [ fundingSource ]: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -231,8 +234,9 @@ describe('client config cases', () => {
             }));
 
             const fundingEligibility = {
-                [fundingSource]: {
-                    eligible: true
+                [FUNDING.CREDIT]: {
+                    eligible: true,
+                    branded: false
                 }
             };
 

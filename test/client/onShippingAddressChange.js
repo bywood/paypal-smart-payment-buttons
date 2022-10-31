@@ -212,7 +212,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -284,7 +283,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -415,7 +413,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -485,7 +482,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -557,7 +553,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -623,7 +618,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -689,7 +683,6 @@ describe('onShippingAddressChange', () => {
                 fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
                 personalization:               {},
                 buyerCountry:                  COUNTRY.US,
-                isCardFieldsExperimentEnabled: false
             });
 
             await clickButton(FUNDING.PAYPAL);

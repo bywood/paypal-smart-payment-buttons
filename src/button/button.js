@@ -19,21 +19,21 @@ import { prerenderButtonSmartMenu, clearButtonSmartMenu } from './menu';
 import { validateProps } from './validation';
 import { setupExports } from './exports';
 
-type ButtonOpts = {|
+export type SetupButtonOptions = {|
     fundingEligibility : FundingEligibilityType,
     buyerCountry : $Values<typeof COUNTRY>,
     cspNonce? : string,
     merchantID : $ReadOnlyArray<string>,
     firebaseConfig? : FirebaseConfig,
     facilitatorAccessToken : string,
-    content : ContentType,
+    content : $Shape<ContentType>,
     sdkMeta : string,
     wallet : ?Wallet,
     buyerAccessToken : ?string,
-    eligibility : {|
+    eligibility : $Shape<{|
         cardFields : boolean,
         inlinePaymentFields: InlinePaymentFieldsEligibility
-    |},
+    |}>,
     correlationID? : string,
     cookies : string,
     personalization : PersonalizationType,
@@ -52,7 +52,7 @@ try {
     // pass
 }
 
-export function setupButton(opts : ButtonOpts) : ZalgoPromise<void> {
+export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
     if (!window.paypal) {
         throw new Error(`PayPal SDK not loaded`);
     }

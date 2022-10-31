@@ -39,7 +39,6 @@ describe('callback data cases', () => {
                 merchantID:         [ 'XYZ12345' ],
                 eligibility: {
                     cardFields: false,
-                    native:     true
                 }
             });
 

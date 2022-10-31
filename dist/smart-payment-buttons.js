@@ -73,6 +73,16 @@ window.spb = function(modules) {
             }).apply(this, arguments);
         }
     },
+    "./node_modules/@babel/runtime/helpers/esm/objectDestructuringEmpty.js": function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        __webpack_require__.d(__webpack_exports__, "default", (function() {
+            return _objectDestructuringEmpty;
+        }));
+        function _objectDestructuringEmpty(obj) {
+            if (null == obj) throw new TypeError("Cannot destructure undefined");
+        }
+    },
     "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js": function(module, __webpack_exports__, __webpack_require__) {
         "use strict";
         __webpack_require__.r(__webpack_exports__);
@@ -973,8 +983,34 @@ window.spb = function(modules) {
                 return sfvcScreens;
             }));
             var sfvcScreens = {
+                932: {
+                    device: "iPhone 14 Pro Max",
+                    textSizeHeights: [ 746, 742, 738 ],
+                    textSizeHeightsNoTabs: [ 854, 852, 850, 848 ],
+                    zoomHeight: {
+                        1.15: [ 746, 742, 738 ],
+                        1.25: [ 746, 743 ],
+                        1.5: [ 746, 743 ],
+                        1.75: [ 746, 742, 739 ],
+                        2: [ 746, 742 ],
+                        2.5: [ 745, 743 ],
+                        3: [ 749 ],
+                        3.01: [ 749 ]
+                    },
+                    maybeSafari: {
+                        1: [ 732 ],
+                        1.15: [ 733 ],
+                        1.25: [ 738, 733 ],
+                        1.5: [ 738, 732 ],
+                        1.75: [ 732 ],
+                        2: [ 738, 732 ],
+                        2.5: [ 738, 733 ],
+                        3: [ 743, 740, 734 ],
+                        3.01: [ 743, 740, 734 ]
+                    }
+                },
                 926: {
-                    device: "iPhone 12/13 Pro Max",
+                    device: "iPhone 12/13 Pro Max, iPhone 14 Plus",
                     textSizeHeights: [ 752, 748, 744, 738 ],
                     textSizeHeightsNoTabs: [ 860, 858, 856, 854 ],
                     zoomHeight: {
@@ -1010,8 +1046,34 @@ window.spb = function(modules) {
                         3: [ 714 ]
                     }
                 },
+                852: {
+                    device: "iPhone 14 Pro",
+                    textSizeHeights: [ 666, 662, 658 ],
+                    textSizeHeightsNoTabs: [ 774, 772, 770, 768 ],
+                    zoomHeight: {
+                        1.15: [ 666, 662, 658 ],
+                        1.25: [ 665, 661, 658 ],
+                        1.5: [ 666, 662, 659 ],
+                        1.75: [ 667, 662 ],
+                        1.99: [ 663, 659 ],
+                        2: [ 663, 659 ],
+                        2.5: [ 665, 663 ],
+                        3: [ 666, 663 ]
+                    },
+                    maybeSafari: {
+                        1: [ 652 ],
+                        1.15: [ 652 ],
+                        1.25: [ 651 ],
+                        1.5: [ 653 ],
+                        1.75: [ 658, 653 ],
+                        1.99: [ 655, 649 ],
+                        2: [ 655, 649 ],
+                        2.5: [ 658, 653 ],
+                        3: [ 657, 651 ]
+                    }
+                },
                 844: {
-                    device: "iPhone 12, iPhone 12 Pro",
+                    device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
                     textSizeHeights: [ 670, 666, 662, 656 ],
                     textSizeHeightsNoTabs: [ 778, 776, 774, 772 ],
                     zoomHeight: {
@@ -2754,7 +2816,9 @@ window.spb = function(modules) {
                 return [].slice.call(doc.querySelectorAll(selector));
             }
             function onClick(element, handler) {
-                element.addEventListener("touchstart", src_util_noop);
+                element.addEventListener("touchstart", src_util_noop, {
+                    passive: !0
+                });
                 element.addEventListener("click", handler);
                 element.addEventListener("keypress", (function(event) {
                     if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) return handler(event);
@@ -4248,8 +4312,34 @@ window.spb = function(modules) {
             return sfvcScreens;
         }));
         var sfvcScreens = {
+            932: {
+                device: "iPhone 14 Pro Max",
+                textSizeHeights: [ 746, 742, 738 ],
+                textSizeHeightsNoTabs: [ 854, 852, 850, 848 ],
+                zoomHeight: {
+                    1.15: [ 746, 742, 738 ],
+                    1.25: [ 746, 743 ],
+                    1.5: [ 746, 743 ],
+                    1.75: [ 746, 742, 739 ],
+                    2: [ 746, 742 ],
+                    2.5: [ 745, 743 ],
+                    3: [ 749 ],
+                    3.01: [ 749 ]
+                },
+                maybeSafari: {
+                    1: [ 732 ],
+                    1.15: [ 733 ],
+                    1.25: [ 738, 733 ],
+                    1.5: [ 738, 732 ],
+                    1.75: [ 732 ],
+                    2: [ 738, 732 ],
+                    2.5: [ 738, 733 ],
+                    3: [ 743, 740, 734 ],
+                    3.01: [ 743, 740, 734 ]
+                }
+            },
             926: {
-                device: "iPhone 12/13 Pro Max",
+                device: "iPhone 12/13 Pro Max, iPhone 14 Plus",
                 textSizeHeights: [ 752, 748, 744, 738 ],
                 textSizeHeightsNoTabs: [ 860, 858, 856, 854 ],
                 zoomHeight: {
@@ -4285,8 +4375,34 @@ window.spb = function(modules) {
                     3: [ 714 ]
                 }
             },
+            852: {
+                device: "iPhone 14 Pro",
+                textSizeHeights: [ 666, 662, 658 ],
+                textSizeHeightsNoTabs: [ 774, 772, 770, 768 ],
+                zoomHeight: {
+                    1.15: [ 666, 662, 658 ],
+                    1.25: [ 665, 661, 658 ],
+                    1.5: [ 666, 662, 659 ],
+                    1.75: [ 667, 662 ],
+                    1.99: [ 663, 659 ],
+                    2: [ 663, 659 ],
+                    2.5: [ 665, 663 ],
+                    3: [ 666, 663 ]
+                },
+                maybeSafari: {
+                    1: [ 652 ],
+                    1.15: [ 652 ],
+                    1.25: [ 651 ],
+                    1.5: [ 653 ],
+                    1.75: [ 658, 653 ],
+                    1.99: [ 655, 649 ],
+                    2: [ 655, 649 ],
+                    2.5: [ 658, 653 ],
+                    3: [ 657, 651 ]
+                }
+            },
             844: {
-                device: "iPhone 12, iPhone 12 Pro",
+                device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
                 textSizeHeights: [ 670, 666, 662, 656 ],
                 textSizeHeightsNoTabs: [ 778, 776, 774, 772 ],
                 zoomHeight: {
@@ -5546,7 +5662,9 @@ window.spb = function(modules) {
             return [].slice.call(doc.querySelectorAll(selector));
         }
         function onClick(element, handler) {
-            element.addEventListener("touchstart", util_noop);
+            element.addEventListener("touchstart", util_noop, {
+                passive: !0
+            });
             element.addEventListener("click", handler);
             element.addEventListener("keypress", (function(event) {
                 if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) return handler(event);
@@ -10498,14 +10616,15 @@ window.spb = function(modules) {
             }));
         }
         function isProcessorDeclineError(err) {
-            var _err$response, _err$response$body, _err$response$body$da, _err$response$body$da2;
-            return Boolean(null == err || null == (_err$response = err.response) || null == (_err$response$body = _err$response.body) || null == (_err$response$body$da = _err$response$body.data) || null == (_err$response$body$da2 = _err$response$body$da.details) ? void 0 : _err$response$body$da2.some((function(detail) {
+            var _err$response, _err$response$body, _err$response$body$da, _err$response2, _err$response2$body, _err$response2$body$d, _err$response3, _err$response3$body;
+            var details = null != err && null != (_err$response = err.response) && null != (_err$response$body = _err$response.body) && null != (_err$response$body$da = _err$response$body.data) && _err$response$body$da.details ? null == err || null == (_err$response2 = err.response) || null == (_err$response2$body = _err$response2.body) || null == (_err$response2$body$d = _err$response2$body.data) ? void 0 : _err$response2$body$d.details : null == err || null == (_err$response3 = err.response) || null == (_err$response3$body = _err$response3.body) ? void 0 : _err$response3$body.details;
+            return Boolean(null == details ? void 0 : details.some((function(detail) {
                 return detail.issue === constants.ORDER_API_ERROR.INSTRUMENT_DECLINED || detail.issue === constants.ORDER_API_ERROR.PAYER_ACTION_REQUIRED;
             })));
         }
         function isUnprocessableEntityError(err) {
-            var _err$response2, _err$response2$body, _err$response2$body$d;
-            return Boolean(null == err || null == (_err$response2 = err.response) || null == (_err$response2$body = _err$response2.body) || null == (_err$response2$body$d = _err$response2$body.details) ? void 0 : _err$response2$body$d.some((function(detail) {
+            var _err$response4, _err$response4$body, _err$response4$body$d;
+            return Boolean(null == err || null == (_err$response4 = err.response) || null == (_err$response4$body = _err$response4.body) || null == (_err$response4$body$d = _err$response4$body.details) ? void 0 : _err$response4$body$d.some((function(detail) {
                 return detail.issue === constants.ORDER_API_ERROR.DUPLICATE_INVOICE_ID;
             })));
         }
@@ -13479,7 +13598,7 @@ window.spb = function(modules) {
             },
             init: function(_ref8) {
                 var props = _ref8.props, components = _ref8.components, payment = _ref8.payment, serviceData = _ref8.serviceData, config = _ref8.config;
-                var createOrder = props.createOrder, onApprove = props.onApprove, clientAccessToken = props.clientAccessToken, enableThreeDomainSecure = props.enableThreeDomainSecure, partnerAttributionID = props.partnerAttributionID, getParent = props.getParent, userIDToken = props.userIDToken, clientID = props.clientID, env = props.env;
+                var createOrder = props.createOrder, onApprove = props.onApprove, clientAccessToken = props.clientAccessToken, enableThreeDomainSecure = props.enableThreeDomainSecure, partnerAttributionID = props.partnerAttributionID, getParent = props.getParent, userIDToken = props.userIDToken, clientID = props.clientID, env = props.env, merchantID = props.merchantID;
                 var ThreeDomainSecure = components.ThreeDomainSecure, Installments = components.Installments;
                 var fundingSource = payment.fundingSource, paymentMethodID = payment.paymentMethodID, button = payment.button;
                 var facilitatorAccessToken = serviceData.facilitatorAccessToken, buyerCountry = serviceData.buyerCountry;
@@ -13490,7 +13609,8 @@ window.spb = function(modules) {
                 }({
                     props: props
                 });
-                var accessToken = userIDToken ? facilitatorAccessToken : clientAccessToken;
+                var accessToken = facilitatorAccessToken;
+                clientAccessToken && (accessToken = clientAccessToken);
                 if (!paymentMethodID) throw new Error("Payment method id required for vault capture");
                 if (!accessToken) throw new Error("Client access token required for vault capture");
                 var restart = function() {
@@ -13503,6 +13623,18 @@ window.spb = function(modules) {
                         return !!order.checkoutSession.flags.isChangeShippingAddressAllowed;
                     }));
                 };
+                userIDToken && merchantID && merchantID[0] && zalgo_promise_src.ZalgoPromise.try((function() {
+                    return Object(api.createAccessToken)(clientID, {
+                        targetSubject: merchantID[0]
+                    }).catch((function(err) {
+                        Object(lib.getLogger)().warn("vault_access_token_with_target_subject_failure", {
+                            error: Object(src.stringifyError)(err)
+                        });
+                        throw err;
+                    }));
+                })).then((function(accessTokenWithTargetSubject) {
+                    accessToken = accessTokenWithTargetSubject;
+                }));
                 var startPaymentFlow = function(orderID, installmentPlan) {
                     return zalgo_promise_src.ZalgoPromise.hash({
                         validate: Object(api.validatePaymentMethod)({
@@ -18712,20 +18844,21 @@ window.spb = function(modules) {
         __webpack_require__.d(__webpack_exports__, "getOnShippingAddressChange", (function() {
             return getOnShippingAddressChange;
         }));
-        var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/extends.js");
-        var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+        var _babel_runtime_helpers_esm_objectDestructuringEmpty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/objectDestructuringEmpty.js");
+        var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/extends.js");
+        var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
         __webpack_require__("./node_modules/@krakenjs/zalgo-promise/src/index.js");
-        var _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./node_modules/@paypal/sdk-constants/src/index.js");
-        var _api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("./src/api/index.js");
-        var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./src/constants.js");
-        var _lib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./src/lib/index.js");
-        var _onShippingChange__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./src/props/onShippingChange.js");
-        var _utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./src/props/utils.js");
+        var _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("./node_modules/@paypal/sdk-constants/src/index.js");
+        var _api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./src/api/index.js");
+        var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./src/constants.js");
+        var _lib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./src/lib/index.js");
+        var _onShippingChange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./src/props/onShippingChange.js");
+        var _utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./src/props/utils.js");
         var _excluded = [ "amount", "buyerAccessToken", "event", "forceRestAPI", "shipping_address" ];
         function buildXOnShippingAddressChangeData(data) {
-            var shippingAddress = data.shipping_address, rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__.default)(data, _excluded);
-            return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({
-                errors: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.SHIPPING_ADDRESS_ERROR_MESSAGES,
+            var shippingAddress = data.shipping_address, rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_2__.default)(data, _excluded);
+            return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__.default)({
+                errors: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.SHIPPING_ADDRESS_ERROR_MESSAGES,
                 shippingAddress: shippingAddress
             }, rest);
         }
@@ -18738,28 +18871,28 @@ window.spb = function(modules) {
             if (0 === Object.keys(breakdown).length) throw new Error("Must pass amount with breakdown into data attribute for onShippingAddressChange callback.");
             var actions = {
                 reject: passedActions.reject ? function(message) {
-                    return -1 === Object.values(_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.SHIPPING_ADDRESS_ERROR_MESSAGES).indexOf(message) ? passedActions.reject(_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.GENERIC_REJECT_ADDRESS_MESSAGE) : passedActions.reject(message);
+                    return -1 === Object.values(_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.SHIPPING_ADDRESS_ERROR_MESSAGES).indexOf(message) ? passedActions.reject(_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.GENERIC_REJECT_ADDRESS_MESSAGE) : passedActions.reject(message);
                 } : function() {
                     throw new Error("Missing reject action callback");
                 },
                 updateTax: function(_ref2) {
                     var _data$amount2;
                     var tax = _ref2.tax;
-                    breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.buildBreakdown)({
+                    breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.buildBreakdown)({
                         breakdown: breakdown,
                         updatedAmounts: {
                             tax_total: tax
                         }
                     });
-                    newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.calculateTotalFromShippingBreakdownAmounts)({
+                    newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.calculateTotalFromShippingBreakdownAmounts)({
                         breakdown: breakdown,
                         updatedAmounts: {
                             tax_total: tax
                         }
                     });
-                    patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
+                    patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
                         op: "replace",
-                        path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
+                        path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
                         value: {
                             value: "" + newAmount,
                             currency_code: null == data || null == (_data$amount2 = data.amount) ? void 0 : _data$amount2.currency_code,
@@ -18776,30 +18909,30 @@ window.spb = function(modules) {
                             return !0 === option.selected;
                         }));
                         var selectedShippingOptionAmount = selectedShippingOption && (null == (_selectedShippingOpti = selectedShippingOption[0]) || null == (_selectedShippingOpti2 = _selectedShippingOpti.amount) ? void 0 : _selectedShippingOpti2.value);
-                        breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.buildBreakdown)({
+                        breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.buildBreakdown)({
                             breakdown: breakdown,
                             updatedAmounts: {
                                 shipping: selectedShippingOptionAmount
                             }
                         });
-                        newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.calculateTotalFromShippingBreakdownAmounts)({
+                        newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.calculateTotalFromShippingBreakdownAmounts)({
                             breakdown: breakdown,
                             updatedAmounts: {
                                 shipping: selectedShippingOptionAmount
                             }
                         });
-                        patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
+                        patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
                             op: "replace",
-                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
+                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
                             value: {
                                 value: "" + newAmount,
                                 currency_code: null == data || null == (_data$amount3 = data.amount) ? void 0 : _data$amount3.currency_code,
                                 breakdown: breakdown
                             }
                         };
-                        patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.OPTIONS] = {
+                        patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.OPTIONS] = {
                             op: (null == data ? void 0 : data.event) || "replace",
-                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.OPTIONS,
+                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.OPTIONS,
                             value: options
                         };
                     }
@@ -18808,21 +18941,21 @@ window.spb = function(modules) {
                 updateShippingDiscount: function(_ref4) {
                     var _data$amount4;
                     var discount = _ref4.discount;
-                    newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.calculateTotalFromShippingBreakdownAmounts)({
+                    newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.calculateTotalFromShippingBreakdownAmounts)({
                         breakdown: breakdown,
                         updatedAmounts: {
                             shipping_discount: discount
                         }
                     });
-                    breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.buildBreakdown)({
+                    breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.buildBreakdown)({
                         breakdown: breakdown,
                         updatedAmounts: {
                             shipping_discount: discount
                         }
                     });
-                    patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
+                    patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
                         op: "replace",
-                        path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
+                        path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
                         value: {
                             value: "" + newAmount,
                             currency_code: null == data || null == (_data$amount4 = data.amount) ? void 0 : _data$amount4.currency_code,
@@ -18832,16 +18965,16 @@ window.spb = function(modules) {
                     return actions;
                 },
                 patch: function() {
-                    return Object(_api__WEBPACK_IMPORTED_MODULE_4__.getShippingOrderInfo)(orderID).then((function(sessionData) {
+                    return Object(_api__WEBPACK_IMPORTED_MODULE_5__.getShippingOrderInfo)(orderID).then((function(sessionData) {
                         var _sessionData$checkout, _sessionData$checkout2;
                         var queries;
                         var shippingMethods = (null == sessionData || null == (_sessionData$checkout = sessionData.checkoutSession) || null == (_sessionData$checkout2 = _sessionData$checkout.cart) ? void 0 : _sessionData$checkout2.shippingMethods) || [];
-                        queries = Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_8__.updateOperationForShippingOptions)({
+                        queries = Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_9__.updateOperationForShippingOptions)({
                             queries: patchQueries
-                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_8__.convertQueriesToArray)({
+                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_9__.convertQueriesToArray)({
                             queries: patchQueries
                         });
-                        return Object(_api__WEBPACK_IMPORTED_MODULE_4__.patchShipping)({
+                        return Object(_api__WEBPACK_IMPORTED_MODULE_5__.patchShipping)({
                             clientID: clientID,
                             orderID: orderID,
                             data: queries
@@ -18851,12 +18984,12 @@ window.spb = function(modules) {
                     }));
                 },
                 query: function() {
-                    return Object(_api__WEBPACK_IMPORTED_MODULE_4__.getShippingOrderInfo)(orderID).then((function(sessionData) {
+                    return Object(_api__WEBPACK_IMPORTED_MODULE_5__.getShippingOrderInfo)(orderID).then((function(sessionData) {
                         var _sessionData$checkout3, _sessionData$checkout4;
                         var shippingMethods = (null == sessionData || null == (_sessionData$checkout3 = sessionData.checkoutSession) || null == (_sessionData$checkout4 = _sessionData$checkout3.cart) ? void 0 : _sessionData$checkout4.shippingMethods) || [];
-                        return Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_8__.updateOperationForShippingOptions)({
+                        return Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_9__.updateOperationForShippingOptions)({
                             queries: patchQueries
-                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_8__.convertQueriesToArray)({
+                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_9__.convertQueriesToArray)({
                             queries: patchQueries
                         });
                     }));
@@ -18868,16 +19001,17 @@ window.spb = function(modules) {
             var onShippingAddressChange = _ref5.onShippingAddressChange, clientID = _ref5.clientID;
             var createOrder = _ref6.createOrder;
             if (onShippingAddressChange) return function(_ref7, actions) {
-                var data = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({}, _ref7);
+                var data = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__.default)({}, (Object(_babel_runtime_helpers_esm_objectDestructuringEmpty__WEBPACK_IMPORTED_MODULE_0__.default)(_ref7), 
+                _ref7));
                 return createOrder().then((function(orderID) {
                     var _getLogger$info$track;
-                    Object(_lib__WEBPACK_IMPORTED_MODULE_6__.getLogger)().info("button_shipping_address_change").track((_getLogger$info$track = {}, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.TRANSITION] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_TRANSITION.CHECKOUT_SHIPPING_ADDRESS_CHANGE, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.EVENT_NAME] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_TRANSITION.CHECKOUT_SHIPPING_ADDRESS_CHANGE, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_TYPE] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_CONTEXT_TYPE.ORDER_ID, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.TOKEN] = orderID, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_ID] = orderID, 
-                    _getLogger$info$track[_constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_CUSTOM_KEY.SHIPPING_CALLBACK_INVOKED] = "1", 
+                    Object(_lib__WEBPACK_IMPORTED_MODULE_7__.getLogger)().info("button_shipping_address_change").track((_getLogger$info$track = {}, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.TRANSITION] = _constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_TRANSITION.CHECKOUT_SHIPPING_ADDRESS_CHANGE, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.EVENT_NAME] = _constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_TRANSITION.CHECKOUT_SHIPPING_ADDRESS_CHANGE, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.CONTEXT_TYPE] = _constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_CONTEXT_TYPE.ORDER_ID, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.TOKEN] = orderID, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.CONTEXT_ID] = orderID, 
+                    _getLogger$info$track[_constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_CUSTOM_KEY.SHIPPING_CALLBACK_INVOKED] = "1", 
                     _getLogger$info$track)).flush();
                     return onShippingAddressChange(buildXOnShippingAddressChangeData(data), buildXOnShippingAddressChangeActions({
                         clientID: clientID,
@@ -19002,20 +19136,21 @@ window.spb = function(modules) {
         __webpack_require__.d(__webpack_exports__, "getOnShippingOptionsChange", (function() {
             return getOnShippingOptionsChange;
         }));
-        var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/extends.js");
-        var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+        var _babel_runtime_helpers_esm_objectDestructuringEmpty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/objectDestructuringEmpty.js");
+        var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/extends.js");
+        var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
         __webpack_require__("./node_modules/@krakenjs/zalgo-promise/src/index.js");
-        var _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./node_modules/@paypal/sdk-constants/src/index.js");
-        var _api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("./src/api/index.js");
-        var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./src/constants.js");
-        var _lib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./src/lib/index.js");
-        var _onShippingChange__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./src/props/onShippingChange.js");
-        var _utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./src/props/utils.js");
+        var _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("./node_modules/@paypal/sdk-constants/src/index.js");
+        var _api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./src/api/index.js");
+        var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./src/constants.js");
+        var _lib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./src/lib/index.js");
+        var _onShippingChange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./src/props/onShippingChange.js");
+        var _utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./src/props/utils.js");
         var _excluded = [ "amount", "buyerAccessToken", "event", "forceRestAPI", "options", "selected_shipping_option" ];
         function buildXOnShippingOptionsChangeData(data) {
-            var selectedShippingOption = data.selected_shipping_option, rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__.default)(data, _excluded);
-            return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({
-                errors: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.SHIPPING_OPTIONS_ERROR_MESSAGES,
+            var selectedShippingOption = data.selected_shipping_option, rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_2__.default)(data, _excluded);
+            return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__.default)({
+                errors: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.SHIPPING_OPTIONS_ERROR_MESSAGES,
                 selectedShippingOption: selectedShippingOption
             }, rest);
         }
@@ -19028,7 +19163,7 @@ window.spb = function(modules) {
             if (0 === Object.keys(breakdown).length) throw new Error("Must pass breakdown into data attribute for onShippingAddressChange callback.");
             var actions = {
                 reject: passedActions.reject ? function(message) {
-                    return -1 === Object.values(_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.SHIPPING_OPTIONS_ERROR_MESSAGES).indexOf(message) ? passedActions.reject(_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.GENERIC_REJECT_ADDRESS_MESSAGE) : passedActions.reject(message);
+                    return -1 === Object.values(_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.SHIPPING_OPTIONS_ERROR_MESSAGES).indexOf(message) ? passedActions.reject(_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.GENERIC_REJECT_ADDRESS_MESSAGE) : passedActions.reject(message);
                 } : function() {
                     throw new Error("Missing reject action callback");
                 },
@@ -19037,30 +19172,30 @@ window.spb = function(modules) {
                     if (option && data.options) {
                         var _option$amount, _data$amount2, _data$amount3;
                         var selectedShippingOptionAmount = null == option || null == (_option$amount = option.amount) ? void 0 : _option$amount.value;
-                        var options = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.updateShippingOptions)({
+                        var options = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.updateShippingOptions)({
                             option: option,
                             options: data.options
                         });
-                        newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.calculateTotalFromShippingBreakdownAmounts)({
+                        newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.calculateTotalFromShippingBreakdownAmounts)({
                             breakdown: (null == data || null == (_data$amount2 = data.amount) ? void 0 : _data$amount2.breakdown) || {},
                             updatedAmounts: {
                                 shipping: selectedShippingOptionAmount
                             }
                         });
-                        breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.buildBreakdown)({
+                        breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.buildBreakdown)({
                             breakdown: breakdown,
                             updatedAmounts: {
                                 shipping: selectedShippingOptionAmount
                             }
                         });
-                        options && options.length > 0 && (patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.OPTIONS] = {
+                        options && options.length > 0 && (patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.OPTIONS] = {
                             op: (null == data ? void 0 : data.event) || "replace",
-                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.OPTIONS,
+                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.OPTIONS,
                             value: options
                         });
-                        patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
+                        patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
                             op: "replace",
-                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
+                            path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
                             value: {
                                 value: "" + newAmount,
                                 currency_code: null == data || null == (_data$amount3 = data.amount) ? void 0 : _data$amount3.currency_code,
@@ -19073,21 +19208,21 @@ window.spb = function(modules) {
                 updateShippingDiscount: function(_ref3) {
                     var _data$amount4, _data$amount5;
                     var discount = _ref3.discount;
-                    newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.calculateTotalFromShippingBreakdownAmounts)({
+                    newAmount = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.calculateTotalFromShippingBreakdownAmounts)({
                         breakdown: (null == data || null == (_data$amount4 = data.amount) ? void 0 : _data$amount4.breakdown) || {},
                         updatedAmounts: {
                             shipping_discount: discount
                         }
                     });
-                    breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_8__.buildBreakdown)({
+                    breakdown = Object(_utils__WEBPACK_IMPORTED_MODULE_9__.buildBreakdown)({
                         breakdown: breakdown,
                         updatedAmounts: {
                             shipping_discount: discount
                         }
                     });
-                    patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
+                    patchQueries[_onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT] = {
                         op: "replace",
-                        path: _onShippingChange__WEBPACK_IMPORTED_MODULE_7__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
+                        path: _onShippingChange__WEBPACK_IMPORTED_MODULE_8__.ON_SHIPPING_CHANGE_PATHS.AMOUNT,
                         value: {
                             value: "" + newAmount,
                             currency_code: null == data || null == (_data$amount5 = data.amount) ? void 0 : _data$amount5.currency_code,
@@ -19097,16 +19232,16 @@ window.spb = function(modules) {
                     return actions;
                 },
                 patch: function() {
-                    return Object(_api__WEBPACK_IMPORTED_MODULE_4__.getShippingOrderInfo)(orderID).then((function(sessionData) {
+                    return Object(_api__WEBPACK_IMPORTED_MODULE_5__.getShippingOrderInfo)(orderID).then((function(sessionData) {
                         var _sessionData$checkout, _sessionData$checkout2;
                         var queries;
                         var shippingMethods = (null == sessionData || null == (_sessionData$checkout = sessionData.checkoutSession) || null == (_sessionData$checkout2 = _sessionData$checkout.cart) ? void 0 : _sessionData$checkout2.shippingMethods) || [];
-                        queries = Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_8__.updateOperationForShippingOptions)({
+                        queries = Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_9__.updateOperationForShippingOptions)({
                             queries: patchQueries
-                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_8__.convertQueriesToArray)({
+                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_9__.convertQueriesToArray)({
                             queries: patchQueries
                         });
-                        return Object(_api__WEBPACK_IMPORTED_MODULE_4__.patchShipping)({
+                        return Object(_api__WEBPACK_IMPORTED_MODULE_5__.patchShipping)({
                             clientID: clientID,
                             orderID: orderID,
                             data: queries
@@ -19116,12 +19251,12 @@ window.spb = function(modules) {
                     }));
                 },
                 query: function() {
-                    return Object(_api__WEBPACK_IMPORTED_MODULE_4__.getShippingOrderInfo)(orderID).then((function(sessionData) {
+                    return Object(_api__WEBPACK_IMPORTED_MODULE_5__.getShippingOrderInfo)(orderID).then((function(sessionData) {
                         var _sessionData$checkout3, _sessionData$checkout4;
                         var shippingMethods = (null == sessionData || null == (_sessionData$checkout3 = sessionData.checkoutSession) || null == (_sessionData$checkout4 = _sessionData$checkout3.cart) ? void 0 : _sessionData$checkout4.shippingMethods) || [];
-                        return Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_8__.updateOperationForShippingOptions)({
+                        return Boolean(shippingMethods.length > 0) ? Object(_utils__WEBPACK_IMPORTED_MODULE_9__.updateOperationForShippingOptions)({
                             queries: patchQueries
-                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_8__.convertQueriesToArray)({
+                        }) : Object(_utils__WEBPACK_IMPORTED_MODULE_9__.convertQueriesToArray)({
                             queries: patchQueries
                         });
                     }));
@@ -19133,16 +19268,17 @@ window.spb = function(modules) {
             var onShippingOptionsChange = _ref4.onShippingOptionsChange, clientID = _ref4.clientID;
             var createOrder = _ref5.createOrder;
             if (onShippingOptionsChange) return function(_ref6, actions) {
-                var data = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({}, _ref6);
+                var data = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__.default)({}, (Object(_babel_runtime_helpers_esm_objectDestructuringEmpty__WEBPACK_IMPORTED_MODULE_0__.default)(_ref6), 
+                _ref6));
                 return createOrder().then((function(orderID) {
                     var _getLogger$info$track;
-                    Object(_lib__WEBPACK_IMPORTED_MODULE_6__.getLogger)().info("button_shipping_options_change").track((_getLogger$info$track = {}, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.TRANSITION] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_TRANSITION.CHECKOUT_SHIPPING_OPTIONS_CHANGE, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.EVENT_NAME] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_TRANSITION.CHECKOUT_SHIPPING_OPTIONS_CHANGE, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_TYPE] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_CONTEXT_TYPE.ORDER_ID, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.TOKEN] = orderID, 
-                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_ID] = orderID, 
-                    _getLogger$info$track[_constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_CUSTOM_KEY.SHIPPING_CALLBACK_INVOKED] = "1", 
+                    Object(_lib__WEBPACK_IMPORTED_MODULE_7__.getLogger)().info("button_shipping_options_change").track((_getLogger$info$track = {}, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.TRANSITION] = _constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_TRANSITION.CHECKOUT_SHIPPING_OPTIONS_CHANGE, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.EVENT_NAME] = _constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_TRANSITION.CHECKOUT_SHIPPING_OPTIONS_CHANGE, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.CONTEXT_TYPE] = _constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_CONTEXT_TYPE.ORDER_ID, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.TOKEN] = orderID, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_4__.FPTI_KEY.CONTEXT_ID] = orderID, 
+                    _getLogger$info$track[_constants__WEBPACK_IMPORTED_MODULE_6__.FPTI_CUSTOM_KEY.SHIPPING_CALLBACK_INVOKED] = "1", 
                     _getLogger$info$track)).flush();
                     return onShippingOptionsChange(buildXOnShippingOptionsChangeData(data), buildXOnShippingOptionsChangeActions({
                         clientID: clientID,

@@ -5,7 +5,7 @@ import { wrapPromise } from '@krakenjs/belter/src';
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING, CARD } from '@paypal/sdk-constants/src';
 
-import { mockSetupButton, generateOrderID, mockAsyncProp, createButtonHTML, mockFunction, clickButton } from './mocks';
+import { mockSetupButton, generateOrderID, mockAsyncProp, createButtonHTML, mockFunction, clickButton, DEFAULT_FUNDING_ELIGIBILITY } from './mocks';
 
 describe('card field cases', () => {
 
@@ -54,11 +54,10 @@ describe('card field cases', () => {
             }));
 
             const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 [ FUNDING.CARD]: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         [ CARD.VISA ]: {
                             eligible: true

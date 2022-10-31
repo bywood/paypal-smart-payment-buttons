@@ -8,7 +8,7 @@ import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { getBuyerAccessToken } from '../../src/lib/session';
 
 import { mockSetupButton, mockAsyncProp, createButtonHTML, clickButton, getGraphQLApiMock,
-    generateOrderID, clickMenu, mockMenu, getMockWindowOpen, MOCK_BUYER_ACCESS_TOKEN } from './mocks';
+    generateOrderID, clickMenu, mockMenu, getMockWindowOpen, MOCK_BUYER_ACCESS_TOKEN, DEFAULT_FUNDING_ELIGIBILITY } from './mocks';
 
 describe('wallet cases', () => {
 
@@ -145,7 +145,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded :true
                         }
                     ]
                 }
@@ -155,7 +156,6 @@ describe('wallet cases', () => {
             await mockSetupButton({
                 merchantID:           [ uniqueID() ],
                 wallet,
-                allowBillingPayments: true
             });
 
             await clickButton(FUNDING.PAYPAL);
@@ -273,7 +273,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded :true
                         }
                     ]
                 }
@@ -406,7 +407,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded :true
                         }
                     ]
                 }
@@ -544,7 +546,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: false
+                            oneClick: false,
+                            branded: true
                         }
                     ]
                 }
@@ -686,7 +689,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CREDIT,
                             instrumentID,
-                            oneClick: false
+                            oneClick: false,
+                            branded: true
                         }
                     ]
                 }
@@ -823,7 +827,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: false
+                            oneClick: false,
+                            branded: true
                         }
                     ]
                 }
@@ -954,7 +959,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -997,7 +1003,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -1019,7 +1026,8 @@ describe('wallet cases', () => {
                                                 type:     WALLET_INSTRUMENT.CARD,
                                                 instrumentID,
                                                 accessToken,
-                                                oneClick: true
+                                                oneClick: true,
+                                                branded: true
                                             }
                                         ]
                                     }
@@ -1135,7 +1143,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CREDIT,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -1272,7 +1281,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -1375,7 +1385,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CREDIT,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -1486,7 +1497,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: false
+                            oneClick: false,
+                            branded: true
                         }
                     ]
                 }
@@ -1732,7 +1744,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -1860,11 +1873,10 @@ describe('wallet cases', () => {
             }));
 
             const fundingEligibility = {
-                paypal: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 credit: {
-                    eligible: true
+                    eligible: true,
+                    branded: true
                 }
             };
 
@@ -1874,7 +1886,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -2004,9 +2017,7 @@ describe('wallet cases', () => {
             }));
 
             const fundingEligibility = {
-                paypal: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 paylater: {
                     eligible: true
                 }
@@ -2018,7 +2029,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -2148,11 +2160,10 @@ describe('wallet cases', () => {
             }));
 
             const fundingEligibility = {
-                paypal: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 card: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         visa: {
                             eligible: true
@@ -2167,7 +2178,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -2285,7 +2297,8 @@ describe('wallet cases', () => {
                         {
                             type:     WALLET_INSTRUMENT.CARD,
                             instrumentID,
-                            oneClick: true
+                            oneClick: true,
+                            branded: true
                         }
                     ]
                 }
@@ -2295,7 +2308,6 @@ describe('wallet cases', () => {
             await mockSetupButton({
                 merchantID:           [ uniqueID() ],
                 wallet,
-                allowBillingPayments: true
             });
 
             await clickButton(FUNDING.PAYPAL);

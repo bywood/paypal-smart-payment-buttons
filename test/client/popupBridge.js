@@ -312,6 +312,8 @@ describe('popup bridge cases', () => {
                             data: {
                                 fundingEligibility: {
                                     paypal: {
+                                        eligible: true,
+                                        branded: true,
                                         vaultable: true
                                     }
                                 }
@@ -367,6 +369,7 @@ describe('popup bridge cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:  true,
+                    branded: true,
                     vaultable: false
                 }
             };
@@ -406,6 +409,8 @@ describe('popup bridge cases', () => {
                             data: {
                                 fundingEligibility: {
                                     paypal: {
+                                        eligible: true,
+                                        branded: true,
                                         vaultable: false
                                     }
                                 }
@@ -462,6 +467,7 @@ describe('popup bridge cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:  true,
+                    branded: true,
                     vaultable: false
                 }
             };

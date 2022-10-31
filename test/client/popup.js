@@ -269,7 +269,8 @@ describe('popup cases', () => {
             }));
             const fundingEligibility = {
                 ideal: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
             window.xprops.onCancel = avoid('onCancel');

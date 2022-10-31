@@ -121,7 +121,8 @@ export function getOrder(orderID : string, { facilitatorAccessToken, buyerAccess
 
 export function isProcessorDeclineError(err : mixed) : boolean {
     // $FlowFixMe
-    return Boolean(err?.response?.body?.data?.details?.some(detail => {
+    const details = err?.response?.body?.data?.details ? err?.response?.body?.data?.details : err?.response?.body?.details;
+    return Boolean(details?.some(detail => {
         return detail.issue === ORDER_API_ERROR.INSTRUMENT_DECLINED || detail.issue === ORDER_API_ERROR.PAYER_ACTION_REQUIRED;
     }));
 }

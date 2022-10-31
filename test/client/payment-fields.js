@@ -5,7 +5,15 @@ import { wrapPromise } from '@krakenjs/belter/src';
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
 
-import { mockSetupButton, generateOrderID, mockAsyncProp, createButtonHTML, mockFunction, clickButton } from './mocks';
+import { mockSetupButton, generateOrderID, mockAsyncProp, createButtonHTML, mockFunction, clickButton, DEFAULT_FUNDING_ELIGIBILITY } from './mocks';
+
+const fundingEligibility = {
+    ...DEFAULT_FUNDING_ELIGIBILITY,
+    [ FUNDING.EPS]: {
+        eligible: true,
+        branded: false
+    }
+};
 
 describe('payment field cases', () => {
     it('should render a button, click the button, and render payment-fields iframe', async () => {
@@ -45,16 +53,7 @@ describe('payment field cases', () => {
                 return paymentFieldsInstance;
             }));
 
-            const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
-                    eligible: true
-                },
-                [ FUNDING.EPS]: {
-                    eligible: true
-                }
-            };
-
-            createButtonHTML({ fundingEligibility });
+                        createButtonHTML({ fundingEligibility });
 
             await mockSetupButton({
                 merchantID: [ 'XYZ12345' ],
@@ -115,15 +114,6 @@ describe('payment field cases', () => {
 
                 return checkoutInstance;
             }));
-
-            const fundingEligibility = {
-                [ FUNDING.PAYPAL ]: {
-                    eligible: true
-                },
-                [ FUNDING.EPS]: {
-                    eligible: true
-                }
-            };
 
             createButtonHTML({ fundingEligibility });
 

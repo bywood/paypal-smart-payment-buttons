@@ -53,13 +53,11 @@ describe('contingency cases', () => {
                     data:   {
                         ack:         'contingency',
                         contingency: 'UNPROCESSABLE_ENTITY',
-                        data:        {
-                            details: [
+                        details: [
                                 {
                                     issue: 'INSTRUMENT_DECLINED'
                                 }
                             ]
-                        }
                     }
                 });
 
@@ -224,13 +222,11 @@ describe('contingency cases', () => {
                     data:   {
                         ack:         'contingency',
                         contingency: 'UNPROCESSABLE_ENTITY',
-                        data:        {
-                            details: [
+                        details: [
                                 {
                                     issue: 'PAYER_ACTION_REQUIRED'
                                 }
                             ]
-                        }
                     }
                 });
 
@@ -345,13 +341,11 @@ describe('contingency cases', () => {
                     data:   {
                         ack:         'contingency',
                         contingency: 'UNPROCESSABLE_ENTITY',
-                        data:        {
-                            details: [
+                         details: [
                                 {
                                     issue: 'INSTRUMENT_DECLINED'
                                 }
                             ]
-                        }
                     }
                 });
 
@@ -467,13 +461,11 @@ describe('contingency cases', () => {
                     data:   {
                         ack:         'contingency',
                         contingency: 'UNPROCESSABLE_ENTITY',
-                        data:        {
-                            details: [
+                        details: [
                                 {
                                     issue: 'PAYER_ACTION_REQUIRED'
                                 }
                             ]
-                        }
                     }
                 });
 

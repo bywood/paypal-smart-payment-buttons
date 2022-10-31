@@ -11,6 +11,13 @@ import { mockSetupButton, mockAsyncProp, createButtonHTML, clickButton, generate
 
 const IOS_SAFARI_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A356 Safari/604.1';
 
+const fundingEligibility = {
+    applepay: {
+        eligible: true,
+        branded: false
+    }
+};
+
 describe('Apple Pay Flow', () => {
 
     it('should render a button with createOrder, click the button, and render Apple Pay paysheet', async () => {
@@ -115,12 +122,6 @@ describe('Apple Pay Flow', () => {
                 })
             }).expectCalls();
 
-            const fundingEligibility = {
-                applepay: {
-                    eligible: true
-                }
-            };
-
             createButtonHTML({ fundingEligibility });
 
             await mockSetupButton({ fundingEligibility });
@@ -212,12 +213,6 @@ describe('Apple Pay Flow', () => {
                     };
                 })
             }).expectCalls();
-
-            const fundingEligibility = {
-                applepay: {
-                    eligible: true
-                }
-            };
 
             createButtonHTML({ fundingEligibility });
 

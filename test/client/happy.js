@@ -553,7 +553,8 @@ describe('happy cases', () => {
 
             const fundingEligibility = {
                 oxxo: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -643,7 +644,8 @@ describe('happy cases', () => {
 
             const fundingEligibility = {
                 oxxo: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 

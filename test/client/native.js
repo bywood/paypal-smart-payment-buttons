@@ -252,7 +252,6 @@ const setupNativeButton = () => {
     return mockSetupButton({
         eligibility: {
             cardFields: false,
-            native:     true
         },
         cookies: 's@paypal.com'
     });

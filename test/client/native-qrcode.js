@@ -12,7 +12,8 @@ import { mockSetupButton, mockAsyncProp, createButtonHTML, clickButton,
 
 const fundingEligibility = {
     [ FUNDING.VENMO ]: {
-        eligible: true
+        eligible: true,
+        branded: false
     }
 };
 
@@ -94,7 +95,6 @@ describe('native qrcode cases', () => {
                 fundingEligibility,
                 eligibility: {
                     cardFields: false,
-                    native:     true
                 }
             });
 
@@ -132,7 +132,6 @@ describe('native qrcode cases', () => {
                 fundingEligibility,
                 eligibility: {
                     cardFields: false,
-                    native:     true
                 }
             });
 
@@ -195,7 +194,6 @@ describe('native qrcode cases', () => {
                 fundingEligibility,
                 eligibility: {
                     cardFields: false,
-                    native:     true
                 }
             });
 
@@ -262,7 +260,6 @@ describe('native qrcode cases', () => {
                     fundingEligibility,
                     eligibility: {
                         cardFields: false,
-                        native:     true
                     }
                 });
     
@@ -367,7 +364,6 @@ describe('native qrcode cases', () => {
                     fundingEligibility,
                     eligibility: {
                         cardFields: false,
-                        native:     true
                     }
                 });
     
@@ -465,7 +461,6 @@ describe('native qrcode cases', () => {
                     fundingEligibility,
                     eligibility: {
                         cardFields: false,
-                        native:     true
                     }
                 });
     
@@ -514,15 +509,12 @@ describe('native qrcode cases', () => {
         
                 createButtonHTML({ fundingEligibility: DEFAULT_FUNDING_ELIGIBILITY });
     
-                const eligibility = {
-                    cardFields: false,
-                    native:     true
-                };
-
                 // Use default fundingEligibility which is PayPal only
                 await mockSetupButton({
                     fundingEligibility: DEFAULT_FUNDING_ELIGIBILITY,
-                    eligibility
+                    eligibility: {
+                        cardFields: false,
+                    }
                 });
 
                 await clickButton(FUNDING.PAYPAL);

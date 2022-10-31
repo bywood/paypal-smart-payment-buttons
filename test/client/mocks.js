@@ -13,6 +13,7 @@ import { ProxyWindow } from '@krakenjs/post-robot/src/serialize/window';
 import type { ZoidComponentInstance, MenuFlowProps } from '../../src/types';
 import { setupButton, setupCard, submitCardFields } from '../../src';
 import { loadFirebaseSDK, clearLsatState } from '../../src/api';
+import { type SetupButtonOptions } from '../../src/button/button';
 
 import { triggerKeyPress } from './util';
 
@@ -465,7 +466,8 @@ export function mockMenu() : ZoidComponentInstance<MenuFlowProps> {
 
 export const DEFAULT_FUNDING_ELIGIBILITY : FundingEligibilityType = {
     [ FUNDING.PAYPAL ]: {
-        eligible: true
+        eligible: true,
+        branded: true
     }
 };
 
@@ -1628,14 +1630,13 @@ export function getNativeFirebaseMock({ sessionUID, extraHandler } : {| sessionU
 
 export const MOCK_SDK_META = 'abc123';
 
-export async function mockSetupButton(overrides? : Object = {}) : Promise<void> {
+export async function mockSetupButton(options : $Shape<SetupButtonOptions> = {}) : Promise<void> {
     await setupButton({
         facilitatorAccessToken:        'QQQ123000',
         merchantID:                    [ 'XYZ12345' ],
         fundingEligibility:            DEFAULT_FUNDING_ELIGIBILITY,
         personalization:               {},
         buyerCountry:                  COUNTRY.US,
-        isCardFieldsExperimentEnabled: false,
         firebaseConfig:                MOCK_FIREBASE_CONFIG,
         eligibility:                   {
             cardFields: false,
@@ -1646,7 +1647,7 @@ export async function mockSetupButton(overrides? : Object = {}) : Promise<void> 
             }
         },
         sdkMeta: MOCK_SDK_META,
-        ...overrides
+        ...options
     });
 }
 

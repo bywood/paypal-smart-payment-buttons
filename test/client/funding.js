@@ -48,7 +48,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 ideal: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -77,7 +78,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 sofort: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -105,7 +107,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 p24: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -133,7 +136,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 bancontact: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -161,7 +165,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 blik: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -189,7 +194,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 eps: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -217,7 +223,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 giropay: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -245,7 +252,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 mybank: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -273,7 +281,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 trustly: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 
@@ -301,7 +310,8 @@ describe('funding source cases', () => {
 
             const fundingEligibility = {
                 multibanco: {
-                    eligible: true
+                    eligible: true,
+                    branded: false
                 }
             };
 

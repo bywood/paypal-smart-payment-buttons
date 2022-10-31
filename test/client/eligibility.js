@@ -21,7 +21,8 @@ describe('eligibility cases', () => {
                 merchantID:         [ 'XYZ12345' ],
                 fundingEligibility: {
                     [ FUNDING.VENMO ]: {
-                        eligible: true
+                        eligible: true,
+                        branded: false
                     }
                 }
             });

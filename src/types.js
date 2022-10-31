@@ -215,12 +215,12 @@ export type WalletPaymentType = {|
     instruments : $ReadOnlyArray<WalletInstrument>
 |};
 
-export type Wallet = {|
+export type Wallet = $Shape<{|
     paypal : WalletPaymentType,
     card : WalletPaymentType,
     credit : WalletPaymentType,
     venmo : WalletPaymentType
-|};
+|}>;
 
 export type ConnectOptions = {|
     scopes : $ReadOnlyArray<string>

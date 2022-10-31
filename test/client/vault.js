@@ -7,8 +7,24 @@ import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 
 import {
     mockSetupButton, mockAsyncProp, createButtonHTML, getValidatePaymentMethodApiMock, getConfirmOrderApiMock,
-    clickButton, getGraphQLApiMock, generateOrderID, mockMenu, clickMenu, getMockWindowOpen
+    clickButton, getGraphQLApiMock, generateOrderID, mockMenu, clickMenu, getMockWindowOpen, getCreateAccessTokenMock, DEFAULT_FUNDING_ELIGIBILITY
 } from './mocks';
+
+const fundingEligibilityPayPalVaulted = {
+    [FUNDING.PAYPAL]: {
+        eligible:  true,
+        branded: true,
+        vaultable: true
+    }
+};
+
+const fundingEligibilityPayPalNotVaulted = {
+    [FUNDING.PAYPAL]: {
+        eligible:  true,
+        branded: true,
+        vaultable: false
+    }
+};
 
 describe('vault cases', () => {
 
@@ -55,14 +71,7 @@ describe('vault cases', () => {
                 }
 
             }));
-
-            const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible:  true,
-                    vaultable: true
-                }
-            };
-
+            const fundingEligibility = fundingEligibilityPayPalVaulted 
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
@@ -85,13 +94,7 @@ describe('vault cases', () => {
 
             window.xprops.onApprove = expect('onApprove');
 
-            const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible:  true,
-                    vaultable: false
-                }
-            };
-
+            const fundingEligibility = fundingEligibilityPayPalNotVaulted 
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
@@ -141,12 +144,7 @@ describe('vault cases', () => {
                 }
             }));
 
-            const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible:  true,
-                    vaultable: false
-                }
-            };
+            const fundingEligibility = fundingEligibilityPayPalVaulted;
 
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
@@ -197,13 +195,8 @@ describe('vault cases', () => {
                 }
             }));
 
-            const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible:  true,
-                    vaultable: false
-                }
-            };
-
+            
+            const fundingEligibility = fundingEligibilityPayPalNotVaulted
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
@@ -259,12 +252,7 @@ describe('vault cases', () => {
                 }
             }));
 
-            const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible:  true,
-                    vaultable: true
-                }
-            };
+            const fundingEligibility = fundingEligibilityPayPalVaulted;
 
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
@@ -337,6 +325,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -349,7 +338,7 @@ describe('vault cases', () => {
             };
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility, allowBillingPayments: true });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
             await clickButton(FUNDING.PAYPAL);
             gqlMock.done();
@@ -418,11 +407,10 @@ describe('vault cases', () => {
             }));
 
             const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 [FUNDING.CARD]: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         visa: {
                             eligible:           true,
@@ -512,11 +500,10 @@ describe('vault cases', () => {
             }));
 
             const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 [FUNDING.CARD]: {
                     eligible:     true,
+                    branded: true,
                     installments: true,
                     vendors:      {
                         visa: {
@@ -537,7 +524,7 @@ describe('vault cases', () => {
             window.paypal.Checkout = avoid('Checkout', window.paypal.Checkout);
 
             createButtonHTML({ fundingEligibility });
-            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility, enableVaultInstallments: true });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
             await clickButton(FUNDING.CARD);
             gqlMock.done();
@@ -610,6 +597,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -691,11 +679,10 @@ describe('vault cases', () => {
             }));
 
             const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 [FUNDING.CARD]: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         visa: {
                             eligible:           true,
@@ -784,6 +771,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -859,11 +847,10 @@ describe('vault cases', () => {
             window.xprops.onApprove = mockAsyncProp(avoid('onApprove'));
 
             const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 [FUNDING.CARD]: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         visa: {
                             eligible:           true,
@@ -917,6 +904,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -1013,6 +1001,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -1108,11 +1097,10 @@ describe('vault cases', () => {
             }).expectCalls();
 
             const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible: true
-                },
+                ...DEFAULT_FUNDING_ELIGIBILITY,
                 [FUNDING.CARD]: {
                     eligible: true,
+                    branded: true,
                     vendors:  {
                         visa: {
                             eligible:           true,
@@ -1276,6 +1264,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -1449,6 +1438,7 @@ describe('vault cases', () => {
             const fundingEligibility = {
                 [FUNDING.PAYPAL]: {
                     eligible:           true,
+                    branded: true,
                     vaultedInstruments: [
                         {
                             id:    paymentMethodID,
@@ -1491,17 +1481,253 @@ describe('vault cases', () => {
                 gqlMock.done();
             }));
 
-            const fundingEligibility = {
-                [FUNDING.PAYPAL]: {
-                    eligible:  true,
-                    vaultable: true
-                }
-            };
+            const fundingEligibility = fundingEligibilityPayPalVaulted;
 
             createButtonHTML({ fundingEligibility });
             await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
             await clickButton(FUNDING.PAYPAL).catch(expect('clickCatch'));
+        });
+    });
+
+    it('should pay with a vaulted card and create a new access token with the target subject for ID token and merchant ID case', async () => {
+        return await wrapPromise(async ({ expect, avoid }) => {
+            const facilitatorAccessToken = 'abcde-12345';
+            const merchantID = ['XYZ12345'];
+            const payees = merchantID;
+            const accessTokenWithTargetSubject = 'edcba-54321';
+            const paymentMethodID = 'xyz123';
+            const orderID = generateOrderID();
+
+            window.xprops.userIDToken = 'eyja1234567';
+            window.xprops.merchantID = merchantID;
+
+            const gqlMock = getGraphQLApiMock({
+                extraHandler: ({ data }) => {
+                    if (data.query.includes('query GetCheckoutDetails')) {
+                        return {
+                            data: {
+                                checkoutSession: {
+                                    cart: {
+                                        intent: INTENT.CAPTURE,
+                                        amounts: {
+                                            total: {
+                                                currencyCode: 'USD'
+                                            }
+                                        },
+                                        shippingAddress: {
+                                            isFullAddress: false
+                                        }
+                                    },
+                                    flags: {
+                                        isChangeShippingAddressAllowed: false
+                                    },
+                                    payees: payees.map(id => {
+                                        return (id.indexOf('@') === -1)
+                                            ? {
+                                                merchantId: id
+                                            }
+                                            : {
+                                                email: {
+                                                    stringValue: id
+                                                }
+                                            };
+                                    })
+                                }
+                            }
+                        };
+                    }
+                }
+            }).expectCalls();
+
+            window.paypal.Menu = expect('Menu', mockMenu);
+
+            window.xprops.createOrder = mockAsyncProp(expect('createOrder', async () => {
+                return orderID;
+            }));
+
+            const createAccessTokenCall = getCreateAccessTokenMock({
+                handler: expect('createAccessToken', ({ data }) => {
+                    if (!data.includes('target_subject') && !data.includes(merchantID)) {
+                        throw new Error(`Expected target subject to be set on access token request`)
+                    }
+
+                    return {
+                        access_token: accessTokenWithTargetSubject
+                    }
+                })
+            }).expectCalls();
+
+
+            const vpmCall = getValidatePaymentMethodApiMock({
+                extraHandler: expect('validatePaymentMethod', ({ headers }) => {
+                    if (headers.authorization !== `Bearer ${accessTokenWithTargetSubject}`) {
+                        throw new Error(`Expected call to come with correct access token`);
+                    }
+
+                    return {};
+                })
+            }).expectCalls();
+
+            const confirmCall = getConfirmOrderApiMock({
+                extraHandler: expect('confirmOrder', ({ headers }) => {
+                    if (headers.authorization !== `Bearer ${accessTokenWithTargetSubject}`) {
+                        throw new Error(`Expected call to come with correct access token`);
+                    }
+
+                    return {};
+                })
+            }).expectCalls();
+
+            window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
+                if (data.orderID !== orderID) {
+                    throw new Error(`Expected orderID to be ${orderID}, got ${data.orderID}`);
+                }
+
+                createAccessTokenCall.done();
+                vpmCall.done();
+                confirmCall.done();
+            }));
+
+            const fundingEligibility = {
+                [FUNDING.CARD]: {
+                    eligible: true,
+                    branded: true,
+                    vendors: {
+                        visa: {
+                            eligible: true,
+                            vaultedInstruments: [
+                                {
+                                    id: paymentMethodID,
+                                    label: {
+                                        description: 'Visa x-1234'
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+            window.paypal.Checkout = avoid('Checkout', window.paypal.Checkout);
+
+            createButtonHTML({ fundingEligibility });
+            await mockSetupButton({ merchantID, fundingEligibility, facilitatorAccessToken });
+
+            await clickButton(FUNDING.CARD);
+            gqlMock.done();
+        });
+    });
+
+    it('should pay with a vaulted card and use the facilitator access token for ID token case', async () => {
+        return await wrapPromise(async ({ expect, avoid }) => {
+            const facilitatorAccessToken = 'abcde-12345';
+            const paymentMethodID = 'xyz123';
+
+            window.xprops.userIDToken = 'eyja1234567';
+
+            const gqlMock = getGraphQLApiMock({
+                extraHandler: ({ data }) => {
+                    if (data.query.includes('query GetCheckoutDetails')) {
+                        return {
+                            data: {
+                                checkoutSession: {
+                                    cart: {
+                                        intent: INTENT.CAPTURE,
+                                        amounts: {
+                                            total: {
+                                                currencyCode: 'USD'
+                                            }
+                                        },
+                                        shippingAddress: {
+                                            isFullAddress: false
+                                        }
+                                    },
+                                    flags: {
+                                        isChangeShippingAddressAllowed: false
+                                    },
+                                }
+                            }
+                        };
+                    }
+                }
+            }).expectCalls();
+
+            window.paypal.Menu = expect('Menu', mockMenu);
+
+            const orderID = generateOrderID();
+            window.xprops.createOrder = mockAsyncProp(expect('createOrder', async () => {
+                return orderID;
+            }));
+
+            let createAccessTokenCalled = false;
+            const createAccessTokenCall = getCreateAccessTokenMock({
+                handler: () => {
+                    createAccessTokenCalled = true;
+                }
+            }).listen();
+
+            const vpmCall = getValidatePaymentMethodApiMock({
+                extraHandler: expect('validatePaymentMethod', ({ headers }) => {
+                    if (createAccessTokenCalled) {
+                        throw new Error(`Expected createAccessToken not to be called`)
+                    }
+
+                    if (headers.authorization !== `Bearer ${facilitatorAccessToken}`) {
+                        throw new Error(`Expected call to come with correct access token`);
+                    }
+
+                    return {};
+                })
+            }).expectCalls();
+
+            const confirmCall = getConfirmOrderApiMock({
+                extraHandler: expect('confirmOrder', ({ headers }) => {
+                    if (headers.authorization !== `Bearer ${facilitatorAccessToken}`) {
+                        throw new Error(`Expected call to come with correct access token`);
+                    }
+
+                    return {};
+                })
+            }).expectCalls();
+
+            window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
+                if (data.orderID !== orderID) {
+                    throw new Error(`Expected orderID to be ${orderID}, got ${data.orderID}`);
+                }
+
+                createAccessTokenCall.done();
+                vpmCall.done();
+                confirmCall.done();
+            }));
+
+            const fundingEligibility = {
+                [FUNDING.CARD]: {
+                    eligible: true,
+                    branded: true,
+                    vendors: {
+                        visa: {
+                            eligible: true,
+                            vaultedInstruments: [
+                                {
+                                    id: paymentMethodID,
+                                    label: {
+                                        description: 'Visa x-1234'
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+            window.paypal.Checkout = avoid('Checkout', window.paypal.Checkout);
+
+            createButtonHTML({ fundingEligibility });
+            await mockSetupButton({ fundingEligibility, facilitatorAccessToken });
+
+            await clickButton(FUNDING.CARD);
+            gqlMock.done();
         });
     });
 });
