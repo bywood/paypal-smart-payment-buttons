@@ -9,6 +9,7 @@ import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods 
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 import { AriaMessage } from './AriaMessage'
+
 type CardNameProps = {|
     name : string,
     type : string,

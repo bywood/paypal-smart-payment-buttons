@@ -9,6 +9,7 @@ import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods 
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
 import { AriaMessage } from './AriaMessage'
+
 type CardPostalCodeProps = {|
     name : string,
     type : string,
