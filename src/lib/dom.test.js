@@ -42,3 +42,4 @@ describe('dom utils', () => {
         });
     });
 });
+
