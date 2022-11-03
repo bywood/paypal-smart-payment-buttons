@@ -136,27 +136,27 @@ export function CardExpiry(
 
     return (
         <Fragment>
-        <input
-            aria-describedby={'card-expiry-field-description'}
-            name={ name }
-            autocomplete={ autocomplete }
-            inputmode='numeric'
-            ref={ expiryRef }
-            type={ type }
-            className='card-field-expiry'
-            style={ style }
-            maxLength= { maxLength }
-            onKeyUp= { formatExpiryDate }
-            onKeyDown={ onKeyDownEvent }
-            onFocus={ onFocusEvent }
-            onBlur={ onBlurEvent }
-            onPaste={ onPasteEvent }
-            { ...attributes }
-        />
-        <AriaMessage
-            ariaMessageId={'card-expiry-field-description'}
-            ariaMessageRef={ariaMessageRef}
-        />
+            <input
+                aria-describedby={'card-expiry-field-description'}
+                name={ name }
+                autocomplete={ autocomplete }
+                inputmode='numeric'
+                ref={ expiryRef }
+                type={ type }
+                className='card-field-expiry'
+                style={ style }
+                maxLength= { maxLength }
+                onKeyUp= { formatExpiryDate }
+                onKeyDown={ onKeyDownEvent }
+                onFocus={ onFocusEvent }
+                onBlur={ onBlurEvent }
+                onPaste={ onPasteEvent }
+                { ...attributes }
+            />
+            <AriaMessage
+                ariaMessageId={'card-expiry-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
         </Fragment>
     );
 }

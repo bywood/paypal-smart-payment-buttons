@@ -137,28 +137,28 @@ export function CardCVV(
 
     return (
         <Fragment>
-        <input
-            aria-describedby={'card-cvv-field-description'}
-            name={ name }
-            autocomplete={ autocomplete }
-            inputmode='numeric'
-            ref={ cvvRef }
-            type={ type }
-            className='card-field-cvv'
-            value={ inputValue }
-            style={ style }
-            maxLength={ cardType.code.size }
-            onKeyDown={ onKeyDownEvent }
-            onInput={ setCvvValue }
-            onFocus={ onFocusEvent }
-            onBlur={ onBlurEvent }
-            { ...attributes }
-            placeholder={ attributes.placeholder ?? cardType.code.name }
-        />
-        <AriaMessage
-            ariaMessageId={'card-cvv-field-description'}
-            ariaMessageRef={ariaMessageRef}
-        />
+            <input
+                aria-describedby={'card-cvv-field-description'}
+                name={ name }
+                autocomplete={ autocomplete }
+                inputmode='numeric'
+                ref={ cvvRef }
+                type={ type }
+                className='card-field-cvv'
+                value={ inputValue }
+                style={ style }
+                maxLength={ cardType.code.size }
+                onKeyDown={ onKeyDownEvent }
+                onInput={ setCvvValue }
+                onFocus={ onFocusEvent }
+                onBlur={ onBlurEvent }
+                { ...attributes }
+                placeholder={ attributes.placeholder ?? cardType.code.name }
+            />
+            <AriaMessage
+                ariaMessageId={'card-cvv-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
         </Fragment>
     );
 }

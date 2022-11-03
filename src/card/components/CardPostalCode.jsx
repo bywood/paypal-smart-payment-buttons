@@ -107,27 +107,27 @@ export function CardPostalCode(
 
     return (
         <Fragment>
-        <input
-            aria-describedby={'card-postalCode-field-description'}
-            name={ name }
-            inputmode='numeric'
-            ref={ postalCodeRef }
-            type={ type }
-            className='card-field-postal-code'
-            value={ inputValue }
-            style={ style }
-            maxLength={ maxLength }
-            onKeyDown={ onKeyDownEvent }
-            onInput={ setPostalCodeValue }
-            onFocus={ onFocusEvent }
-            onBlur={ onBlurEvent }
-            minLength={ minLength }
-            { ...attributes }
-        />
-        <AriaMessage
-            ariaMessageId={'card-postalCode-field-description'}
-            ariaMessageRef={ariaMessageRef}
-        />
+            <input
+                aria-describedby={'card-postalCode-field-description'}
+                name={ name }
+                inputmode='numeric'
+                ref={ postalCodeRef }
+                type={ type }
+                className='card-field-postal-code'
+                value={ inputValue }
+                style={ style }
+                maxLength={ maxLength }
+                onKeyDown={ onKeyDownEvent }
+                onInput={ setPostalCodeValue }
+                onFocus={ onFocusEvent }
+                onBlur={ onBlurEvent }
+                minLength={ minLength }
+                { ...attributes }
+            />
+            <AriaMessage
+                ariaMessageId={'card-postalCode-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
         </Fragment>
     )
 }
